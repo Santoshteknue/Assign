@@ -1,0 +1,671 @@
+//////////selection sort/////////
+
+#include <iostream>
+using namespace std;
+
+//Selection Sort Function
+int selectionSort ( int A[], int n)
+{
+int i , j, small, temp;
+for( i=0 ; i < n-1 ; i++)
+ {
+ small = i;
+ //finding smallest element in unsorted array
+ for( j=i+1 ; j < n ; j++)
+  {
+  if ( A[j] < A[small] )
+  small = j;
+  }
+
+ //swapping with left most unsorted element  
+ temp = A[i];
+ A[i] = A[small];
+ A[small] = temp;
+ }
+}
+//Function to display Array elements
+void displayArray(int A[],int n)
+{
+ int i;
+ for(i=0;i<n;i++)
+  cout<<A[i]<<" "; cout<<"\n";
+
+ }
+ //Main Function
+ int main() {
+
+ int n;
+ cout<<"enter size of array\n"; cin>>n;
+ int A[n],e,i,ans;
+ cout<<"enter elements of array\n";
+
+ for(i=0;i<n;i++)
+ cin>>A[i]; cout<<"Array before sorting\n";
+
+ displayArray(A,n);
+
+ selectionSort(A,n);
+
+ cout<<"Array after sorting\n";
+ displayArray(A,n);
+ return 0;
+}
+-------------------------------------------------------------------
+///////bubble sort/////////////
+
+#include <iostream>
+using namespace std;
+
+//bubble sort function
+void BubbleSort(int A[], int n) {
+int flag , k , i, temp;
+ //Outer loop
+ for( k=1; k<n ; k++)
+ {
+  flag = 0;
+   //inner loop
+   for( i=0 ; i<n-k ; i++)
+   {
+    if(A[i] >A[i+1])
+    {
+    //swapping
+    temp = A[i];
+    A[i] = A[i+1];
+    A[i+1] = temp;
+    //setting flag to 1
+    flag = 1;
+    }
+   }
+  // if flag==0 means no swaps i.e. array is sorted
+  if(flag == 0 )
+  break;
+  }
+}
+
+void displayArray(int A[],int n)
+{
+ int i;
+ for(i=0;i<n;i++)
+  cout<<A[i]<<" ";
+ cout<<"\n";
+}
+
+int main()
+{
+ int n,i,e;
+ cout<<"enter number of elements\n";
+ cin>>n;
+ int A[n];
+ cout<<"enter elements\n";
+ for(i=0;i<n;i++)
+ cin>>A[i];
+
+ cout<<"Array before sorting:\n";
+ displayArray(A,n);
+
+ //calling bubble sort function
+ BubbleSort(A,n);
+ cout<<"Array after sorting:\n";
+ displayArray(A,n);
+
+ return 0;
+}
+----------------------------------------------------------------
+//////// insertion sort////////
+
+
+#include <iostream>
+using namespace std;
+
+//Insertion sort sort function
+void insertionSort( int A[], int n)
+{
+ int i ,value, index;
+ for(i=1 ; i<n ; i++)
+ {
+  value = A[i];
+  index = i;
+  while ( index > 0 && A[index -1] > value)
+  {
+   A[index] = A[index -1];
+   index = index -1;
+  }
+ A[index] = value;
+ }
+}
+
+void displayArray(int A[],int n)
+{
+ int i;
+ for(i=0;i<n;i++)
+  cout<<A[i]<<" ";
+ cout<<"\n";
+}
+
+int main()
+{
+ int n,i,e;
+ cout<<"enter number of elements\n";
+ cin>>n;
+ int A[n];
+ cout<<"enter elements\n";
+ for(i=0;i<n;i++)
+ cin>>A[i];
+
+ cout<<"Array before sorting:\n";
+ displayArray(A,n);
+
+ //calling insertion sort function
+ insertionSort(A,n);
+ cout<<"Array after sorting:\n";
+ displayArray(A,n);
+
+ return 0;
+}
+--------------------------------------------------------------------
+/* Simple Bubble Sort Program Using Functions in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void bubble_sort(int[]);
+
+int main() {
+    int arr_sort[MAX_SIZE], i;
+
+    cout << "Simple C++ Bubble Sort Example - Array and Functions\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    bubble_sort(arr_sort);
+    getch();
+}
+
+void bubble_sort(int fn_arr[]) {
+    int i, j, a, t;
+
+    for (i = 1; i < MAX_SIZE; i++) {
+        for (j = 0; j < MAX_SIZE - 1; j++) {
+            if (fn_arr[j] > fn_arr[j + 1]) {
+                //Swapping Values 
+                t = fn_arr[j];
+                fn_arr[j] = fn_arr[j + 1];
+                fn_arr[j + 1] = t;
+            }
+        }
+
+        cout << "\nIteration : " << i;
+        for (a = 0; a < MAX_SIZE; a++) {
+            cout << "\t" << fn_arr[a];
+        }
+    }
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << fn_arr[i];
+    }
+}
+Sample Output
+Simple Bubble Sort Example - Array and Functions
+
+Enter 5 Elements for Sorting
+677
+45
+32
+1
+17
+
+----------------------------------------------------------------
+/* Simple Insertion Sort Program Using Functions in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void insertion(int[]);
+
+int main() {
+    int arr_sort[MAX_SIZE], i;
+
+    cout << "Simple C++ Insertion Sort Example - Array and Functions\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    insertion(arr_sort);
+    getch();
+}
+
+void insertion(int fn_arr[]) {
+    int i, j, a, t;
+    for (i = 1; i < MAX_SIZE; i++) {
+        t = fn_arr[i];
+        j = i - 1;
+
+        while (j >= 0 && fn_arr[j] > t) {
+            fn_arr[j + 1] = fn_arr[j];
+            j = j - 1;
+        }
+        fn_arr[j + 1] = t;
+
+        cout << "\nIteration : " << i;
+        for (a = 0; a < MAX_SIZE; a++) {
+            cout << "\t" << fn_arr[a];
+        }
+    }
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << fn_arr[i];
+    }
+}
+Sample Output
+Simple Insertion Sort Example - Array and Functions
+
+Enter 5 Elements for Sorting
+901
+56
+34
+23
+2
+---------------------------------------------------------
+/* Simple Selection Sort Program Using Functions and Array in C++*/
+/* Data Structure C++ Programs,C++ Functions and Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void selection_sort(int[]);
+
+int main() {
+    int arr_sort[MAX_SIZE], i;
+
+    cout << "Simple C++ Selection Sort Example - Functions and Array\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    selection_sort(arr_sort);
+    getch();
+
+}
+
+void selection_sort(int fn_arr[]) {
+    int i, j, a, t, p;
+
+    for (i = 0; i < MAX_SIZE; i++) {
+        p = i;
+        for (j = i; j < MAX_SIZE; j++) {
+            if (fn_arr[p] > fn_arr[j])
+                p = j;
+        }
+
+        if (p != 1) {
+            //Swapping Values 
+            t = fn_arr[i];
+            fn_arr[i] = fn_arr[p];
+            fn_arr[p] = t;
+        }
+
+        cout << "\nIteration : " << i;
+        for (a = 0; a < MAX_SIZE; a++) {
+            cout << "\t" << fn_arr[a];
+        }
+    }
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << fn_arr[i];
+    }
+
+    getch();
+}
+Sample Output
+Simple Selection Sort Example - Functions and Array
+
+Enter 5 Elements for Sorting
+56
+12
+34
+11
+2
+------------------------------------------------------------------
+/* Simple Quick Sort Program Using Functions and Array in C++*/
+/* Data Structure C++ Programs,C++ Functions and Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void quick_sort(int, int);
+int arr_sort[MAX_SIZE];
+
+int main() {
+    int i;
+
+    cout << "Simple C++ Quick Sort Example - Functions and Array\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    quick_sort(0, MAX_SIZE - 1);
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    getch();
+}
+
+void quick_sort(int f, int l) {
+    int i, j, t, p = 0;
+
+    if (f < l) {
+        p = f;
+        i = f;
+        j = l;
+
+        while (i < j) {
+            while (arr_sort[i] <= arr_sort[p] && i < l)
+                i++;
+            while (arr_sort[j] > arr_sort[p])
+                j--;
+            if (i < j) {
+                t = arr_sort[i];
+                arr_sort[i] = arr_sort[j];
+                arr_sort[j] = t;
+            }
+        }
+
+        t = arr_sort[p];
+        arr_sort[p] = arr_sort[j];
+        arr_sort[j] = t;
+        quick_sort(f, j - 1);
+        quick_sort(j + 1, l);
+    }
+}
+Sample Output
+Simple Quick Sort Example - Functions and Array
+
+Enter 5 Elements for Sorting
+56
+24
+20
+17
+2
+---------------------------------------------------------------------
+/* Simple Merge Sort Program Using Functions and Array in C++*/
+/* Data Structure C++ Programs,C++ Functions and Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void merge_sort(int, int);
+void merge_array(int, int, int, int);
+
+int arr_sort[MAX_SIZE];
+
+int main() {
+    int i;
+
+    cout << "Simple C++ Merge Sort Example - Functions and Array\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    merge_sort(0, MAX_SIZE - 1);
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    getch();
+
+}
+
+void merge_sort(int i, int j) {
+    int m;
+
+    if (i < j) {
+        m = (i + j) / 2;
+        merge_sort(i, m);
+        merge_sort(m + 1, j);
+        // Merging two arrays
+        merge_array(i, m, m + 1, j);
+    }
+}
+
+void merge_array(int a, int b, int c, int d) {
+    int t[50];
+    int i = a, j = c, k = 0;
+
+    while (i <= b && j <= d) {
+        if (arr_sort[i] < arr_sort[j])
+            t[k++] = arr_sort[i++];
+        else
+            t[k++] = arr_sort[j++];
+    }
+
+    //collect remaining elements 
+    while (i <= b)
+        t[k++] = arr_sort[i++];
+
+    while (j <= d)
+        t[k++] = arr_sort[j++];
+
+    for (i = a, j = 0; i <= d; i++, j++)
+        arr_sort[i] = t[j];
+}
+Sample Output
+Simple Merge Sort Example - Functions and Array
+
+Enter 5 Elements for Sorting
+67
+57
+45
+32
+13
+----------------------------------------------------------------
+/* Simple Shell Sort Program Using Array in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+using namespace std;
+
+#define MAX_SIZE 5
+
+int main() {
+    int arr_sort[MAX_SIZE], i, j, k, a, t;
+
+    cout << "Simple C++ Shell Sort Example - Array\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    for (i = MAX_SIZE / 2; i > 0; i = i / 2) {
+        for (j = i; j < MAX_SIZE; j++) {
+            for (k = j - i; k >= 0; k = k - i) {
+                if (arr_sort[k + i] >= arr_sort[k])
+                    break;
+                else {
+                    //Swapping Values 
+                    t = arr_sort[k];
+                    arr_sort[k] = arr_sort[k + i];
+                    arr_sort[k + i] = t;
+                }
+            }
+
+            cout << "\nShell Sort Iteration " << i << " : " << j;
+            for (a = 0; a < MAX_SIZE; a++) {
+                cout << "\t" << arr_sort[a];
+            }
+        }
+
+    }
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    getch();
+}
+Sample Output
+Simple Shell Sort Example - Functions and Array
+
+Enter 5 Elements for Sorting
+4556
+300
+201
+10
+23
+----------------------------------------------------------------
+/* Simple Heap Sort Program Using Functions and Array in C++*/
+/* Data Structure C++ Programs,C++ Functions and Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+using namespace std;
+
+void heap_sort();
+
+void heap_adjust(int, int);
+int arr_sort[MAX_SIZE], t, a;
+
+int main() {
+    int i;
+
+    cout << "Simple C++ Heap Sort Example - Functions and Array\n";
+    cout << "\nEnter " << MAX_SIZE << " Elements for Sorting : " << endl;
+    for (i = 0; i < MAX_SIZE; i++)
+        cin >> arr_sort[i];
+
+    cout << "\nYour Data   :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    heap_sort();
+
+    cout << "\n\nSorted Data :";
+    for (i = 0; i < MAX_SIZE; i++) {
+        cout << "\t" << arr_sort[i];
+    }
+
+    getch();
+
+}
+
+void heap_sort() {
+    for (int i = MAX_SIZE / 2 - 1; i >= 0; i--)
+        heap_adjust(MAX_SIZE, i);
+
+    for (int i = MAX_SIZE - 1; i >= 0; i--) {
+        //Swapping Values 
+        t = arr_sort[0];
+        arr_sort[0] = arr_sort[i];
+        arr_sort[i] = t;
+        heap_adjust(i, 0);
+
+        cout << "\nHeap Sort Iteration : " << i;
+        for (a = 0; a < MAX_SIZE; a++) {
+            cout << "\t" << arr_sort[a];
+        }
+    }
+}
+
+void heap_adjust(int n, int i) {
+    int large = i, left = 2 * i + 1, right = 2 * i + 2;
+
+    // adjest left child
+    if (left < n && arr_sort[left] > arr_sort[large])
+        large = left;
+
+    // adjest right child
+    if (right < n && arr_sort[right] > arr_sort[large])
+        large = right;
+
+
+    if (large != i) {
+        //Swapping Values 
+        t = arr_sort[i];
+        arr_sort[i] = arr_sort[large];
+        arr_sort[large] = t;
+        heap_adjust(n, large);
+    }
+}
+Sample Output
+Simple Heap Sort Example - Functions and Array
+
+Enter 5 Elements for Sorting
+500
+401
+300
+20
+10
+---------------------------------------------------------------

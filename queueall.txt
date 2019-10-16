@@ -1,0 +1,618 @@
+/* Simple Queue Program in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 100
+
+using namespace std;
+
+int main() {
+    int item, choice, i;
+    int arr_queue[MAX_SIZE];
+    int rear = 0;
+    int front = 0;
+    int exit = 1;
+
+    cout << "\nSimple Queue Example - Array";
+    do {
+        cout << "\n\n Queue Main Menu";
+
+        cout << "\n1.Insert \n2.Remove \n3.Display \nOthers to exit";
+        cout << "\nEnter Your Choice : ";
+        cin>>choice;
+        switch (choice) {
+            case 1:
+                if (rear == MAX_SIZE)
+                    cout << "\n## Queue Reached Max!!";
+                else {
+                    cout << "\nEnter The Value to be Insert : ";
+                    cin>>item;
+                    cout << "\n## Position : " << rear + 1 << " , Insert Value  : " << item;
+                    arr_queue[rear++] = item;
+                }
+                break;
+            case 2:
+                if (front == rear)
+                    cout << "\n## Queue is Empty!";
+                else {
+                    cout << "\n## Position : " << front << " , Remove Value  :" << arr_queue[front];
+                    front++;
+                }
+                break;
+            case 3:
+                cout << "\n## Queue Size : " << (rear - front);
+                for (i = front; i < rear; i++)
+                    cout << "\n## Position : " << i << " , Value  : " << arr_queue[i];
+                break;
+            default:
+                exit = 0;
+                break;
+        }
+    } while (exit);
+
+    return 0;
+}
+---------------------------------------------------------------
+
+/* Simple Queue Program Using Functions in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 100
+
+using namespace std;
+
+
+int item, choice, i;
+int arr_queue[MAX_SIZE];
+int rear = 0;
+int front = 0;
+int exit_p = 1;
+
+void insert() {
+    if (rear == MAX_SIZE)
+        cout << "\n## Queue Reached Max!";
+    else {
+        cout << "\nEnter The Value to be Insert : ";
+        cin>>item;
+        cout << "\n## Position : " << rear + 1 << " , Insert Value  : " << item;
+        arr_queue[rear++] = item;
+    }
+}
+
+void removeData() {
+    if (front == rear)
+        cout << "\n## Queue is Empty!";
+    else {
+        cout << "\n## Position : " << front << " , Remove Value  :" << arr_queue[front];
+        front++;
+    }
+}
+
+void display() {
+    cout << "\n## Queue Size : " << (rear - front);
+    for (i = front; i < rear; i++)
+        cout << "\n## Position : " << i << " , Value  : " << arr_queue[i];
+}
+
+int main() {
+    cout << "\nSimple Queue Example - Array and Functions";
+    do {
+        cout << "\n\n Queue Main Menu";
+
+        cout << "\n1.Insert \n2.Remove \n3.Display \nOthers to exit";
+        cout << "\nEnter Your Choice : ";
+        cin>>choice;
+        switch (choice) {
+            case 1:
+                insert();
+                break;
+            case 2:
+                removeData();
+                break;
+            case 3:
+                display();
+                break;
+            default:
+                exit_p = 0;
+                break;
+        }
+    } while (exit_p);
+
+    return 0;
+}
+----------------------------------------------------------------------
+/* Simple Queue Program Using Class and Memeber Functions in C++*/
+/* Data Structure C++ Programs,C++ Array Examples */
+
+#include <iostream>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 100
+
+using namespace std;
+
+class Queue {
+private:
+    int item, i;
+    int arr_queue[MAX_SIZE];
+    int rear;
+    int front;
+
+public:
+
+    Queue() {
+        rear = 0;
+        front = 0;
+    }
+
+    void insert() {
+        if (rear == MAX_SIZE)
+            cout << "\n## Queue Reached Max!";
+        else {
+            cout << "\nEnter The Value to be Insert : ";
+            cin>>item;
+            cout << "\n## Position : " << rear + 1 << " , Insert Value  : " << item;
+            arr_queue[rear++] = item;
+        }
+    }
+
+    void removeData() {
+        if (front == rear)
+            cout << "\n## Queue is Empty!";
+        else {
+            cout << "\n## Position : " << front << " , Remove Value  :" << arr_queue[front];
+            front++;
+        }
+    }
+
+    void display() {
+        cout << "\n## Queue Size : " << (rear - front);
+        for (i = front; i < rear; i++)
+            cout << "\n## Position : " << i << " , Value  : " << arr_queue[i];
+    }
+};
+
+int main() {
+    int choice, exit_p = 1;
+    Queue obj;
+    cout << "\nSimple Queue Example - Class and Memeber Functions in C++";
+    do {
+        cout << "\n\n Queue Main Menu";
+
+        cout << "\n1.Insert \n2.Remove \n3.Display \nOthers to exit";
+        cout << "\nEnter Your Choice : ";
+        cin>>choice;
+        switch (choice) {
+            case 1:
+                obj.insert();
+                break;
+            case 2:
+                obj.removeData();
+                break;
+            case 3:
+                obj.display();
+                break;
+            default:
+                exit_p = 0;
+                break;
+        }
+    } while (exit_p);
+
+    return 0;
+}
+-----------------------------------------------------------------------
+queue using array
+
+#include <iostream>
+using namespace std;
+
+#define SIZE 5
+int A[SIZE];
+int front = -1;
+int rear = -1;
+//function to check if queue is empty
+bool isempty()
+{
+ if(front == -1 && rear == -1)
+ return true;
+ else
+ return false;
+}
+//function to insert element in queue
+void enqueue ( int value )
+{
+ if (rear == SIZE-1)
+  cout<<"Queue is full \n";
+ else
+ {
+  if( front == -1)
+   front = 0;
+  rear++;
+  A[rear] = value;
+ }
+}
+//function to remove element from queue
+void dequeue ( )
+{
+ if( isempty() )
+  cout<<"Queue is empty\n";
+ else
+ if( front == rear )
+  front = rear = -1;
+ else
+  front++;
+}
+//function to display element at front
+void showfront( )
+{
+ if( isempty())
+  cout<<"Queue is empty\n";
+ else
+  cout<<"element at front is:"<<A[front]<<"\n";
+}
+//function to display elements of the queue
+void displayQueue()
+{
+ if(isempty())
+  cout<<"Queue is empty\n";
+ else
+ {
+  for( int i=front ; i<= rear ; i++)
+   cout<<A[i]<<" ";
+  cout<<"\n";
+ }
+}
+
+int main()
+{
+ //inserting elements in queue
+ cout<<"Inserting elements in queue\n";
+ enqueue(2);
+ displayQueue();
+ enqueue(3);
+ displayQueue();
+ enqueue(5);
+ displayQueue();
+ enqueue(7);
+ displayQueue();
+ enqueue(8);
+
+ displayQueue();
+ // queue is full
+ enqueue(9);
+ //show element at front
+ showfront();
+
+ cout<<"Removing elements from queue\n";
+ //removing elements from the queue
+ dequeue();
+ displayQueue();
+ dequeue();
+ displayQueue();
+ dequeue();
+ displayQueue();
+ dequeue();
+ displayQueue();
+ dequeue();
+
+ return 0;
+}
+-------------------------------------------------------------------
+///queue using circular array
+
+#include <iostream>
+using namespace std;
+#define SIZE 5
+int A[SIZE];
+int front = -1;
+int rear = -1;
+
+//Function to check if queue is empty or not
+bool isempty()
+{
+ if(front == -1 && rear == -1)
+ return true;
+ else
+ return false;
+}
+
+//function to enter elements in queue
+void enqueue ( int value )
+{
+ //queue is full
+ if ((rear + 1)%SIZE == front)
+    cout<<"Queue is full \n";
+ else
+ {
+  //first element inserted
+  if( front == -1)
+     front = 0;
+ //insert element at rear
+ rear = (rear+1)%SIZE;
+   A[rear] = value;
+ }
+}
+
+//function to delete/remove element from queue
+void dequeue ( )
+{
+ if( isempty() )
+  cout<<"Queue is empty\n";
+ else
+ //only one element
+ if( front == rear )
+  front = rear = -1;
+ else
+  front = (front + 1)%SIZE;
+}
+
+//function to show the element at front
+void showfront( )
+{
+ if( isempty())
+ cout<<"Queue is empty\n";
+ else
+ cout<<"element at front is:"<<A[front];
+}
+
+//function to display queue
+void displayQueue()
+{
+ if(isempty())
+  cout<<"Queue is empty\n";
+ else
+ {
+  int i;
+  if( front <= rear )
+  {
+   for( i=front ; i<= rear ; i++)
+   cout<<A[i]<<" ";
+  }
+  else
+  {
+   i=front;
+   while( i < SIZE)
+   {
+   cout<<A[i]<<" ";
+   i++;
+   }
+   i=0;
+   while( i <= rear)
+   {
+   cout<<A[i]<<" ";
+   i++;
+   }
+  }
+ }
+}
+
+//Main Function
+int main()
+{
+ int choice, flag=1, value;
+ while( flag == 1)
+ {
+  cout<<"\n1.enqueue 2.dequeue 3.showfront 4.displayQueue 5.exit\n";
+  cin>>choice;
+  switch (choice)
+  {
+  case 1: cout<<"Enter Value:\n";
+          cin>>value;
+          enqueue(value);
+          break;
+  case 2: dequeue();
+          break;
+  case 3: showfront();
+          break;
+  case 4: displayQueue();
+          break;
+  case 5: flag = 0;
+          break;
+  }
+ }
+
+ return 0;
+}
+----------------------------------------------------------------------
+
+////Queue using linked list
+
+#include <iostream>
+using namespace std;
+
+// Structure of Node.
+struct Node
+{
+int data;
+
+Node *link;
+};
+
+Node *front = NULL;
+Node *rear = NULL;
+
+//Function to check if queue is empty or not
+bool isempty()
+{
+ if(front == NULL && rear == NULL)
+ return true;
+ else
+ return false;
+}
+
+//function to enter elements in queue
+void enqueue ( int value )
+{
+ Node *ptr = new Node();
+ ptr->data= value;
+ ptr->link = NULL;
+
+ //If inserting the first element/node
+ if( front == NULL )
+ {
+  front = ptr;
+  rear = ptr;
+ }
+ else
+ {
+  rear ->link = ptr;
+  rear = ptr;
+ }
+}
+
+//function to delete/remove element from queue
+void dequeue ( )
+{
+ if( isempty() )
+ cout<<"Queue is empty\n";
+ else
+ //only one element/node in queue.
+ if( front == rear)
+ {
+  free(front);
+  front = rear = NULL;
+ }
+ else
+ {
+  Node *ptr = front;
+  front = front->link;
+  free(ptr);
+ }
+}
+
+//function to show the element at front
+void showfront( )
+{
+ if( isempty())
+ cout<<"Queue is empty\n";
+ else
+ cout<<"element at front is:"<<front->data;
+}
+
+//function to display queue
+void displayQueue()
+{
+ if (isempty())
+  cout<<"Queue is empty\n";
+ else
+ {
+  Node *ptr = front;
+  while( ptr !=NULL)
+  {
+   cout<<ptr->data<<" ";
+   ptr= ptr->link;
+  }
+ }
+}
+
+//Main Function
+int main()
+{
+ int choice, flag=1, value;
+ while( flag == 1)
+ {
+  cout<<"\n1.enqueue 2.dequeue 3.showfront 4.displayQueue 5.exit\n";
+  cin>>choice;
+  switch (choice)
+  {
+  case 1: cout<<"Enter Value:\n";
+          cin>>value;
+          enqueue(value);
+          break;
+  case 2: dequeue();
+          break;
+  case 3: showfront();
+          break;
+  case 4: displayQueue();
+          break;
+  case 5: flag = 0;
+          break;
+  }
+ }
+
+ return 0;
+}
+------------------------------------------------------------------
+stsck using queue
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Stack {
+    
+    queue<int> primary_queue, secondary_queue;
+    
+    public:
+        void push(int element){
+            
+            secondary_queue.push(element);
+            
+            while(!primary_queue.empty()){
+                secondary_queue.push(primary_queue.front());
+                primary_queue.pop();
+            }
+            
+            // swapping the queues
+            queue<int> temp_queue = primary_queue;
+            primary_queue = secondary_queue;
+            secondary_queue = temp_queue;
+        }
+    
+        void pop(){
+            if(primary_queue.empty()){
+                return;
+            } else {
+                primary_queue.pop();
+            }
+        }
+    
+        int top(){
+            if(primary_queue.empty()){
+                return -1;
+            } else {
+                return primary_queue.front();
+            }
+        }
+    
+        void displayStack()
+        {
+            queue<int> temp_queue = primary_queue;
+            
+            while(!temp_queue.empty()){
+                cout<<temp_queue.front()<<" ";
+                temp_queue.pop();
+            }
+            cout<<"\n";
+            
+        }
+};
+
+int main(){
+    
+    Stack s;
+    
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    s.push(4);
+    
+    s.displayStack();
+    
+    cout<<"Top: "<<s.top()<<"\n";
+    
+    s.pop();
+    
+    s.displayStack();
+    
+    return 0;
+    
+}
+
