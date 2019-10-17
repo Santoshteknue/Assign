@@ -1,0 +1,41 @@
+Assignment 1.1
+==============
+Write a program which accepts 2 integer values as input say p, q; and prints the multiplication table starting from p*1 to p*q.
+
+Assignment 1.2
+==============
+Write a program for modified Bubble sort and prove that its time complexity is less than that of normal Bubble sort
+
+Assignment 1.3
+==============
+Building a character intersection matrix-
+Your program is supposed to accept the following inputs:
+a) An integer i, representing the number of character arrays to be accepted as input
+b) A sequence of 'i' integers representing the size of the each character array
+c) 'i' number of lines where each line is a character array
+You need to find the mid character of each character array, from where you start the next character array, till you place each of the character arrays in the matrix.
+
+Example: Let us consider constructing a character intersection matrix for 4 character arrays, then i=4. Let PGDAC, PGDITISS, CCAT & ACTS be the character arrays to be placed in the character intersection matrix, then second line of input consisting of the size of each of the character arrays will be "5 8 4 4", followed by 4 lines, where PGDAC, PGDITISS, CCAT & ACTS will be each in one line. Then these character arrays need to be placed in the character matrix in the following fashion.
+
+Sample Input:
+-------------
+4
+5 8 4 4
+PGDAC
+PGDITISS
+CCAT
+ACTS
+
+Sample Output:
+--------------
+P
+G
+DPGDITISS
+A   C
+C   CACTS
+    A
+    T
+
+
+
+

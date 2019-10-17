@@ -1,0 +1,483 @@
+Assignment 1:
+Develop a Function to check if two numbers are equal without using arithmetic operators or comparison operators.
+
+#include<iostream>
+using namespace std;
+//without using arithmetic and comparison operator
+void areSame(int a, int b) {
+	if (a ^ a)   //XOR operator
+		cout << "Not same" << endl;
+	else
+		cout << "same" << endl;
+}
+int main() {
+	int num1, num2;
+	cout << "Enter two numbers" << endl;
+	cin >> num1 >> num2;
+	areSame(num1, num2);
+
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 2:
+ Write a program to display the following output using a single cout statement.
+
+   Subject            Marks
+   Mathematics     	90 
+   Computer         77 
+   Chemistry        69 
+
+#include<iostream>
+using namespace std;
+int main() {
+	int sub1, sub2, sub3;
+	cout << "Enter the mathematics marks = ";
+	cin >> sub1;
+	cout << "Enter the computer marks = ";
+	cin >> sub2;
+	cout << "Enter the chemistry marks ";
+	cin >> sub3;
+	cout << "\nSubject\t\t\tMarks\n";
+	cout << "\nmathematics\t\t" << sub1;
+	cout << "\nComputer\t\t" << sub2;
+	cout << "\nChemistry\t\t" << sub3;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 3:
+Write a program to print all natural numbers upto N without using semi-colon.
+
+#include<iostream>
+#define N 50
+using namespace std;
+int main(int num) {
+	if (num <= N && cout << (" ", num) && main (num + 1)) {
+
+	}
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 4:
+Write a program which accept principle, rate and time from user and print the simple interest.
+
+#include<iostream>
+using namespace std;
+int main() {
+	int p, r, t, i;
+	cout << "Enter the Principle Amount: ";
+	cin >> p;
+	cout << "Enter the rate: ";
+	cin >> r;
+	cout << "enter the time ";
+	cin >> t;
+	i = (p * r * t) / 100;
+	cout << "simple interest is :" << i;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 5:
+Write a program which accept temperature in Farenheit and print it in centigrade
+#include<iostream>
+using namespace std;
+int main() {
+	float centigrate;
+	float farrenheit;
+	cout << "Enter temp in Fahrenheit";
+	cin >> farrenheit;
+	cout << endl;
+	centigrate = (farrenheit - 32) * 5 / 9;
+	cout << "temp.in.celsius " << centigrate;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 6:
+ Write a program that takes an input of string and displays the reverse of the string. It should be a function that takes a char*  as arg and returns the char* with reversed value. 
+ 
+#include<iostream>
+using namespace std;
+string wordReverse(string str) {
+	int i = str.length() - 1;
+	int start, end = i + 1;
+	string result = " ";
+	while (i >=0)
+	{
+		if (str[i] == ' ') {
+			start = i + 1;
+			while (start != end)
+				result += str[start++];
+			result += ' ';
+			end = i;
+		}
+		i--;
+	}
+	start = 0;
+	while (start != end)
+		result += str[start++];
+	return result;
+}
+int main() {
+	string str;
+	cout << "Enter the string";
+	cin >> str;
+	cout << wordReverse(str);
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+ Assignment 7:
+Write a program to check whether the given number is positive or negative (using ? : ternary operator )
+
+#include<iostream>
+using namespace std;
+int main() {
+	int num1;
+	cout << "Enter the number ";
+	cin >> num1;
+	(num1 > 0) ? cout << "Number is positive " : cout << "number is negtive";
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 8:
+Write a C++ program to find the sum and average of one dimensional integer array.
+
+#include<iostream>
+using namespace std;
+int sum(int arr[], int n) {
+	int sum = 0;
+	float avg;
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
+		}
+	avg = (float)sum / n;
+	cout << "Average of the number is " << avg << endl;
+	return sum;
+}
+int main() {
+	int arr[] = { 10,20,30,40};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	//int result = addAvg(arr, n);
+	cout << "sum of given array is " << sum(arr, n);
+	
+	return 0;
+}
+ ////////////////////////////////////////////////////////////////
+
+Assignment 9:
+Write a menu driven C++ program with following option
+a. Accept elements of an array
+b. Display elements of an array
+
+#include<iostream>
+using namespace std;
+
+void accept(int arr[], int s) {
+	for (int i = 0; i < s; i++) {
+		cout << "Enter elements " << i + 1 << ":";
+		cin >> arr[i];
+	}
+}
+
+void display(int arr[], int s) {
+	cout << "Elements of an array are ";
+	for (int i = 0; i < s; i++)
+		cout << arr[i] << " ";
+}
+int main() {
+	int arr[5];
+	int n, choice;
+	cout << "Enter the size of array\n";
+	cin >> n;
+	do {
+		cout << "Accept elements of an array press 1\n";
+		cout << "display elements of an array press 2\n";
+		cout << "Enter the choice";
+		cin >> choice;
+
+		switch (choice) {
+		case 1: accept(arr, n);
+			break;
+		case 2: display(arr, n);
+			break;	
+		case 3: break;
+		default: cout << "\n Invalid choice";
+		 }
+	} while (choice!=3);
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 10:
+Develop a program to store employee objects into a file as CSV. It should be able to add, remove and update the values in the file.
+
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<ostream>
+using namespace std;
+void InsertData(int eno, string ename, string emob);
+int GetEmployeeNumber()
+{
+	int count = 1;
+	ifstream ifs;
+	string filename = "EmployeeData.csv";
+	ifs.open(filename, ios::app);
+	string line;
+	while (getline(ifs, line))
+		++count;
+	return count;
+}
+void GetData()
+{
+	int eno = GetEmployeeNumber();
+	string ename, emob;
+	cout << "Enter Employee Name:";
+	cin >> ename;
+	cout << "Enter Employee Mobile Number:";
+	cin >> emob;
+	InsertData(eno, ename, emob);
+	cout << "ENTRY DONE EMPLOYEE-ID:" << eno << endl;
+}
+void InsertData(int eno, string ename, string emob)
+{
+	ofstream ofs;
+	string filename = "EmployeeData.csv";
+	ofs.open(filename, ios::app);
+	ofs << eno << "," << ename<< "," << emob << "\n";
+}
+
+string OptionsAvail()
+{
+	string menu;
+	menu += "Welcome To Tata Consultancy Services Employee Records\n";
+	menu += "Enter 1 to Add Employee\n";
+	menu += "Enter 2 to Display Employee\n";
+	menu += "Enter 3 to Delete Employee\n";
+	menu += "Enter 4 to Exit\n";
+	menu += "Whats Your Choice:";
+	return menu;
+}
+
+void RetrieveData(int ena)
+{
+	ifstream ifs;
+	string filename = "EmployeeData.csv";
+	ifs.open(filename, ios::app);
+	string ename, emobi, eno;
+	while (ifs)
+	{
+		getline(ifs, eno, ',');
+		getline(ifs, ename, ',');
+		getline(ifs, emobi, '\n');
+		int enumber = std::atoi(eno.c_str());
+		if (enumber == ena)
+		{
+			cout << "Employee Name:" << ename << endl;
+			cout << "Employee Mobile Number:" << emobi << endl;
+		}
+	}
+}
+////////////////////////////////////////////////////////////////
+
+Assignment 11:
+Write a function to calculate the factorial value of any integer as an argument. Call this function from main( ) and print the results in main( ). 
+
+#include<iostream>
+using namespace std;
+int factorial(int a) {
+	int fact = 1;
+	while (a >= 1) {
+		fact = fact * a;
+		a--;
+	}
+	return fact;
+}
+int main() {
+	int x, f;
+	cout << "Enter the number ";
+	cin >> x;
+	f = factorial(x);
+	cout << "the factorial is: " << f;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 12:
+#include<iostream>
+using namespace std;
+void zero_small(int& a, int& b) {
+	if (a > b)
+		b = 0;
+	else
+		a = 0;
+}
+
+
+int main() {
+	int num1, num2;
+	cout << "Enter the first number ";
+	cin >> num1;
+	cout << "Enter the second number ";
+	cin >> num2;
+	zero_small(num1, num2);
+	cout << "First number is " << num1;
+	cout << " Second number is " << num2;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 13:
+Write a C++ program, which initializes a string variable to the content "Time is a great teacher but unfortunately it kills all its pupils. Berlioz" and outputs the string to the disk file OUT.TXT. you have to include all the header files if required.
+
+#include<iostream>
+#include<fstream>
+using namespace std;
+int main() {
+	ofstream writeToFile;
+	writeToFile.open("out.txt");
+	char str[300] = "Time is a great teacher but unfortunately it kills all its pupils.Berlioz";
+	writeToFile << str;
+	writeToFile.close();
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 14:
+Write a function in C++ to count and display the number of lines not starting with alphabet 'A' present in a text file "STORY.TXT".
+Example:
+If the file "STORY.TXT" contains the following lines,
+The rose is red.
+A girl is playing there.
+There is a playground.
+An aeroplane is in the sky.
+Numbers are not allowed in the password.
+
+#include<iostream>
+#include<fstream>
+using namespace std;
+int main() {
+	ifstream readFromTheFile;
+	readFromTheFile.open("STORY.TXT");
+	char str[100];
+	int count = 0;
+	while (!readFromTheFile.eof()) {
+		readFromTheFile.getline(str, 100);
+		if (str[0] == 'A')
+			count++;
+	}
+	
+	cout << "Number of lines not starting with A " << count;
+	readFromTheFile.close();
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////
+
+Assignment 15:
+Create a program in Cpp to store Parking tickets for vehicles in a Shopping Mall Parking Lot. It should have features like raising ticket and finding 
+
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<ostream>
+using namespace std;
+void InsertData(int ticketno, string vehicle, string timeentry);
+int GetTicketNumber() 
+{
+	int count = 1;
+	ifstream ifs;
+	string filename = "ParkingData.csv";
+	ifs.open(filename, ios::app);
+	string line;
+	while (getline(ifs, line))
+		++count;
+	return count;
+}
+void GetData()
+{
+	int ticketno = GetTicketNumber();
+	string vehno, timeofentry;
+	cout << "Enter Vehicle Number:";
+	cin >> vehno;
+	cout << "Enter Entry Time:";
+	cin >> timeofentry;
+	InsertData(ticketno, vehno, timeofentry);
+	void InsertData(int ticketno, string vehicle, string timeentry);
+	cout << "ENTRY DONE TICKET-ID:"<<ticketno<<endl;
+}
+void InsertData(int ticketno,string vehicle,string timeentry)
+{
+	ofstream ofs;
+	string filename = "ParkingData.csv";
+	ofs.open(filename, ios::app);
+	ofs << ticketno << "," << vehicle << "," << timeentry<<"\n";
+}
+void RetrieveData(int tickno)
+{
+	ifstream ifs;
+	string filename = "ParkingData.csv";
+	ifs.open(filename, ios::app);
+	string vehino,time,tno;
+	while (ifs)
+	{
+		getline(ifs,tno,',');
+		getline(ifs, vehino, ',');
+		getline(ifs, time, '\n');
+		int ticketno = std::atoi(tno.c_str());
+		if (ticketno == tickno)
+		{
+			cout << "Vehicle Number:" << vehino<<endl;
+			cout << "Entry Time:" << time<<endl;
+		}
+	}
+}
+string OptionsAvail()
+{
+	string menu;
+	menu += "Welcome To Eternity Mall Parking Lot\n";
+	menu += "Enter 1 to Add Vehicle\n";
+	menu += "Enter 2 to Find Vehicle\n";
+	menu += "Enter 3 to Exit\n";
+	menu += "Whats Your Choice:";
+	return menu;
+}
+int main()
+{
+	int userinp, ticketnum;
+	do
+	{
+		cout << OptionsAvail();
+		cin >> userinp;
+		switch (userinp)
+		{
+		case 1:
+			GetData();
+			break;
+		case 2:
+			cout << "Enter Ticket Number:";
+			cin >> ticketnum;
+			RetrieveData(ticketnum);
+			break;
+		case  3:
+			cout << "Thanks For Visiting...!!!";
+			break;
+		default:
+			cout << "Invalid Input";
+			break;
+		}
+	} while (userinp!=3);
+}
+//////////////////////////////////////////////////////////////// 
