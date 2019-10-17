@@ -1,0 +1,376 @@
+//////Linked List - Insert Node*///////
+
+#include <iostream>
+using namespace std;
+
+//Creating Node Structure
+struct Node{
+ int data;
+ Node *link;
+};
+//creating head pointer and equating to NULL
+Node *head=NULL;
+
+//Function to insert at the beginning of linked list
+void insertBeg (int d)
+{
+ Node *ptr = new Node();
+ ptr->data=d;
+ ptr->link=head;
+ head=ptr;
+}
+//Function to insert at the end of linked list
+void insertEnd (int d)
+{
+  Node *ptr = new Node();
+  ptr->data=d;
+  ptr->link=NULL;
+
+  //If list is empty
+  if(head==NULL)
+  head=ptr;
+  //else list is not empty
+  else
+  {
+   Node *temp = head;
+   while(temp->link != NULL)
+   {
+    temp=temp->link;
+   }
+   temp->link=ptr;
+
+  }
+
+}
+//Function to display linked list
+void dispLink()
+{
+ Node *temp=head;
+ while(temp!=NULL)
+ {
+  cout<<temp->data<<" ";
+  temp=temp->link;
+ }
+ cout<<"\n";
+}
+//Main Function
+int main()
+{
+ insertBeg(2);
+ insertBeg(1);
+ insertEnd(3);
+ dispLink();
+ return 0;
+}
+-----------------------------------------
+//////Linked list delete node from beginning or en///
+
+
+#include <iostream>
+using namespace std;
+
+//Creating Node Structure
+struct Node{
+ int data;
+ Node *link;
+};
+//creating head pointer and equating to NULL
+Node *head=NULL;
+
+//Function to delete node at the beginning
+void deleteBeg(){
+//if list is empty.
+if(head==NULL)
+ cout<<"LIST IS EMPTY\n";
+else
+{
+ Node *ptr=head;
+ head=head->link;
+ free(ptr);
+
+}
+}
+
+//Function to delete node at the end
+void deleteEnd()
+{
+ Node *ptr;
+
+ //if list is empty.
+ if(head==NULL)
+  cout<<"EMPTY LIST\n";
+ //if list has only one node.
+ if(head->link==NULL)
+ {
+  ptr=head;
+  head=NULL;
+  free(ptr);
+ }
+ //Traversing the list.
+ else
+ {  Node *prev;
+  ptr=head;
+  while(ptr->link!=NULL)
+  {
+   prev=ptr;
+   ptr=ptr->link;
+  }
+  prev->link=NULL;
+  free(ptr);
+
+ }
+
+}
+
+//Function to insert at the end of linked list
+void insertEnd (int d)
+{
+
+ Node *ptr = new Node();
+ ptr->data=d;
+ ptr->link=NULL;
+
+ if(head==NULL)
+ head=ptr;
+ else
+ {
+  Node *temp = head;
+  while(temp->link != NULL)
+  {
+   temp=temp->link;
+  }
+  temp->link=ptr;
+
+ }
+
+}
+
+// function to display Linked list
+void displayList(){
+ Node *ptr=head;
+ if(head==NULL)
+  cout<<"LIST IS EMPTY\n";
+ while(ptr!=NULL)
+ {
+  cout<<ptr->data<<" ";
+  ptr=ptr->link;
+ }
+ cout<<"\n";
+}
+
+//Main Function
+int main()
+{
+
+ insertEnd(1);
+ insertEnd(2);
+ insertEnd(3);
+ insertEnd(4);
+ insertEnd(5);
+ displayList();
+
+ deleteBeg();
+ displayList();
+ deleteEnd();
+ displayList();
+ return 0;
+}
+---------------------------------------
+///#Display middle element of a linked list////
+
+#include <iostream>
+using namespace std;
+
+//Creating Node Structure
+struct Node{
+ int data;
+ Node *link;
+};
+//creating head pointer and equating to NULL
+Node *head=NULL;
+
+//Function to Display middle element
+void showMid()
+{
+  Node *slow=head;
+  Node *fast=head;
+
+  if(head==NULL)
+   cout<<"List is Empty";
+  else
+  {
+   while(fast!=NULL && fast->link!=NULL)
+   {
+    slow=slow->link;
+    fast=fast->link->link;
+   }
+   cout<<"Middle element is:"<<slow->data;
+  }
+
+}
+
+//Function to insert at the end of linked list
+void insertEnd (int d)
+{
+
+ Node *ptr = new Node();
+ ptr->data=d;
+ ptr->link=NULL;
+
+ if(head==NULL)
+ head=ptr;
+ else
+ {
+  Node *temp = head;
+  while(temp->link != NULL)
+  {
+   temp=temp->link;
+  }
+  temp->link=ptr;
+
+ }
+
+}
+
+//Main Function
+int main()
+{
+ insertEnd(2);
+ insertEnd(9);
+ insertEnd(1);
+ insertEnd(3);
+ insertEnd(7);
+
+ showMid();
+ return 0;
+}
+-------------------------------------------
+///Reverse a linked list///////
+
+#include <iostream>
+using namespace std;
+
+//Creating Node Structure
+struct Node{
+ int data;
+ Node *link;
+};
+
+Node *head=NULL;
+
+//Function to reverse linked list
+void reverseList()
+{
+Node *p,*c,*n;
+p=NULL;
+c=head;
+while(c!=NULL)
+{
+
+ n=c->link;
+ c->link=p;
+ p=c;
+ c=n;
+}
+head=p;
+}
+
+//Function to insert at the end of linked list
+void insertEnd (int d)
+{
+
+ Node *ptr = new Node();
+ ptr->data=d;
+ ptr->link=NULL;
+
+ if(head==NULL)
+ head=ptr;
+ else
+ {
+  Node *temp = head;
+  while(temp->link != NULL)
+  {
+   temp=temp->link;
+  }
+  temp->link=ptr;
+
+ }
+
+}
+
+//Function to display linked list
+void displayList()
+{
+ Node *ptr=head;
+ while(ptr!=NULL)
+ {
+  cout<<ptr->data<<" ";
+  ptr=ptr->link;
+ }
+ cout<<"\n";
+}
+
+//Main Function
+int main()
+{
+ insertEnd(1);
+ insertEnd(2);
+ insertEnd(3);
+ insertEnd(4);
+ insertEnd(5);
+
+ displayList();
+ reverseList();
+ displayList();
+ return 0;
+}
+
+------------------------------
+/////#Find loop in a linked list///////
+
+
+int findLoop (Node *head)
+{
+Node *slow, *fast;
+slow=head;
+fast=head;
+ while (fast!=NULL && fast->link!=NULL )
+ {
+ fast= fast->link->link;
+ slow = slow->link;
+  if (slow ==  fast)
+  {
+  return 1;   //loop found
+  }
+ }
+return 0;      //No loop, reached end of list
+
+------------------------------------------
+//////Delete node using one pointer//////////
+
+void deleteNode(Node *ptr)
+{
+ //creating temporary pointer
+ Node *temp;
+  //Pointing temp to link part of current node i.e. next node
+ temp=ptr->link;
+ //copy data and link part of next node to current node
+ ptr->data=temp->data;
+ //point current node to link part of next node
+ ptr->link=temp->link;
+ //Delete current node
+ free(temp);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
