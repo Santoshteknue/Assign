@@ -1,0 +1,1237 @@
+let us understand the key features of VMM model.
+- virtual memory model of GPOS is a SW model, 
+   which uses hw model/features of processor/MMU
+--a "typical VMM model" is based on "page-based memory 
+management" - it is "a combination of page-based 
+memory model and virtual memory management techniques":
+
+
+
+- in this VMM model, logical address-space/
+  logical addresses/
+  logical pages are "transformed" to "virtual addresses/
+  virtual address-space/virtual pages" - how is 
+  this transformation achieved ?? what is the effect 
+  of this transformation ??
+       -->requires some amount of study 
+
+- such "transformation" is done, using "several 
+  sw techniques" "built on top of hw techniques" -
+  refer to the "previous document, for hw 
+  techniques"  and basic sw models 
+
+- the "scope of virtual address-space" and 
+  related characteristics remain the same
+      -->for a 32-bit system or 64-bit system 
+         , the earlier discussions still apply  
+
+--->let us understand the changes, in VMM system and
+    its sw mechanims 
+
+- when a process is created, in a VMM system, 
+  virtual address-space is set-up , as per the requirements 
+  of the "process/active application"
+  and "virtual segments are created" - as always, 
+  "address-space descriptors"(virtual address-space) 
+  are set-up to manage the address-space and segments - 
+  in addition, virtual segments are divided 
+  into virtual pages 
+  and managed - in addition, 
+  "page-tables/ptes" are allocated and set-up, but 
+  "page-frames are not allocated/no mappings are 
+   set-up,for the valid virtual pages",
+--->invalid/unused virtual segments/pages will 
+    anyway not be mapped/allocated page-frames  
+  actual mapping/page-frames are not set-up, 
+  "at the time of creation", but later - meaning, the 
+  "contents of the virtual segments/pages" are not 
+  "loaded immediately",during process 
+  creation, but later - "actual physical memory 
+  blocks/page-frames are unallocated, at the time 
+  of creation of processes", but 
+  "deferred to a later stage, during run-time" - in 
+  this set-up, each process is allocated virtual 
+  address-space, not physical memory-blocks/
+  page-frames/mappings - this is 
+  a form of virtual memory allocation ??
+-->in this set-up, virtual address-space is 
+   used and in addition, initially, no memory 
+   is allocated, but the process is created 
+   and set-up - this set-up/illusion is known 
+   as virtual memory management 
+      --->if the above points are clear, the 
+          logical address-space/logical segments/
+          logical pages are now transformed into 
+          virtual address-space/virtual segments/
+          virtual pages
+      --->we should just say, that a virtual  
+          address-space is set-up,as part 
+          virtual memory management
+
+      --->now, you need to have a clear definition
+          for logical address-space/logical segments
+          /logical pages
+             -->in this context, actual memory 
+                is allocated and mapped, for 
+                logical address-space/pages
+      --->now, you should have a better definition, 
+          for virtual address-space/virtual segments/
+          virtual pages    
+             -->in this context, actual memory 
+                may not be allocated and mapped, 
+                for virtual pages/address-space 
+
+      --->physical page-frames are physical memory 
+          blocks/unit of allocation  
+
+- similar to the logical address space, each 
+  virtual address-space is split into user-space and 
+  system-space - in this sw model, 
+  system-space/kernel/core component are managed , 
+  without VMM(sw model-1)  - in this context, system 
+  uses logical address-space/logical segments/logical 
+  pages- 
+  in this sw model, user-space is managed, 
+  using VMM model(model-2) - in this context, virtual 
+  address-space/virtual-segments/virtual pages are 
+  used to manage user-space of a process/active 
+  application 
+--->in these demos., we will be using a sample, 
+    example2.c / compiled to generate ex2 /binary executable
+-->this example2.c uses large amounts of heap memory//
+   dynamic memory and in addition, can be controlled, 
+   using Unix signals/notifications - follow the demo. 
+   and the commands
+-->in addition, we will be using system utilities, 
+   ps, top, free , cat /proc/meminfo and others 
+
+- refer to demos ??
+   - in these demos, refer to VSZ/VIRT(in ps, VIRT in top)  
+     field of processes/pds 
+     - this field defines the "total process size" , which 
+       is also the "virtual address space 
+       size of the process" -this is "the sum of 
+       sizes of all the virtual segments of the process"-
+       as part of the VMM techniques
+       , virtual address-space is set-up, 
+       "but physical memory 
+       blocks are not immediately allocated" - 
+       they are "deferred" - meaning, they will be "allocated
+       on demand", when "the specific page is accessed 
+       by the active application/process - this mechanism
+       is known as "demand paging"  - demand paging 
+       is an important mechanism, in VMM subsystem
+-->VMM subsystem is a core-component of OS  
+
+     - in the case of VMM, "VSZ is set-up, using virtual 
+       address-space/segments/descriptors - this is part 
+       of VMM techniques"  
+
+     - in addition, "rsz denotes the currently allocated 
+       page-frames/physical memory blocks", for "a given 
+       process",using VSZ/VMM - 
+       "in most cases", this "value" will be 
+       smaller 
+       and "much less than the VSZ" - reason is "VMM 
+       techniques,like demand-paging" - this is what 
+       make VMM an useful memory management technique
+       /sw model, in GPOS - we can "support larger 
+       applications", but these may be "using 
+      lesser physical memory" , so the "physical memory 
+       is allocated and managed efficiently", in VMM
+       systems - only allocate physical memory blocks/
+       page-frames currently, in use    	 
+
+     - in a typical demo, we may be "able to create several 
+       large processes", but "hardly any physical memory 
+       blocks/page-frames are allocated" - 
+       this a basic feature of 
+       VMM - the sum of VSZs of all these large processes 
+       can be greater than the "total physical memory size"
+     - a large process, with "VSZ larger than total 
+       physical memory" can be loaded and in addition, 
+       "several large applications/processes" whose 
+       "sum of VSZs" is larger than "total physical 
+       memory"  
+     - in addition, there are "strict rules of virtual 
+       memory  management", which we need to follow, 
+       if we "expect our applications and system to 
+       perform correctly" - otherwise, "there may be 
+       unacceptable slow-down or crashes", in the 
+       system
+--->let us launch  few instances of ex2 :
+
+     ./ex2  1000&   -->allocate a large dynamic memory 
+                       of ~1GiB 
+
+     ./ex2  1500&    -->similarly, ~1.5GiB
+
+     ./ex2  2000&     --->""""""""""""""
+
+     ./ex2  2500&     --->""""""""""""""
+
+
+--->following discussions explain the sample 
+    application used, for demo. and  commands
+    and tools 
+     - in the demo application, we will be doing 
+       the following:
+         -->we will be allocating larger virtual 
+            address-spaces, for dynamic data/
+            memory for the processes/demo. 
+            applications 
+         -->however, initially, the virtual 
+            pages of the process are set-up/mapped, 
+            but not accessed - these virtual 
+            pages are used/valid, but yet to 
+            be accessed by the application -
+            when  these virtual pages are accessed, 
+            there will be demand paging operations
+            ?? based on demand-paging mechanism 
+          -->in these demo applications, after 
+             allocating a large address-space/
+             virtual pages, the processes/application
+             are blocked waiting, for signals/      
+             notifications - as long as there are
+             no notifications, these processes will 
+             just be blocked and will not access 
+             any dynamic memory
+-->we need to awaken/unblock these processes, 
+   using signals/notifications, using kill 
+   command - kill command can be used to 
+   generate notifications to processes - in 
+   addition, some of these notifications are 
+   used to just unblock/awaken the processes, 
+   but some others are used to forcibly terminate 
+   the processes   
+          -->once the signals/notifications are 
+             sent to demo processes/applications, 
+             they are unblocked and awakened - 
+             added to Rq - when scheduled and 
+             dispatched, they start accessing 
+             every virtual page of a dynamic data 
+             of a large address-space
+             - this will lead to demand paging 
+               and allocation of several page-frames
+             - these allocations of page-frames         
+               and related mappings are 
+               temporary
+   -->as part of virtual memory management, 
+      page-frames are allocated, temporarily - 
+      this is part of mechanisms/policies 
+          --> in this context, we will be using 
+              SIGTERM  signal to unblock/awaken 
+              such blocked processes- SIGTERM 
+              is selected, for this application
+   -->kill  -SIGTERM  <pid1> 
+   -->kill  -SIGTERM  <pid2> 
+   -->kill  -SIGTERM  <pid3> 
+          --->when we run the demo and understand
+              the working of the application and
+              the memory management, we can see
+              VSZ is allocated and virtual 
+              address-space/virtual segments/
+              virtual pages are allocated - typically,    
+              set-up, but no physical memory is 
+              immediately allocated, until memory 
+              access is done 
+          --> virtual address-space is used to 
+              set-up virtual segments which are
+              used to address/access code /data/
+              other contents of the active 
+              application/process - once we access
+              the virtual pages of virtual segments, 
+              demand-paging/translations are done
+              and eventually, the actual contents 
+              are fetched from corresponding 
+              physical memory blocks/page-frames           
+         
+
+     - based on the above, VMM techniques allow us to 
+       create large processes, with appropriate 
+       VSZs - we can launch and manage several 
+       large processes/applications, with VMM 
+       and efficient usage of physical memory 
+
+     - since each large process is allocated a large 
+       virtual address-space, but not actual physical 
+       memory blocks, the memory management model is 
+       known as VMM and techniques are known as 
+       VMM techniques 
+note : in a typical GPOS system, like Linux and Unix, 
+       "VMM" and "VM" are popularly used, since physical 
+       memory is managed efficiently
+-->VMM is a set of mechanisms and policies 
+-->VM is a resource ??  
+     - in addition to the above set-up, whenever a process
+       attempts to access a valid virtual address/page of 
+       a valid virtual segment, 
+       system generates a page-fault exception(memory
+       fault exception), as there is 
+       no mapping(P bit of the pte is set to 0) - 
+       there will be run-time exceptions/
+       memory faults ??? these excetions are similar
+       to hw interrupts, but generated differently -
+       due to such fault exceptions, system will 
+       process fault exception handler, in the 
+       system space - after processing the fault 
+       exception handler and the memory fault, 
+       the system may resume
+       the same process or switch to another 
+       process, as per scenarios
+         -->if the memory fault is , for a 
+            valid page, allocate a page-frame
+            and load contents,before resuming 
+            the process - as part of this pte 
+            and mappings are set-up   
+note: refer to page-fault exception handler, which 
+      will do the processing, for page-fault 
+      exceptions, which are generated, due to 
+      unmapped virtual pages and their related 
+      virtual addresses - refer to the lecture   
+      diagram on exception handler processing, 
+      due to a page-fault - all the processing
+      is done, in the exception handler 
+        -->in the case of an invalid virtual page, 
+           the process/active application will 
+           be forcibly terminated  
+demos: as part of the demos., "using example2.c /ex2", 
+       we will be demonstrating VMM/VM - as part 
+       of this, when we "execute ex2 on the command-line", 
+       it will just "allocate a large virtual address-space"
+       and the "process/application is blocked",
+       using "system call APIs" -
+   
+       next, as part of the demo., we can send 
+       signal(SIGTERM) notifications to the "process/active
+       application" - the "process/active application
+       is unblocked/awakened" - it will be 
+       "scheduled/dispatched"
+       - "it resumes and executes"
+       ,"which leads to application/process 
+       accessing several virtual pages" - 
+       since most of the virtual pages are
+       unmapped, their "ptes have P bit set to 0" - 
+       due to this, there are several 
+       "page-faults/fault-exceptions" - 
+       these page-faults are processed 
+       and page-frames are allocated to the process
+       , contents of virtual pages/segments are loaded
+       from the disk/program file and pte mappings are 
+       set-up - for certain pages, like code, 
+       contents will be read frm the program file
+       on disk/storage - this is to demonstrate
+       VMM techniques, during process creation and 
+       life-cycle of the process - such background 
+       processing is common, in operating system 
+       environments and there are run-time/cpu 
+       overheads due
+       to such operations - if there are too 
+       many such operations and too often, 
+       the system's performance will be hit 
+       and applications' performance will be 
+       hit, as well - there will slow down 
+       and dragging of applications  
+        -->if there are too many page-faults, 
+           it will lead to higher overheads
+           and slowdown 
+      -->if there are too many disk IO operations, 
+         it will lead to slowdown 
+      -->if there are too many page-stealing/
+         page-frame stealing operations, there 
+         will be slowdown    
+    
+note : like all core components/services, 
+       VMM is part of the kernel-space - it is a
+       module/component of the core/kernel/kernel image 
+     - what happens, if a invalid virtual address of an
+       invalid virtual page and invalid virtual 
+       segment(unused) is accessed ??
+-->in all these contexts, if there is a page-fault, 
+   system's fault handlers are executed - these 
+   fault handlers are part of VMM, in this case 
+-->most of these operations are done, by the fault 
+   handler(s) - these handlers are part of VMM, 
+   in the core of the OS 
+          - as mentioned below, VMM(virtual memory 
+            manager) will check 
+            the "validity of the address/page, 
+            using virtual address descriptors" of 
+            valid virtual segments  - "if the 
+            address is not found, it is an 
+            invalid address", or "insufficient 
+            access permissions", or "insufficient 
+            access privileges", 
+            the "process" will be "abnormally terminated"
+              -->in most cases, we will see 
+                 a "segmentation fault" and the 
+                 the active application/process will 
+                 be abnormally terminated 
+       - what happens,if a virtual address of a 
+         valid page is accessed ???
+     - internally, VMM will check the validity of the 
+       virtual address/page, using the address-descriptors
+       of the valid virtual segments of the 
+       specific process - if the address is invalid, 
+       or access permissions are invalid, the process will be 
+       abnormally / forcibly terminated 
+note : VMM will do several low-level checks, for validity 
+       of addresses/access permissions ??? 
+     - however, if it is a  valid page case, since it is a 
+       valid virtual address/page/virtual 
+       segment is valid ,VMM will do the following :
+         - allocate a free page-frame, 
+           from physical mem. mgr.
+             -->in this case, VMM is requesting a 
+                service from another core service, 
+                like physical memory manager 
+         - load the "contents of the page/page-frame", 
+           from the "program file, using file IO"
+           -->if the contents are , in a program 
+              file, there will be a file IO/disk IO 
+         - in addition, "set-up the pte", with 
+           "a new set of 
+           attributes and page-frame base address" - 
+           in this context, since there is a new page-frame 
+           allocation, the pte is initialized  
+         - once the above are done, the process is 
+           resumed and 
+           the process/application will execute normally
+-->the above operations are completed, in a fault 
+   handler and the fault handler resumes the process  
+         - the "above mechanism is known as demand-paging" 
+         - allocate page-frames to virtual pages only, 
+           when the corresponding virtual pages/ contents 
+           are accessed, by the process/application 
+         - demand-paging is part of VMM techniques 
+         - efficient allocation of phy mem. blocks and 
+           page-frames on demand - unused virtual pages
+           are never allocated page-frames/physical 
+           memory blocks  
+         - due to the above mechanisms, "we can load several 
+           large applications and use the physical memory 
+           /page-frames efficiently"
+
+         - "based on the discussions so far", can you 
+           "visualize the set-up of virtual memory/VM", 
+           "in a VMM based system" ??
+             -->refer to the discussions below  
+-->in the following discussions, we will understand
+   and quantify VM resource 
+
+note : refer to "sw_memory_n.pdf", for a more detailed 
+       descriptions of VMM techniques 
+--->as part of VM discussions, we will be discussing 
+    swap-space and related mechanisms
+         - let us understand swap-space and how it is used, 
+           in "VMM/VM"  and "related VMM techniques" 
+
+         - it is part of a storage disk, typically a 
+           partition - it can be set-up differently, but 
+           the basic usage remains the same - 
+           in our context, 
+           let us assume, that we are dealing, with a 
+           "partition of a storage disk" used, 
+           "as swap partion"
+           and "known as swap-space"
+              --->run "swapon -s" 
+                  -->it will list the currently 
+                     used swap partitions, in the 
+                     system 
+              -->a typical swap-space is represented
+                 and managed, using  /dev/sda3 (or 
+                 another special device file) - these 
+                 special files are known as 
+                 "block device" special files - 
+                 these are used to manage disk/storage
+                 related resources, in the system 
+                 - these are abstract interfaces, 
+                 in the system
+              -->similarly, there are several abstract
+                 block device files, which are used 
+                 to represent and manage removable 
+                 USB disks or standard storage disks, 
+                 in the system
+
+                 
+
+         - once a swap partition is created, it can be 
+           attached to the system, using swapon(by 
+           privileged administrator), which 
+           will activate the swap partition - once a 
+           swap partition is activated, it can be used 
+           , by the "virtual memory manager" - VMM
+           will use the swap-partition /partitions, 
+           for VM resource management - VM resource
+           is typically used, for active applications, 
+           in the system 
+-->once activated, a swap-partition will be part 
+   of VM resource
+-->if deactivated, a swap-partition will be 
+   removed from VM resource   
+
+         - if not required, we may deactivate /disable 
+           swap partion, using swapoff - 
+           this is unacceptable, 
+           in a "GPOS system" - may be acceptable,
+           for specialized systems  
+ 
+         - first, a "swap partion/swap-space" is 
+           divided into 
+           "page-slots/page-size slots" and managed, during 
+           run-time, by the "VMM"
+                --> you can check the swap-size, using
+                    top or   free -m
+-->in a VMM/VM system, following terminology 
+   applies :
+      -->virtual page of a process - of page-size
+      -->page-frame/physical memory block - of page-size
+           -->this is part of main-memory
+      -->page-slot of swap-space - of page-size
+           -->part of disk storage/disk 
+ 
+         - for a given process under the management of 
+           VMM, its "virtual pages/ptes" can be , 
+           in one of the following states :
+
+            - the virtual page is unmapped and the 
+              pte is set to invalid state(P is set to 0)
+              - all the  fields of a pte are set to 0
+                  -->this is true for a valid virtual 
+                     page, which is unmapped
+            - the virtual page is mapped to a page-frame
+              and the pte fields are set-up, accordingly 
+              - u/s bit is set to 1 and protection 
+              bits are set, as per the segment and 
+              base address of the page-frame is stored, 
+              in the pte
+                 -->the pte is properly set-up and 
+                    a valid virtual page is properly 
+                    mapped to a page-frame 
+
+            - the "virtual page" is mapped to "a page-slot" 
+              and "P bit of the pte is set to 0", but 
+              "base address of the page-slot is stored 
+              , in the pte"
+               --->if a valid virtual page is not mapped
+                   to a page-frame, it may be mapped to 
+                   a page-slot of swap-space - this 
+                  is part of virtual memory managment
+                  techniques - refer to the discussions
+                  below       
+-->as part of VMM, many of the virtual pages of a process/
+   active application are loaded, in main-memory/
+   page-frames - mapped to page-frames 
+-->in addition, as part of VMM, many of the virtual 
+   pages of a process can be loaded into page-slots
+   of swap-space 
+-->in addition, as part of VMM, many of the virtual 
+   pages are not mapped into page-frames or 
+   page-slots 
+     - in summary, swap-space is used,for the following 
+       reasons/scenarios : 
+              - if a process is allocated a VSZ and rsz, 
+                "certain page-frames may be active", in the
+                allocated page-frames to this process and 
+                "certain page-frames may be inactive",
+                in the allocated page-frames to this process 
+                ,during the run-time - among the allocated 
+                page-frames, certain page-frames may be 
+                currently, in use and certain page-frames
+                are unused 
+-->active pages/page-frames means,they are recently used
+-->inactive pages/page-frames means, they are not 
+   recently used  
+              - currently  used means, recently used 
+              - currently  unused means, not  recently 
+                used
+              - to maintain recently used and not recently
+                used "physical page-frames of the processes, 
+                system uses NRU algorithm", which is based
+                on "LRU algorithm - LRU is theoretical 
+                and perfect, but cannot be implemented"
+                - "NRU is less perfect, but practically 
+                implemented" 
+--->you can read these algorithms, from text books 
+    or reference books  
+              - rsz is the currently allocated physical 
+                memory blocks/page-frames, for this process 
+                -->in this rsz, several page-frames 
+                   will be active
+                -->in this rsz, severl page-frames 
+                   will be inactive 
+         - what is meant,by "active" pages/page-frames ??
+                 - page-frames allocated, for virtual pages, 
+                   but currently used / recently used 
+                    - refer to  cat  /proc/meminfo of 
+                      your system and interpret the 
+                      "active(anon)" field - this field 
+                      will provide the total physical 
+                      memory allocated to all the processes
+                      and that are currently active/used
+                      -->these are the total page-frames
+                         allocated to processes and
+                         recently used  
+
+                            
+              - what is meant, by "inactive" pages/
+                page-frames ??
+                - page-frames allocated, for virtual pages, 
+                  but currently unused/ recently unused 
+                   - similarly, refer to  cat  /proc/meminfo
+                     of your system and interpret the 
+                     "inactive(anon)" field - this will 
+                     provide details of "inactive page-frames
+                     allocated to processes"
+                      --->these are the total page-frames
+                          allocated to processes, but 
+                          not recently used 
+                 
+              - if you refer to Active(file) and 
+                Inactive(file), these are page-frames
+                allocated to files/fileIO and indirectly 
+                used by applications  
+  
+-->as per the rules of VMM, if there are 
+   low-physical-memory scenarios, 
+   VMM is allowed to steal from 
+   inactive pages/page-frames of processes - 
+   meaning, page-frames
+   of inactive pages of processes will be stolen - 
+   page-frames contents are first copied into 
+   page-slots(page-size entity of swap-space)
+   and page-frames are freed back to the physical 
+   memory manager - the address of page-slot is 
+   stored, in pte of the corresponding page, 
+   in the page-table
+          ----->this mechanism is part of VMM 
+                and again provides efficient use 
+                physical memory  
+--->based on the above stealing mechanism and 
+    policies, active pages/page-frames of 
+    processes are maintained, in main-memory - 
+    meaning, no stealing 
+--->similarly, inactive pages/page-frames of 
+    processes are stolen and stored, in page-slots
+    of swap-space and page-frames are freed to 
+    physical memory manager 
+-->in the text books, stealing is described, 
+   as page-replacement mechanism and related 
+   policies are described 
+          -->there are too many scenarios, but 
+             we will discuss a few, for clarity       
+
+        - based on the above set-up, "VMM may do 
+                page-stealing/page-frame stealing"  of 
+                "inactive pages/page-frames", 
+                from processes - 
+                meaning,the corresponding page-frame is 
+                "deallocated/unmapped and freed/returned to 
+                physical memory manager" - 
+                the current contents 
+                stored, in the page-frame are copied into 
+                a free swap-slot/page-slot - 
+                in addition, 
+                the address of the page-slot/swap-slot is 
+                stored, in the corresponding pte, 
+                but this is 
+                not a page frame address, 
+                so the pte will be 
+                treated , as an invalid pte, 
+                but contains the 
+                page-slot address 
+             -"page-stealing" involves "paging-out" of 
+              "contents of a page/page-frame" to 
+              "a page-slot", in a "swap-space"
+             -"demand-paging" involves "paging-in" of 
+              "contents of a page/page-frame", from 
+              "program file on the disk" or "page-slot
+              in a swap-space"              
+
+             -  based on page-stealing, several inactive 
+                page-frames will be stolen/"paged-out" to 
+                page-slots, in the swap-space - their 
+                contents will be copied into the 
+                swap-space - as part of stealing, page 
+                frame are freed, but their contents will
+                be copied into page-slots/swap-slots
+                of the swap-space - where are these 
+                freed/stolen page-frames returned to 
+                ?? these stolen page-frames are freed 
+                back to the physical memory manager    
+
+             - based on the above set-up, what is the 
+               benefit of page-stealing and swap-space ???
+                 -page-stealing is again a mechanism to 
+                  allocate/free page-frames efficiently ??
+
+             - using "several VMM techniques", like "demand 
+               paging", "page-stealing", and others, "OS 
+               enables efficient usage of physical memory".  
+
+             - in short, during the run-time, due to demand 
+               paging, several page-frames are allocated and 
+               these events are known, as "paging-in" 
+         
+             - during run-time, due to stealing, 
+               several page-frames
+               are stolen and their contents are copied into 
+               page-slots and these events are known as 
+               "paging-out" 
+
+             - based on the demand-paging and 
+               page-stealing/swap-space, 
+               following will be the "state of RAM usage"
+               and 
+               "swap-usage" :
+
+               - typically, active pages/page-frames will be 
+                 using RAM/main memory 
+
+               - typically, "inactive pages/page-frames" 
+                 will be stored, "in page-slots/swap-space" 
+               - this set-up is said to be an efficient 
+                 memory management and is part of 
+                 virtual memory management - this is 
+                 for virtual memory allocation ??  
+               - follow are the related demos ??
+
+                 - in these demos,we will be unblocking/
+                   awakening several large processes/
+                   applications, so that we can trigger 
+                   several demand-paging events and 
+                   page-stealing events 
+
+               - under normal load conditions, 
+                 as mentioned above, 
+                 active pages/page-frames are normally 
+                 loaded into 
+                 the main-memory and 
+                 inactive pages/page-frames are
+                 loaded, in the 
+                 swap-slots/page-slots/swap-space 
+  -->we must always have sufficient free 
+     physical memory /page-frames, for 
+     supporting active page-frames of applications
+     -->based on the applications that we 
+        load, in our system and their active 
+        pages/page-frames, we must increase/
+        decrease physical memory resources
+  -->we must always have sufficient free 
+     swap-space for inactive page-frames/anonymous
+     (belonging to processes directly )
+     -->based on our applications/testing, 
+        we must check the total size of 
+        inactive memory blocks of processes - 
+        based on this, we must decide the 
+        swap-space size 
+  -->if the above resources can be managed, in 
+     a balanced state, the system's virtual 
+     memory manager will be able to manage 
+     memory requirements of all the active 
+     applications/processes, in the system,
+     efficiently  
+
+
+
+
+        - however, "if the system is heavily loaded", meaning 
+          "too many large processes, physical memory will be 
+          heavily used" and 
+          "the system will enter a low-memory 
+          scenario" ?? 
+          this is due to demand-paging/paging-in
+          , as every process/application demands physical 
+          memory blocks , which "eventually leads to a low
+          physical memory situation" ??
+--->should we increase the total physical memory of 
+    the system or swap-space ???
+        - in the heavily loaded scenarios, after the low-memory 
+          scenarios, page-stealing will be triggered, 
+          which will lead to 
+          stealing inactive pages/page-frames and
+          using page-slots/swap-space 
+            --->why does the system trigger page-stealing 
+                , when the physical memory falls below 
+                acceptable 
+                thresold /value ?? 
+                  -->to ensure that the system has 
+                     certain safe amount of free 
+                     page-frames/physical memory 
+                     blocks and the total free 
+                     physical memory never drops
+                     to 0
+                  -->some of these details are part 
+                     of the design of VMM 
+    -->a typical VMM cycle is as below :
+          -->there are several large processes
+             and these will be using VMM/VM 
+             and hence, demand-paging 
+          -->when the system enters low physical 
+             memory state, the system initiates 
+             page-stealing and as part of this, 
+             page-slots/swap-space is used            
+          -->in addition, more demand-paging 
+             may be requested - this will lead 
+             to more page-stealing and usage 
+             of swap-space/page-slots 
+           -->in extreme cases, eventually, 
+              swap-space may be 
+              exhausted - this will lead to 
+              a serious problem, for VMM - 
+              in these extreme cases, VMM will 
+              forcibly terminate one or more 
+              large processes, so that it can 
+              reclaim some memory - these are
+              extreme memory management scenarios    
+-->if such extreme problems are encountered, 
+   physical memory and swap-space must be 
+   extended/scaled, as per applications' 
+   requirements 
+  -->another extreme scenario - in this context, 
+     we have sufficient swap-space, in the system  
+       - in addition, this will keep continuing and 
+         when there is more demand-paging,
+         "active pages/page-frames will be stolen" - 
+         this is an extreme scenario, as active 
+         pages and their page-frames are affected -
+         this will also lead to very poor performance
+         and slow down of applications -
+         "this cycle continues and eventually", 
+         leads to "thrashing of the system" - 
+         - thrashing means, there will be unacceptable 
+           page-faults, unacceptable demand-paging and
+           also, unacceptable page-stealing  
+           -->what is the serious effect of 
+              thrashing on applications and 
+              the system ???
+               -->applications will slow-down - 
+                  poor performance
+               -->in addition, OS/kernel will 
+                  be unable to respond,due to 
+                  its own slowdown
+               --->there will be too many 
+                   interrupts/back ground processing 
+                   events, in the system     
+
+   this will be followed, by more demand-paging and 
+   contents of page-slots will be paged-in - 
+   too many demand-paging 
+   events and page-stealing events, under heavy load
+   conditions 
+
+     - in the above abnormal scenario, system performance 
+       and  applications' performance will be very poor - 
+       in this 
+       context of heavy load conditions, applications' 
+       performance is affected, but why is the system's 
+                 performance affected ??? 
+         core components of 
+         the system  will be too busy and in addition, 
+         this will affect the non-core components of 
+         the OS, which are also managed, using processes ???            --> in the above scenarios, shells/instances
+               /other system processes stop 
+               responding    
+ -->due to low-memory and thrashing, in VMM systems, 
+    applications/processes face slow-down/poor 
+    performance - in addition, since many of the 
+    non-core components/system processes are 
+    also affected, OS stops responding or 
+    there is a complete slow down 
+--->refer to chapters 11 & 12 of reference of Charles
+    crowley, for certain good diagrams on 
+    memory management and virtual memory 
+
+--->in a practical perspective, virtual memory 
+    is sum of a % of physical memory(based on 
+    physical memory resources/OS mechanisms/policies)
+    plus swap-space allocated(based on OS mechanisms/
+    policies)
+-->based on the above detailed discussions and further
+   discussions, many of these parameters are based 
+   requirements/testing of applications of a given 
+   GPOS system
+-->many of these parameters are managed, by 
+   administrators/sw developers, based on 
+   their requirements/testing   
+ 
+     - what is virtual memory, as a resource, 
+       in the context of  VMM ??
+
+         - refer to a lecture diagram ??
+            -->chapter 11 mentioned above
+            -->this diagram involves virtual 
+               address-space and swap-space 
+              -->as per this diagram, virtual 
+                 address-space of a process 
+                 and its virtual pages are
+                 mapped to page-frames and
+                 page-slots of swap-space - 
+                 meaning, ideally, 
+                 active virtual pages 
+                 of the process are mapped to 
+                 page-frames and inactive 
+                 virtual pages are mapped to 
+                 page-slots,if resources are
+                 appropriately set-up   
+              -->the above set-up/mappings is the
+                 typical mappings, but there are
+                 other possible scenarios  
+                   --->refer to the above and
+                       following discussions 
+           
+       - as per OS developers,following is the practical 
+         definition, for virtual memory/VM 
+--->the following details taken from developers'
+    documentation and fine tuned, as per 
+    requirements: 
+         VM = a "x%" of total physical memory size + 
+                       total swap-space size 
+          -->VM is for active applications/processes/
+             non-core components/services 
+          -->balance %y of physical memory is 
+             allocated to system/core services/
+             file IO + network IO and other 
+             such requirements
+          -->x can be configured, as per the 
+             requirements of the system and 
+             applications - we may need to test 
+             the system, for actual performance,
+             after changing the settings  
+note:  total swap-space size of a system is based on 
+       several factors - "one is the maximum inactive 
+       memory possible", in the system
+       -in addition, 
+       total "swap-space size can be the same
+       as that of physical memory size or 
+       in some cases, 2 * total Ram size"
+       based on the above, we may need to 
+       test and find the appropriate number ???  
+
+       - x can be typically 50% and above ?? x is the % 
+         of total physical memory dedicated to VM/VMM, 
+         for user-space - balance,y% is said to be 
+         dedicated, for system-space - once again, 
+         there is no fixed number, but only guide lines ??  
+          -->this is a system parameter, which 
+             can be changed, as per system 
+             and applications' requirements
+          --> /proc/sys/vm/overcommit_ratio ??        
+         - so, VM is a sum of a % of total physical memory 
+           dedicated
+           to user-space and swap-space size 
+
+            - y% (100-x%) is dedicated to 
+              sytem-space/system-space 
+              components 
+
+            - x and y are tunable system parameters, 
+              which can be 
+              tuned by system administrator, as per the 
+              requirements of the system and applications 
+-->need to have root privileges/root session, for 
+   changing these parameters 
+           - for instance, on a typical Linux system , 
+             x is set, 
+             using echo x > /proc/sys/vm/overcommit_ratio 
+
+           - we can check the current value, using 
+             cat  /proc/sys/vm/overcommit_ratio
+
+           - we can set the current value, using 
+             echo  "x"  > /proc/sys/vm/overcommit_ratio
+
+           - what is the practical interpretation of 
+             VM / VM size, in a given system ?? how does 
+             it affect the memory management/VMM of 
+             processes ???
+-->based on the available physical mem. resources 
+   and swap-space, we can do the configuration 
+   of VM - check using top or free commands  
+-->once configured, following are the 
+   conclusions 
+              - as per the rules of VMM and VM, 
+                VSZ of a single large process 
+                cannot exceed 
+                VM size of the system  
+-->a single large process cannot exceed 
+   VM size 
+             - next, similarly, sum of VSZs of 
+               all processes cannot exceed VM size
+               of the system
+--->in addition, sum of all the sizes of all the 
+    processes cannot exceed VM size  
+
+       - based on all the above details, what is the 
+         final interpretation ??
+         - is it acceptable to have  a VM size, which 
+           will support a large application, such 
+           that its active pages can be mapped to 
+           main-memory and inactive pages can be 
+           mapped to swap-space ?? Yes
+         - is it acceptable to have a  VM size,for 
+           supporting a sum of VSZ of all processes, 
+           which are large processes, such that all 
+           active pages can be mapped to main-memory 
+           and inactive pages can be mapped to 
+           swap-space ???Yes 
+       - what happens, if we have "a large amount of 
+         physical memory", which can be used, for
+        "mapping active pages and inactive pages" ??
+   
+    - what happens, if we have less amount 
+         of swap-space, which cannot be used to 
+         map all the inactive pages of processes ???
+
+      - based on the above points, we need to understand
+        VM, as a resource ???
+         
+--->read certain parts your text book, for memory 
+    management and VM 
+--->we need to change certain parameters of the 
+    VMM core, setting resource configurations 
+    and policies 
+--->for instance, if we need to enforce strict 
+    VMM /VM policies, we need to do the following :
+
+    -->set  /proc/sys/vm/overcommit_memory to 2
+       echo 2 > /proc/sys/vm/overcommit_memory 
+      
+    -->also, set  /proc/sys/vm/overcommit_ratio
+       to x% - can be 50 or above, but need to 
+       test 
+    -->what is the effectiveness of the above ??
+  -->the above settings will effectively do the 
+     following :
+
+      -->strictly enforce VMM rules, as discussed
+         above - meaning, no process VSZ can be larger
+         than VM - sum of all VSZs of 
+         processes cannot be greater than VM 
+
+--->in addition, we may set the following :
+
+    echo 1 >  /proc/sys/vm/overcommit_memory 
+
+--->for this setting, /proc/sys/vm/overcommit_ratio
+    is ignored 
+
+-->effectively, for this set of settings, the 
+   system will allow a process to exceed actual 
+   VM of the system - there is no limit 
+-->similarly, we can load/execute very large 
+   set of processes, without restrictions 
+-->however, when there is demand-paging and
+   page-stealing, if resources are very low, 
+   the system will enter thrashing - further, 
+   when the resources are exhausted, system 
+   will forcibly terminate processes and the 
+   applications and the OS will be destabilized 
+ 
+         
+
+      
+
+       
+                 
+        - once you are comfortable, 
+          with basic memory management 
+          and VMM / VM techniques, attempt the 
+          second assignment 
+       - for the second assignment, we need to modify
+         the following system parameters 
+      - for changing these system parameters, we need to 
+        have super-user privileges/root privileges, which 
+        can be provided, by sudo command, as well 
+     - you can set the /proc/sys/vm/overcommit_ratio to 
+       50% or above, but not more than 80% 
+    - based on the above, let us assume, that 
+      we have set-up the resources and parameters, 
+      for VMM/VM, what happens, if exceed the 
+      VM resources ?? what happens, if we load 
+      large applications/processes, which will 
+      exceed the VM resources ??
+      vsz1 + vsz2 + vsz3 +.....+vszn > VM
+     (ideally, vsz1 + vsz2 + vsz3 +...+vszn <= VM)
+                   
+  - in addition, if we need strict VMM/VM policy, 
+    as per the above discussions, 
+    set /proc/sys/vm/overcommit_memory to 2
+  - if you use this setting and attempt to 
+    load too many large processes/applications, 
+    in the system,the system will disallow 
+    loading of applications and creation of 
+    processes - based on all the above and 
+    this strict settings, system will disallow 
+    loading large processes, which cannot 
+    be satisfied, by VM resources - as a policy, 
+    this is acceptable  
+                
+               - if we need a lenient VMM/VM policy, we can 
+                 set /proc/sys/vm/overcommit_memory to 1
+                 - in this context, the system will allow 
+                 loading of large applications/processes, 
+                 in the system, even if they exceed the 
+                 VM resources, without restrictions ??
+                 - however, as a policy, this is unacceptable
+                 ?? not a good policy ??  
+              -  if you use this setting, you may face 
+                 thrashing and in the worst case scenario, 
+                 OOM - OOM is a scenario, where we have 
+                 exceeded the VM resources - specifically, 
+                 OOM means, when there are too many 
+                 large processes and there is thrasing, 
+                 system may forcibly terminate one or 
+                 more processes to free physical memory 
+                 and swap-space - this is an extreme 
+                 low-memory scenario ??? this will seriously
+                 affect the applications and the system 
+                 processes ??
+       
+          - based on the above policies and related settigs, 
+            operating systems provided different policies, for 
+            different resources(resources are decided, by us), 
+            as per applications's 
+            requirements - so, we must select and set the 
+            settings, as per our applications' requirements
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+   
+
+
+ 
+  
+
+
+
+
+
+
+   
+
+
+ 
+
+
+
+
+
+
+               -    
+                    
+
+
+
+
+
+ 
+ 
+ 
+             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+          
+
+
+
+ 
+
+ 
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+     
+
+
+
+           
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+ 

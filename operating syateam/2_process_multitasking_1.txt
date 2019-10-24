@@ -1,0 +1,2170 @@
+
+- let us take look at some of the big pictures - 
+  refer to the big-pictures and understand the 
+  set-up of processes - understand the 
+  "user-space set-up of processes" and 
+  understand the "system-space set-up of processes"
+--->refer to process related bigpictures and
+    next, continue with the document
+
+-->in the bigpictures, for each active application, 
+   an instance of process is associated - 
+   with the help of a process instance, the 
+   process can be managed - for instance, the
+   active application can be scheduled and 
+   executed on the processor, with the help
+   of cpu scheduler 
+
+-->in addition, for every process instance, 
+   a private address-space is allocated and 
+   assigned to the active application - 
+   with the help of this private address-space, 
+   further memory management is done by the 
+   OS 
+-->several processes/instances are managed 
+   by the process manager - this is a basic
+   management , for several active 
+   applications - there are other entities, 
+   for managing processes, like cpu scheduler 
+
+-->process memory manager, along with many 
+   other core components work together to 
+   manage several processes and their 
+   active applications  
+  - practically, in the system, "user-space 
+    part" and "system-space part" work together  
+    - in the bigpicture, there are "several 
+      processes managing several active 
+      applications" - this is "just management 
+      of processes", but we also need a 
+      "scheduler", which will use certain "policy", 
+      "for "multitasking the processes" 
+   - each process is associated, with a process
+     address-space - this private address-space/virtual 
+     address-space of a process is the user-space
+     part/visible part, which is also 
+     accessible to applications/developers 
+ --->every process also needs a process descriptor/
+     process control block to manage the specific 
+     process/active application - this object/
+     descriptor is present, in the system -space
+     of the operating system - meaning, if there
+     are several processes, there are several 
+     process descriptors/objects managed and 
+     present, in the system space 
+   - there is a system-space set-up of a process, 
+     which uses a pd("process descriptor"/"process
+     control block"/ system object) per process and 
+     several 
+     nested objects maintained, in the pd - 
+     these nested object and tables are 
+     used to manage resources, for a process-
+     these pds and their system objects are
+     hidden, in the system-space, but we can 
+     most of their details, using system utilities
+     , like ps  or top - we can also control 
+     processes/pds, using certain system 
+     utilities, like kill / renice/ chrt 
+     and others 
+-->as per the bigpictures, following can 
+   be a scenario, for processes/active 
+   applications/instances :
+
+   -->Pi --> applicationi /one active 
+                           instance of 
+                           applicationi
+
+   -->Pi+1--> applicationi /another 
+                            active instance of 
+                            applicationi
+
+   -->Pi+2--> applicationi+2 /one active
+                              instance of 
+                              applicationi+2
+
+--->analyze the details, in the bigpictures, 
+    for understanding multiple processes/
+    applications/instances 
+-->basically, when multiple processes are 
+   used to load and manage multiple applications
+   , in an OS platform, we say that there is 
+   support for multitasking /multiprogramming 
+-->in addition, for practical requirements, 
+   we can load multiple instances of the 
+   same application/program, using multiple 
+   processes - this is also a form of 
+   multitasking 
+
+--->a typical process set-up has two parts - 
+    one is the user-space part, which is 
+    more of address-space and memory management
+    -->we will definitely understand the 
+       address-space and memory management 
+       set-up of a process, during memory 
+       management  
+
+-->the second part of the process is resident, 
+   in the system-space - this contains pd and
+   related nested objects
+     -->many of these details will be cleared, 
+        during process management and scheduler
+        discussions  
+
+-->the combination of user-space and system-space
+   parts actually, make up a process instance 
+ 
+   - user-space part of the process is fully 
+     under the control of pd, like memory 
+     resources
+     are fully controlled, execution of 
+     application's code is 
+     full under control of system-space, and 
+     operations
+     like suspension/blocking/termination 
+     are under the control of pd and its 
+     fields  - 
+     let us use one or more demos, for 
+     control of processes, using 
+     pd ?? during Linux discussions
+
+-->a formal definition of a process is 
+   an active instance of an application - 
+   every process is assigned a process 
+   descriptor/control block/a process id
+   -->an active application may be 
+      running/executing /blocked/suspended, 
+      during its life cycle 
+   -->active means, the application is 
+      loaded into memory and being 
+      managed by the OS - as part of 
+      process management, there are different 
+      policies used, in different GPOS 
+      systems, but the basic process management 
+      remains the same  
+   -->passive means, it is just a program 
+      image, which is unloaded and unmanaged
+    
+
+-->an incorrect definition for a process is 
+   a running/executing application - a process can 
+   be suspended/blocked - meaning, if 
+   a process is suspended or blocked, the 
+   associated application instance will 
+   be suspended/blocked 
+ 
+-->any further details, we need to understand
+   the actual process set-up, as discussed 
+   above 
+ 
+   - typically, a "process/pd(system object)
+     is scheduled 
+     and dispatched" - when a "process/ 
+     pd is scheduled/dispatched", corresponding
+     "code/program of the process will 
+     be executed" - this kind of "controlled /
+     restricted management/execution" of a 
+     process/active application is one of the 
+     reasons, for using processes, in a 
+     an OS - one such control is , in the context 
+     of scheduling and dispatching - 
+     however, if the process is 
+     "suspended or blocked or waiting for 
+     cpu"(due to certain control of processes), 
+     the corresponding application 
+     will not be executed and there will 
+     be no response ??? there are practical 
+     reasons , for such control - most of 
+     the control is managed, by the OS and
+     some degree of control can be handled
+     by developers/users/administrators, in 
+     a GPOS -  
+     - if a process of an active application 
+       is suspended/stopped, corresponding 
+       process can never be executed - 
+       which means, the application can 
+       never be executed - which means, 
+       application does not respond ?? the 
+       active application/process is respond, 
+       when it is resumed - this is a form 
+       of control ??
+  -->the following operations can be done
+     on a typical Unix/Linux GPOS platforms ??    
+     - what happens, when we generate 
+       "a SIGSTOP notification/signal 
+       to a process", using its pid(process id) ??
+        - in this case, we are using 
+          top utility - it will use 
+          certain system call API to 
+          manipulate/control the 
+          pd of the pid - its state 
+          is changed - once its state
+          is changed to suspended(T),
+          the process will never be 
+          scheduled/executed - so, 
+          the application will never 
+          execute/will and  never respond 
+          - however, if we send another 
+          signal/notification, SIGCONT 
+          to the process, using pid, 
+          the state of the pd will be 
+          changed to READY - once ready, 
+          this process can be scheduled 
+          and executed - which means, 
+          application can be executed- 
+          meaning, active application/
+          process  will respond
+         
+       - for example, what is the set-up 
+         of the following processes and 
+         active applications :
+         --->Pi----->applicationi/an instance of 
+                     applicationi
+
+         --->Pi+1--->applicationi/""""""""
+
+         --->Pi+2--->applicationi+2/"""""""""
+
+         --->Pi+3--->applicationi+3/"""""""""""
+
+         ............
+         ............
+
+         - how do we explain the above set-up, 
+           using application perspective,for
+           typical programmers /developers ???
+
+           - for Pi/applicationi, following 
+             is the set-up :
+                ------>codei is managed, using 
+                       an address-space 
+                       segment 
+                ------>datai is managed, using 
+                       an address-space segment
+                ------>heapi """""""""""
+                ------>libi  """"""""""""""
+                ------>stacki """""""""""""
+                ....made up of several........ 
+                segments of the address-space 
+           - for Pi+1/applicationi, following 
+             is the set-up :
+                ------>codei/code is being 
+                       shared ???
+                ------>datai'
+                ------>heapi'
+                ------>stacki'
+                ------>libi'
+                (another set of copies of 
+                 segments)
+           note: ' means another copy of 
+                 the same entity
+           - for the above set-up and 
+             management, each process 
+             is assigned its own address-space
+             and divided into segments and 
+             each segment will manage code
+             or data or heap or stack or 
+             libraries and many more ?? 
+--->we can use the following commands/
+    utilities/interfaces, in a typical 
+    Linux system ??
+           - in the above cases,if we 
+             wish to see the address-space
+             and segments of a process, 
+             in a real system, we must use 
+             cat  /proc/<pid>/maps, 
+             where we can fill the pid of 
+             the process, which we wish to 
+             see the address-space and 
+             its segments
+           - every process is provided its 
+             own, isolated process 
+             address-space - whereas, in the 
+             case of system/system-space, 
+             there is a single  address-space     
+           - each process address-space is 
+             isolated from another process 
+             address-space - since process
+             address-spaces are isolated, 
+             corresponding active applications 
+             are isolated and protected
+  -->what do we understand from isolation of 
+     active applications and their protection??
+      -->due to memory management techniques, 
+         processes/segments are isolated from 
+         each other and this leads to a form
+         of protection - this enables implementing 
+         protected active applications   
+     -->there are several low-level mechanisms 
+        involved, in isolating memory segments 
+        of processes ?? 
+
+
+     
+
+  
+- processes/process management services 
+  depend on many 
+  other core services, for resources - one 
+  or two such services are scheduler and 
+  memory management - in the future, we may come across
+  thread services - many of the core services/
+  components are logically separated, but 
+  linked together, during run-time, as per 
+  architecture and design
+   -->process manager uses core services 
+      of other core components to actually 
+      manage active applications/processes  
+   
+
+    
+
+- as per operating system definition, each 
+  active application is managed, using a 
+  process - as per operating system set-up, 
+  we can have several active processes, 
+  in the system, at the same time - this is 
+  the beginning of /multiprogramming/
+  multitasking ???
+   -->as per the requirements, we can 
+    set-up several active applications/
+    processes, for our multitasking requirements
+    -->10 processes/active applications
+    -->100         """"""""""""""
+    -->1000  """""""""""""""""""""""""'
+  
+   -->the no. of active applications/processes
+      depends on the actual requirements 
+
+- process is an operating system entity/service -
+  we need operating system support, for processes
+- without OS support, we cannot create/delete/
+  manage processes - we cannot have active 
+  applications, in the system  
+  -->any GPOS provides appropriate system 
+     call APIs  
+
+- every active application is managed using 
+  an unique process/pd - "most common case" is 
+  "one process" is used, 
+  for "each active application" - 
+  however, "in the real-world implementations", 
+  there are "other scenarios" ??
+
+      Pi -------> active applicationi
+      pi+1------> active applicationi+1
+      pi+2------> active applicationi 
+
+      Pi------------>active applicationi
+                     |  |
+      Pi+1------------  |
+      Pi+2---------------
+
+- for most of our discussions, let us assume
+  that for "each active application", there is 
+  "only one process associated" - we may change
+  this understanding, if applications behave 
+  differently - meaning, applications request 
+  multiple processes, from the OS ???
+
+- every process has a well defined set-up, 
+  in the operating system 
+
+- first, which component/sub-system/core of 
+  OS  is responsible, for 
+  creation of processes, for active applications ??
+    - process management subsystem/component 
+    - this subsystem/component exports 
+      several system call APIs,which are 
+      used directly or indirectly - if 
+      we invoke a system call API directly, 
+      it is known as direct invokation - 
+      if we type a command and shell creates 
+      a process, using a system call API, 
+      the service is used, indirectly
+--->there are different interfaces to a typical 
+    GPOS - one of the popular interfaces is 
+    a shell utility/system process
+--->in many system graphical tools may be 
+    provided, as interface tools, but 
+    behind the scenes, they will be invoking 
+    system call APIs - such graphical 
+    interfaces are provided to support 
+    illiterate engineers/users /administrators
+    
+- what is the system interface, for requesting 
+  process creation core service ??
+      - these are system call APIs  
+      - in certain cases, we may use 
+        system utilities to initiate 
+        process management 
+- how are the pds of different processes 
+  managed, by the OS, in kernel-space ??
+      - like any set of software objects, 
+        pds are also maintained, using 
+        certain data-structure(s), in 
+        the process management subsystem/module 
+        or scheduler/module ??? simple lists or 
+        hash tables and others 
+-->use some of these techniques to visualize
+   the operating system set-up  
+      - because of such maintenance, processes
+        /pds can be accessed/deleted/added, 
+        as per run-time requirements - 
+        we will see the details, during 
+        life-cycle of processes/active 
+        applications  
+  
+
+- as part of the set-up, operating system/kernel 
+  maintain several system objects, for each 
+  process, in the system space - there is a 
+  a pd and a set of nested objects, for each 
+  process /active application - this is set-up, 
+  for every new process created, in the system 
+  - all these pds are managed by the system - 
+  in this case, process manager manages all 
+  the pds, in the system - this is the system-space
+  perspective of processes/active applications, 
+  in the system - the next provides the user-space 
+  perspective ??? this is more of address-space
+  segments /contents of the active application/
+  program
+
+-->  pd contains enough information 
+  to manage and control a process - as we will 
+  see more, using the pd and its related information, 
+  we can control active applications/processes, during 
+  run-time  
+
+- system-space(in this context, process manager)
+   maintains sufficient information, for a process, 
+   using pd and nested objects - this includes
+   managing process address-space /user-space  
+
+- user-space perspective of processes - in the 
+  user-space, a process is represented, using 
+  a process address-space - this address-space/ 
+  memory map is not conventional, but uses 
+  "logical or virtual addresses" - 
+   so, the address-space
+  /memory map is not of physical addresses, 
+  but logical or virtual addresses - memory 
+  management of OS manages these address-spaces
+  and also maps these addresses to physical 
+  segments/addresses 
+
+- for each process, there is a well defined 
+  address-space managed, for the process - 
+  this well defined address-space is exported
+  to the user-space and used by the application 
+- in an OS platform, there will be several 
+  virtual/logical address-spaces, for 
+  several processes, in the system - meaning, 
+  there will one dedicated virtual/logical address-space
+  per process  
+- so, the sw models used, in operating system 
+  platforms are more complicated - for multitasking/
+  memory management/scheduling  
+   
+
+- once you understand the basic set-up of processes, 
+  we use OS services to create and manage processes ??  
+- process creation, deletion and management is 
+  done, by process manager/subsystem of the 
+  OS/kernel
+- process manager/subsystem is a core component of 
+  OS, so resides, in the kernel / kernel-space 
+note: in most text books/academic references, 
+      kernel is treated, as OS 
+note: use uname -r, for extracting version of 
+      core of the OS 
+note: use  cat  /etc/os-release, for extracting 
+      the complete OS version, which includes 
+      core + non-core components 
+
+
+- "process manager" exports appropriate "system 
+  services", using "system call APIs" - these are
+  known as "process management system call APIs" - 
+  some of the "familiar APIs are fork() and execl()" 
+-->these system call APIs are provided by 
+   the system libraries of respective 
+   GPOS platforms 
+- as a developer,the typical approach to 
+  accessing core OS services is to use 
+  system call APIS - in some cases, there 
+  are may third party libraries/interfaces, 
+  which will indirectly invoke these system 
+  call APIs - say, for instance, a data-base
+  service may internally invoke these 
+  system call APIs, not the actual user of 
+  the data-base services - you will be provided
+  other interfaces, that are typically invoked 
+  
+- however, for convenience and operations, 
+  many of the OS services are provided, using 
+  system utilities - for typical system operations, 
+  system utilities are commonly used - 
+  these system utilities in turn use 
+  system call APIs   
+
+
+- "processes are typically used for multitasking", 
+  "in larger applications" - in addition, processes 
+  are used, in "GPOS commonly" - in addition, 
+  in specialized systems, where "reliability and 
+  robustness" is needed, processes are still used 
+-->larger applications create multiple processes
+   to manage an instance of the application
+--->smaller applications tend to create only 
+    a single process to manage the active 
+    application instance  
+- "processes and threads" may be used together, for 
+  multitasking, in real-world applications - initially, 
+  we will deal, with multitasking, using processes -
+  later, with threads and hybrid models  
+-->in the real-world, many applications will 
+   use a single process and multiple threads, 
+   for their multitasking sw model 
+note: some of the points are more to do 
+      with process memory management - 
+      so, we will discuss these points, 
+      along with memory management 
+- in an Unix/Linux system, processes are involved, 
+  in managing most services - many of the non-core
+  services use processes,as the base, for 
+  multitasking 
+
+- every process is assigned its own process-address - 
+  this address space is set-up, using logical or 
+  virtual addresses of the processor and OS - 
+  in addition, each address space is mapped to 
+  corresponding physical addresses, "using tables 
+  like page tables" - these tables are managed, 
+  as part of pd 
+
+- logical addresses/virtual addresses/address-spaces 
+  are provided, by processor and OS platforms - 
+  processor provides low-level features and 
+  it is the OS, that actually manages the 
+  address-spaces, for processes
+- in typical GPOS scenarios, we may 
+  come across following nodes :
+     - sophisticated nodes/systems, with processors 
+       supporting MMU, virtual addresses/virtual 
+       address-spaces
+    -->due to the above reasons, memory management 
+       of processes use virtual addresses/
+       virtual memory 
+- in all the above cases, we may OS platforms,
+  for the systems      
+- in the case of GPOS, we will be dealing, 
+  with processors supporting MMU/virtual 
+  address-spaces/virtual addresses 
+
+note: we will see more details, during 
+      memory management of processes and 
+      system 
+- as part of the process address-space, a large 
+  portion is exported to user-space and the 
+  active application - refer to pdfs and diagrams
+
+- currently, let us accept the basic set-up 
+  of processes and their address-spaces, and 
+  we will explore more, during memory management  
+
+  - for better system-space perspective, let 
+    us understand pd and its nested objects 
+    - let us understand the various fields 
+    of pd and its nested objects 
+--->to understand the actual working of 
+    processes and their control, we need 
+    to understand many of the fields of 
+    pd /pcb 
+note: many of the fields of pds of processes 
+      are used to manage the processes and 
+      most important of them is "pid" ?? we can 
+      treat this, as the "handle to a process" ??
+- "every process" is managed using a "pd/system 
+  object", which maintains attributes of a 
+  process, like :
+           - pid - process identifier
+    -->pid is the handle to a process, which 
+       is used, along with utilities/system 
+       call APIs - every process/pd is assigned
+       an unique process id, by the system 
+ 
+
+    - "user credentials" of the sesssion 
+             |
+             --------->user-id/
+             login id of the user-account
+   -->this id/user-id/login-id is used to 
+      manage multi-user credentials of 
+      processes - so, processes of a 
+      specific user/user-id will be provided
+      the respective user-id - this information 
+      will be used, in further process 
+      management 
+ -->every process has a state field, which 
+    defines the current active state of the 
+    process, as part of its life-cycle 
+
+      - state of the process ??
+              - a process/pd will have a 
+                life-cycle, during its 
+                existence - for this life-cycle
+                ,there are different states, as 
+                per the current state of the 
+                process/active application
+           - R ---> Runnable/ready
+           - R ---> Runnable/executing  
+           - S ---> a form of blocked
+                    state
+           - D ---> another form of 
+                    blocked state 
+           - Z ---> a form of terminated state
+           - I ---> another form of 
+                    blocked state 
+           - T ---> stopped/suspended
+                    state 
+      -->we may change the above details, as 
+         per specific GPOS platform      
+              - we will discuss more on the 
+                life cycle of the process and
+                its state, using certain 
+                practical events ??? 
+
+               
+
+           - scheduling parameters of the process
+              - these parameters are used, by 
+                OS scheduler, for multtasking 
+                different processes, in the 
+                system ?? 
+   -->a typical pd maintains scheduling 
+      parameters and these are used by the 
+      scheduler, at appropriate scheduling 
+      points 
+      
+      - pointers to nested objects 
+   -->these nested objects are part of the pd 
+      and used to maintain details of resources
+      managed, for this process 
+           - these nested objects are used to maintain 
+             resources on-behalf of the process 
+               - tables, for managing 
+                 physical memory resources
+               - tables, for managing active 
+                 file resources
+               - for managing IO resources 
+               -->similarly, other requirements 
+                  exist 
+-->there are several low-level mechanisms
+   used for process management - one such 
+   is hw context management used, for 
+   blocking/suspending/context switching 
+       - pd maintains hw context on-behalf of the 
+         process - it may be directly maintained, 
+         in the pd or indirectly, using 
+         stack memory region 
+               - hw context of every process is 
+                 saved and maintained, in the 
+                 pd or related objects - why ??
+  -->this hw context management is needed to 
+     remember the execution state of a 
+     process, while controlling its execution 
+     , like blocking/suspending/switching  
+     processes 
+                  - hw context of a process 
+                    is the current state of
+                    processor, which is the 
+                    various hw registers of 
+                    the processor - these 
+                    are low-level processor 
+                    features, but help us 
+                    control process and 
+                    active applications ???
+                  - we will use hw context 
+                    details, during scheduling 
+                    /dispatching/blocking/ 
+                    preemption ???   
+--->hw context is used, during process context 
+    switching and similar activities - these 
+    are low-level mechanisms supported by hw 
+    /processor  
+- use the following system utility/command to list various 
+  fields/attributes of processes/pds of the 
+  applications, in the system :
+-->ps is a system utility, which is a non-core 
+   component of the OS
+ 
+  --->ps -eH -o pid,ppid,stat,vsz,rsz,class,ni,rtprio,
+                                           stat
+      --> -e  is for list all the processes
+      --> -H  is list, with hiearchy of processes
+      --> pid is the process id of the process/pd, 
+          which will be used to access the pd and 
+          the process
+      --> ppid is the process id of the parent process
+          of a process - this is used to understand 
+          the parent-child relationship of  
+          processes
+      --> stat will list the current state of the 
+          process
+      --> vsz is the size of the process - this is 
+          the size of the address-space of the 
+          process, which is based on the 
+          active application
+      --> rsz lists the physical memory allocated
+          to the process - we will understand more
+          of this during memory management 
+      --> class provides the scheduling policy 
+          of the process/pd - we will see more 
+          details of class, during our 
+          scheduling discussions 
+      --> ni is non-real-time/non-absolute priority
+          of a process
+      --> rtprio is the real-time/abolute priority
+          of a process
+     if we execute the above command, details of 
+     different processes/pds of the system are
+     extracted and listed 
+
+
+- pd of a process is used to manage and control the 
+  process - how is it possible to manage / control 
+  a process, using its pd ?? following 
+   disussions cover this ???
+
+- based on the "run-time state" field of the 
+  process/pd, the 
+  "pd of the process" is maintained, "in different 
+  lists/queues" of the system, "like rqs and wqs of  
+  the system" ?? this will be clear, when we 
+      discuss the life-cycle of a process???
+      -- we will use certain diagrams ??
+   -->a newly created process/pd is assigned 
+      a run-time state of Ready and the pd 
+      is typically maintained, in a Rq of 
+      the scheduler 
+   -->in addition, a process/pd can also be 
+      , in Rq, if the specific process is 
+      currently not executing, due to scheduling 
+      policy /parameters 
+   -->due to events, in the system and scheduling 
+      policy and parameters, scheduler will 
+      select and dispatch a specific process/pd 
+      to execute on the processor - the state of 
+      the process/pd is set to Running - the code
+      of the active application will be executed 
+      on the processor
+    -->a scheduled/dispatched process/pd can be 
+       preempted, due to scheduling policy/parameters
+       - preemption means the process/pd is forcibly 
+       removed from the processor and added to the 
+       ready state - it is not a suspension - it 
+       is a preemption - one of the common cases of
+       preemption is time-slicing scheduling policy 
+       of processes/pds - each process is assigned 
+       a certain time-slice/quantum and after the 
+       process/active applictaion executes, for 
+       certain time-quantum, it will be preempted
+       -->there are low-level mechanisms involved, 
+       in preemption of processes   
+    -->if a process is executing , it may request 
+       for IO resource or other resources and 
+       if these resources are temporarily unavailable, 
+       the process/pd will be blocked, in a wq/list - 
+       meaning,the process is forced to wait, for 
+       the resource to be available - the state of the 
+       process/pd will be set to blocked state
+       -->if a process/pd is blocked, in a wq/list, 
+       the process/pd cannot execute on the processor
+       - so, the system will invoke the scheduler, 
+         which will select and dispatch another 
+         eligible process/pd - this mechanism is 
+         part of multitasking
+    -->once the resource is available, the blocked 
+       process/pd will be unblocked/awakened and
+       the process/pd  will be added to the ready 
+       state/Rq, again - this kind of unblocking 
+       action is done, in the background of the 
+       system - we will certain scenarios later 
+    -->the unblocked process/pd will be scheduled
+       /dispatched, in the future, as per scheduling 
+       policy/parameters 
+    -->in addition, it is very much possible, for 
+       a short-lived application to complete its 
+       job and this will lead to termination of the 
+       associated process - the process/pd/resources 
+       are freed - the process is said to be terminated
+ -->based on the above descriptions of life cycle of 
+    a typical process/active application, we may 
+    have several processes/pds, in ready state or
+    blocked state or suspended - in addition,in a
+    typical uniprocessor system, there will be one 
+    process/pd, in running state - if there are 
+    multiple processors, in the system, several 
+    processes will be , in running state on 
+    different processors   
+   
+--->the above discussion provides a clear understanding
+    of controlled execution of a process/active 
+    application, as well as OS interference  
+- using "pid of the process" and "system utilities/
+  system call APIs", we can "control a process/
+  active application", as needed ???
+   -->in addition to OS control, users/developers/
+      administrators can explicitly control processes/
+      pds/active applications, as needed - there 
+      are system utilities - one common scenario 
+      is to forcibly terminate a process/active 
+      application, if the application is misbehaving ??? 
+
+- let us understand processes, using certain 
+  "scenarios" /demos/commands  ?? creation of 
+  processes and listing their attributes ??
+   -->in Linux  discussions 
+- let us understand life-cycle of a process, 
+  using certain scenarios/demos/commands ???
+
+- for instance, let us launch /load a set 
+  of applications/instances, as processes :
+
+   - using taskset, we can force a process 
+     to a specific processor/scheduler instance
+     ,in a multiprocessor system  
+-->./w1&  -->this will not force the 
+    processor ??
+   taskset 0x00000001  ./w1&
+    --the above command will force the 
+      process/active application to 
+      cpu0 of the system - forces the 
+      process to be managed, by scheduler
+      of cpu0  
+    --& is to direct the shell to execute
+        this command, as background process
+       -->this background processing is more
+          , for our convenience 
+   
+   
+   taskset 0x00000001  ./w1&
+    -->in this case, we are loading/launching 
+       an instance of active application of
+       w1 on cpu0
+   taskset 0x00000002  ./w1&
+    -->in this case, we are loading/launching 
+       an instance of active application of
+       w1 on cpu1
+
+   taskset  0x00000002  ./w1&
+    -->in this case, we are loading/launching 
+       an instance of active application of
+       w1 on cpu1
+
+    ./w1&
+      -- the above command is used to 
+         load/launch a process/active program, 
+         without any processor restrictions, 
+         in a multiprocessor system  
+ 
+
+    ./w1&
+
+note1 : & is used at the end of the command to 
+        launch the application/program, as a 
+        background process, in a shell
+        -->this is more convenient  
+
+note2 : if & is omitted, the command is 
+        launched , as a foreground application 
+        /program/process, in a shell
+        -->less convenient  
+
+note3:  taskset is a system utility 
+        used to launch /load an 
+        application/process and bind it to 
+        a specific processor - this mainly 
+        common, in the context of multiprocessor 
+        systems  
+
+note4: in this context, we are using taskset 
+       command, for binding/pinning a process 
+       to a specific processor, but in a 
+       real-world system, it may be achieved, 
+       using certain configuration file, but 
+       the  basics remain the same and 
+       effectively binding/pinning is achieved
+
+- after loading/launching the above demos, 
+  let us monitor the status of the processes, 
+  using ps and top commands ??
+
+    - ps is a static utility, which just captures
+      the current state of processes and lists 
+      the details 
+       -->ps will just provide a snap-shot 
+          of current state of processes/pds 
+    - whereas, top will periodically update the 
+      details of processes, dynamically 
+       -->periodically, update the current 
+          state of the processes/pds 
+          -->used for studying the scheduling 
+             behaviour
+          -->used for understanding memory 
+             resource allocations, in a VM 
+             system  
+
+    - as per convenience, we can use ps and top, 
+      accordingly 
+
+    - follow the demos and the commands/options 
+
+- what happens, when one or more processes/commands/
+  applications are launched, in a session/shell of 
+  a root user ??
+      - in this context, shell has the user-id/
+        credentials of root user - these are passed to the 
+        children processes 
+   -->a process created, in a root user login session, 
+      will be provided higher OS privilege - 
+      this privilege is OS level, not hw level/
+      processor level 
+       -->this privilege will affect certain 
+          OS services - this is not about 
+          accessing hw resources 
+
+- what happens, when one or more processes/commands/
+  applications are launched, in a session/shell of 
+  a normal user ??
+      - in this context, shell has user-id/ 
+        credendials of normal user - these are 
+        passed to the children processes 
+-->a process created, in a normal user login session, 
+      will be not be provided special OS 
+      privileges  - 
+      this privilege is OS level, not hw level/
+      processor level 
+       -->this privilege will affect certain 
+          OS services - this is not about 
+          accessing hw resources
+  -->if a process is executed by a root user
+     login session, most of the OS services 
+     can be accessed - otherwise, limited set 
+     of OS services are allowed 
+- the above user credentials will be used/discussed, 
+  during access model of the OS ??
+    -->we will again discuss these details, 
+       in the context of processes and their 
+       OS access models 
+
+note: based on the above details and the life-cycle 
+      discussion of processes, we will have  a
+      better understanding of processes and 
+      multitasking, using processes 
+note: in most of these discussions, let us 
+      assume that we are working, in uniprocessor 
+      systems - later, we can extend to 
+      multiprocessor systems - in addition to 
+      the regular scheduling / rqs, there will 
+      be additional features, in the case of 
+      multiprocessor systems, like load 
+      balancing or processor binding /pinning - 
+      so, it 
+      depends on the load conditions and 
+      application's requirements - these points 
+      will be clearer, once we understand some
+      of the basic scheduling policies and 
+      their working ?? 
+note : the below discussions are applicable to a 
+       a specific processor, in the system 
+       and the corresponding scheduler/rq
+      - similar arguments apply to other 
+        processor and their schedulers/rqs 
+- let us understand states and state diagram of 
+  processes : 
+
+    - following are the typical states of 
+      a process:
+
+         - for ready or runnable state - 
+           for any new process creation, 
+           the process/pd is set-up and 
+           state of the process is set to 
+           ready/runnable - the process/pd
+           is added to an Rq of the system -
+           Rq is a ready queue, which  
+           contains several ready processes
+           /pds - awaiting "scheduling/scheduler"
+           to "select/schedule and dispatch" 
+           the "process/pd", as per scheduling 
+           policy and parameters  ??
+       
+         
+         - ready state, in an rq of scheduler
+           of a cpu/processor - typically, 
+           a newly created process/pd is 
+           added to appropriate Rq - the state of 
+           the process is set to ready - 
+           for the "current resource requirements", 
+           this 
+           process has "all the resources", but 
+           "the CPU" ?? which means, "all the processes/
+           pds", which are ready will be added to 
+           appropriate Rq ??
+     -->if a process is in ready state, all the current 
+        resource requirements are satisfied, but th e
+        cpu - in addition, when this process/pd 
+        is scheduled and dispatched, it may 
+        request for more resources, during run-time
+      
+         - we have passed the control of the 
+           processes/pds to the scheduler, since
+           are they are in ready state - they 
+           are ready, for execution
+        -->scheduler controls the execution of 
+           the process/application, along with 
+           other components 
+       - which component of the system will 
+         schedule/select/dispatch a process
+         /pd from rq ?? this will be the 
+         scheduler - how is a scheduler 
+         invoked ?? it is a passive component 
+         /core component of OS ??   
+   -->scheduler schedules/executes active 
+      applications/processes, but which 
+      component of the OS schedules/executes
+      the scheduler ???
+       -->following are some of the components/
+           processing that are involved, in 
+           invoking scheduler, in the OS 
+           -->interrupt events/interrupt processing/
+              ISRs 
+           -->system call APIs/events/processing /
+              system call handler
+           -->blocking events/processing 
+
+         - running / on the cpu - scheduled/
+           dispatched 
+           - "scheduler" is a "component of OS core", 
+             which is responsible, for "scheduling 
+             and dispatching" a process, from the 
+             Rq, as per "scheduling policies and 
+             parameters" - however, scheduler needs 
+             to be invoked, when needed - in a 
+             "typical GPOS", "scheduler is invoked"
+             ,due to "certain events", like "hw int. 
+             events(ISRs)" and "system call APIs" - there 
+             are other "events", like "blocking of 
+             a process/application and termination 
+             of process/application" also lead 
+             to invoking of scheduler - we will see 
+             more of scheduler, in the upcoming 
+             sessions ?? 
+           - for instance, if a specific process/pd 
+             is not eligible, for scheduling/
+             dispatching, what will the process/pd 
+             /associated active application do, 
+             in the system ?? this will lead to 
+             longer waiting of the process, 
+             in the Rq and 
+             in extreme cases, the process/application 
+             will be starved ???
+         - if the "scheduler selects/schedules" a 
+             process, when the scheduler is invoked, 
+             it will "dispatch the process/pd to 
+             the processor", using "hw context" of the 
+             process/pd ?? this hw context involves 
+            basic hw context + more, like 
+            "control registers used to save base 
+            address of translation tables of MMU"  
+             ??
+            - the scheduler needs to select/schedule 
+              a process/pd - scheduling is a selection 
+              based on scheduling policy/
+              parameters  
+            - once selected, the process/pd needs 
+              to be dispatched - saved hw context of the 
+              process is loaded into the processor 
+              - effectively, the application of the
+              process will be executed - we say, that 
+              the process is executing/running and 
+              actually, the application is executing 
+               - every process/pd has certain 
+                 hw context:
+                  - program counter register value
+                  - stack pointer register value
+                  - general purpose registers and 
+                    values
+                  - control register values, which 
+                    may decide the processor 
+                    privilege mode as well as 
+                    hw memory management 
+                 
+               - the above values need to be loaded      
+                 into processor, for the process 
+                 to execute
+               - why this hw context values must 
+                 be loaded into the processor, 
+                 for the execution of the 
+                 process/application ??  
+                   - hw context maintains 
+                     addresses of code/data/
+                     stack currently used 
+                   - in addition, hw context 
+                     contains physical memory
+                     blocks' addresses of
+                     this process, which will 
+                     be loaded into the control 
+                     registers of the processor                           
+  -->dispatching is a low-level hw mechanism 
+     of loading the registers of the processor 
+     -->such low-level processing is done 
+        by core components of OS 
+     -->these low-level mechanisms directly 
+        affect the execution of high-level 
+        applications 
+         - scheduler will have to select/schedule 
+           and also, dispatch ??? dispatching is 
+           all about loading hw context of the process 
+           into the processor - scheduler will have 
+           a "high-level job(os level)", 
+           like policy/selection and 
+           a "low-level job(processor level)", 
+           like dispatching
+         - let us assume that the policy used
+           , for processes is time-slicing, not 
+           any other policy - this assumption is 
+           for current discussions only - the scheduled/ 
+           dispatched process/pd will be allowed
+           to execute on the processor, 
+           for a "certain time-quantum
+           /time-slice", say "10 milliseconds or 
+           100 milliseconds" - these time-slice
+           quantum values may differ from one 
+           GPOS system to another - once the "time-slice
+           /time-quantum" of a process/pd is 
+           "over/expired", the process/pd  will   
+           be "preempted and added back to 
+           the Rq /ready state" - we will see 
+           more details of preemption, during 
+           scheduling - this is a form of 
+           process/active application preemption  
+  
+         - blocked state - waiting/sleeping 
+           for resources/events - 
+            - when a "process /active 
+              application is executing", 
+              it will invoke "OS core 
+              services", for "resources/IO or
+              IPCs", and other such - however, 
+              of the "OS service cannot be 
+              completed immediately", the "OS
+              will block the process" - meaning, 
+              the "state of the process will be 
+              set to blocked state" and the "pd 
+              of the process will be added to 
+              a wq/list" of the corresponding 
+              OS service - as part of this, 
+              "hw context of the process execution 
+              is saved,in the pd or its system 
+              stack" - eventually, as part of    
+              the blocking of the process/pd,
+              scheduler is 
+              invoked, for selecting and 
+              dispatching another process, in 
+              the system - for instance, we 
+              may need data, from some IO device
+              /peripheral and currently, there 
+              is no data - process is blocked ?? 
+              in this context, 
+              we say, that the current process is 
+              blocked or waiting,for service to 
+              be available, as required ??
+            - until the blocked process/pd is 
+              unblocked/awakened, it will never 
+              be ready/runnable - it will never be
+              scheduled and dispatched - 
+              meaning, it will never 
+              be executed on the cpu ??
+  -->if a specific resource is unavailable, for 
+     a longer duration, the blocked process 
+     will be resource starved - this also will 
+     lead to unresponsiveness and slow down 
+     of the application  
+       demos: refer to ps or top utilities and 
+              look, for "S state" or "D state" - these
+              are blocking / waiting states of 
+              processes - in a typical GPOS, 
+              S is a form of blocking state and 
+              D is another form of blocking state 
+              - on certain systems, we may also 
+              see an I state - it is another form
+              of blocked state
+         - if there are several processes/active 
+           applications, in the system,they 
+           will be blocked, during their life-cycle, 
+           due to resource /IO data requirements - 
+           what happens, if processes/active 
+           applications are blocked, for longer
+           durations, due to non-availability
+           of resources/IO data ??
+              -effectively, the application 
+               will slow-down 
+              - performance of the service 
+                of the application will be 
+                poor
+              - if there are resource issues, 
+                these need to be resolved 
+              - if there are IO issues,  
+                these need to be resolved, 
+                using better IO hw resources
+                 
+         - when is a "blocked process/pd unblocked
+           or awakened" ?? whenever the required 
+           "service or data or IO resource or memory 
+           resource is available", "the system will 
+           unblock or awaken the process/pd and 
+           do the following" - change the "state to 
+           Ready", remove the "pd from the wait-list/
+           wq and add it to the Rq" ??? one of the 
+           "common events", that lead to wake-up is 
+           "hw ints. and their ISRs" ??? in addition, 
+           "system call APIs" ?? we will see more 
+           scenarios, we progress ??
+           - unblocking/awakening a process is 
+             not same, as scheduling - the process
+             state is set to Ready and pd is added
+             to Rq that is all
+ -->unblocking/awakening is a different mechanism
+    and scheduling and dispatching is another 
+    mechanism - once unblocked/awakened, th e
+    process/pd will be scheduled/dispatched, 
+    as per scheduling policy and parameters  
+           - when will such an unblocked/awakened 
+             process/pd be scheduled/dispatched ??
+             - depends on the scheduling policies 
+               and priorities of processes and 
+               behaviour of scheduler ?? the 
+               actual scheduling/dispatching 
+               is more dependent on scheduling 
+               policies of the system ?? 
+          
+-->suspended state is not same as that of 
+   blocked state - this is a special state
+   used to explicitly control a process/ 
+   active application - suspended is not a
+   common state and used minimally  
+         - "suspended state/stopped state" - 
+           in GPOS, in this state, the process is 
+           explicitly suspended, by the 
+           developer/administrator/core of the 
+           system -  
+           - what is the real use of suspended 
+             or stopped state ???
+             - forcible suspension/stopping, 
+               not blocking/termination 
+             - explicit control and can be 
+               resume, when needed, using 
+               another OS service 
+             - we may use it explicitly or 
+               OS may use it implicitly - in 
+               certain cases, if an application 
+               is attempting an illegal operation, 
+               the OS may implicitly stop/
+               suspend the process  
+             - we may not use this state 
+               explicitly, but the system 
+               may use this state, implicitly   
+      demos: refer to stopped state control, 
+              in a GPOS, like Linux
+         - what happens, when a process is 
+           stopped or suspended ??
+             - the state of the process/pd 
+               is set to stopped state, 
+               not added to any list, but 
+               scheduler is invoked and 
+               another process is selected 
+               and dispatched ??
+             - this process will not be 
+               scheduled/dispatched, until 
+               is is resumed ??? we may 
+               have to use certain OS 
+               services to resume the 
+               process 
+note : in GPOS systems, stopped state/suspended 
+       state may be used implicitly and popular
+         - suspended state/stopped state is 
+           not used, with resource management 
+           and IO management 
+        - there are different forms of 
+          termination, for a process -
+          broadly, there is a normal 
+          termination and forced 
+          termination - we will see 
+          more details, using scenarios??
+   -->if a process/pd is terminated, system 
+      invokes scheduler - this will lead to 
+      selecting another eligible process/pd 
+      and dispatching  
+  -->normal termination means, the application 
+     typically completes its job and this 
+     leads to termination of the process
+  -->in the case of abnormal termination, 
+     the process does not complete the job, 
+     but the process is forced to terminate
+     by the system or user/admin 
+ 
+         - terminated state - the process is 
+           terminated - resources are freed - 
+           eventually, the process/pd is deleted
+           - termination of a process may have 
+             different stages - initially, most
+             of the resources are freed, but 
+             pd may not be freed/deleted - 
+             pd may be deleted, after some 
+             more processing - in certain 
+             implementations are 2 stages of 
+             termination  
+         - if a process is terminated normally 
+           or abnormally, the process/pd is 
+           said to be terminated and its state 
+           is set to "terminated state." 
+         - such a terminated process can never 
+           be scheduled or executed, again 
+         - in the case of normal termination, 
+           the process finishes the application's
+           job and  terminates normally - 
+           this is the most common case  
+         - in the case of abnormal, the process 
+           is forcibly terminated, by the system 
+           or explicitly, by the developer or 
+           administrator ??? in the case of 
+           forced termination, the application 
+           may not have completed its job -
+         - in the case of real-world applications
+           , termination 
+           of a process may not be common, as the 
+           process/job will be a continuous job, 
+           in the system
+         - once a process is terminated, soon 
+           its resources are freed, but pd may be 
+           maintained, for a little longer, but 
+           eventually, the pd will also be 
+           deleted, in the system ??  
+- let us understand some more details of a 
+  typical life-cycle of a process : 
+
+    - a typical process is created, using 
+      one or more system call APIs, directly or 
+      indirectly 
+
+    - once process is created, its pd is added 
+      to an Rq of the scheduler - currently, let 
+      us assume, that we are dealing,with 
+      uniprocessor system - later, we can expand 
+      this to multi-processor systems 
+
+    - all ready processes/pds are maintained, in the 
+      "Rqs of the scheduler" of the system 
+
+    - typically, OS scheduler will be invoked 
+      , as per the rules of the system and it 
+      will select the most eligible process/pd
+      from the Rq and dispatch it to the 
+      processor - there will be events  
+
+    - once dispatched, the process/pd will be 
+      executed on the processor, for certain 
+      time-quantum, as per the scheduling 
+      policies and paramters - let us assume, that 
+      the current policy is time-slicing and round-robin
+      - later, the scheduling policies and parameters
+        are dependent on application's requirements 
+
+    - based on the above scheduling policy and 
+      time-quantum, every process/pd will be 
+      scheduled/dispatched, as per their merit - 
+      in addition, once scheduled/dispatched, 
+      a process will be preempted, after a time-
+      quantum/time-slice and this will be repeated, 
+      forever !!!
+
+     - in this set-up, hw timer/timer int. events-->
+       hw timer ISR ---> scheduler --> preemption -->
+       rescheduling --> this is repeated, every 
+       time-quantum ??? this is a simple form 
+       of multitasking ??
+-->if there are several active applications/processes, 
+   in the system, visualize their multitasking on 
+   the processor, using time-slicing policy 
+   -->refer to lecture diagram
+   -->during Linux labs, we will be using certain 
+      simple scenarios to demonstrate multitasking 
+      and time-slicing  
+
+     - as part of the above actions, "preemption of 
+       a currently executing process" is done, which 
+       will forcibly remove the process/pd from the 
+       cpu  and move  to  Rq - meaning, from 
+       running state to ready state 
+
+     - typically, when a process/application is 
+       scheduled and dispatched,it may invoke 
+       one or more system call APIs, for accessing 
+       resources - however, if the resources are
+       currently unavailable, the process is blocked, 
+       in an appropriate wq - we say, that the 
+       process is blocked/sleeping/waiting and 
+       the state of the process is blocked/sleeping ??
+
+     - typical scenarios can be network IO, disk IO, 
+       interprocess communication channels, like 
+       sockets are possible cases, for blocking/sleeping 
+
+     - typically, starting a service/server service 
+       will require certain system utilities, but the 
+       above basics of process creation/mangement 
+       remain the same 
+
+     - similarly, we may stop or terminate a service, 
+       which will lead to actual termination of the 
+       process/active service - typically, this is done, 
+       for maintenance reasons only ???
+
+     - when a process is terminated, its resources are
+       freed and typically deleted - however, the actual 
+       implementation of process termination varies, 
+       from one system to another - for example, in the 
+       case of Linux/Unix, there is an intermediate 
+       termination state known,as zombie and a final 
+       termination state, known as DEAD
+         -->first stage/state of termination is known 
+            as Zombie state 
+         -->final stage/state of termination is 
+            known as dead state
+     -->we will come across these states, during 
+        Linux process management   	
+
+     - there are different forms of termination - 
+       normal termination and abnormal termination - 
+       abnormal is forced termination - so, depending 
+       upon the requirements, the applications / services
+       are normally or abnormally terminated 
+
+     - when a process is blocked/sleeping, for 
+       resources / IO, it will be unblocked / 
+       awakened, once the resource/IO is available 
+       and added to the Rq - once added to the Rq,
+       the process will be scheduled/dispatched, 
+       as per their merit of scheduling policies 
+       and parameters 
+
+     - typically, suspended/stopped state is an 
+       explicit state, for the processes, which 
+       can be achieved, by the developer/administrator/
+       system to suspend/stop a process, forcibly 
+       - we can explicitly resume the process 
+       , using system utilities, if needed - suspending 
+      a process is not same,as that of terminating 
+      a process - it is a temporary state, for 
+      process control 
+ 
+ - since there are several resources/IO channels/
+   IPC channels, in the system, there will be several 
+   wait-queues/wait-lists, in the system, where a
+   process/pd will be added and blocked
+
+ - if a process/active application is terminated 
+   normally or abormally/forcibly, the process 
+   will be moved to first stage/state, 
+   Zombie - in the zombie state, the resources
+   of the process are freed,but pd is not 
+   freed -  later, it will 
+   cleaned-up, by the parent process - once 
+   cleaned-up, the Zombie process will be 
+   moved to last stage/state DEAD state - 
+   in this state,  the pd of the process 
+   is completely deleted, from all the lists 
+   of the system - there will be no traces
+   of the cleaned-up process, in the system - 
+   you will never be able to monitor it, using 
+   any tool - after this stage/state, th e
+   process is never seen, in the system  
+
+
+- let us understand process scheduler/cpu scheduler
+  of OS : 
+
+   - process scheduler/cpu scheduler is invoked
+     by the system, due to interrupt events, 
+     system call events and other events 
+
+   - in the above case, scheduler invokation, 
+     due to interrupt events are typically 
+     preemption points - these are important 
+     scheduler points -  
+      - in modern GPOS systems, these 
+     are popular,as well 
+ 
+   - on the other hand, scheduler can also be 
+     invoked, due to other events, like blocking 
+    and termination of processes - these points
+    of scheduler invokation are not preemption
+    points - common, in GPOS systems   
+
+   - cpu scheduler is a component of core of 
+     OS - a core component - it has two 
+     sub-components - one is the scheduler or 
+     selection of the next process/pd, as per 
+     the scheduling parameters/policy - policy 
+     part of the scheduler 
+      -->we will be discussing different 
+         scheduling policies used, in GPOS 
+         systems  
+
+   - the other component is the low-level 
+     dispatching component, which is responsible 
+     , for dispatching a process/pd to a processor, 
+    using the hw context of the process/pd - such 
+    low-level details are common, in the context 
+    of OS
+       -->this is a low-level mechanism, that 
+          is handled, along with the help of 
+          processor  
+
+   - in our further discussions, we will understand 
+     certain practical scheduling policies and 
+     their behaviour - in addition, we will understand
+     , how they can influence the scheduling 
+     and execution of processes/applications/
+     services - initially, let us understand scheduling 
+     ,as OS services, but later, as how to use 
+      these, for applications 
+      -->a typical GPOS will support different 
+         scheduling policies and based on the 
+         requirements of applications, the 
+         scheduling policies/parameters of 
+         applications can be changed 
+      -->in a typical GPOS system, there will 
+         be a default scheduling policy 
+         suitable for typical applications - 
+         we may slighltly change the scheduling 
+         parameters of this policy, for the
+         processes/pds, if needed  
+
+   - initially, let us understand uniprocessor 
+     scheduling, but later extend the details 
+     to multiprocessor scheduling
+     -->initially, we will force our applications
+        to work, with uniprocessor scheduling only 
+     -->we can extend the understanding of 
+        uniprocessor scheduling to multiple 
+        processors, based on the underlying 
+        the implementation details 
+     -->to enforce uniprocessor scheduling 
+        , we may need to use certain utilities
+        and parameters , which will force the 
+        applications to be pinned to specific 
+        processors
+
+--->a good summary of key points of process abstraction:-
+
+    --->most OS services are built on top of 
+        processes 
+    -->each process is a an abstration/set-up 
+       used , for managing an active instance 
+       of an application 
+    -->based on this set-up, cpu resources and 
+       other resources, like memory /IO are 
+       allocated and managed, for processes 
+    -->process manager is tightly coupled, with 
+       other resource managers, like cpu scheduler 
+       and memory manager 
+    -->process manager uses low-level mechanisms of 
+       OS and hw - one such is hw context management
+       /saving/switching 
+    -->each process is assigned its own run-time 
+       state field, which is set, as per the current 
+       active state of the process, which can be 
+       ready/running/blocked/suspended/terminated 
+    --> a typical  GPOS provides system call APIs/
+       interfaces, for process management, like 
+       creation | deletion | other control activities
+    -->every process is assigned and managed its
+       own process address-space, with several 
+       segments, for different components, like 
+       code / data/ heap /user-space stack/ 
+       libraries / other components - for this, 
+       low-level memory management mechanisms 
+       of OS and hw are used 
+    -->every process is assigned its own pd/pcb
+       and in addition, each pd/pcb is assigned 
+       nested system objects, for other resource 
+       management - as we progress, we will refer
+       to several nested objects and tables - 
+       these objects/tables are maintained, in 
+       core of the OS/system - space and there 
+       is a list or table, for managing all these 
+       pds/pcbs - there may be a master list of 
+       pds/pcbs  or a master table of pds/pcbs
+    -->in most GPOS systems, each process is 
+       assigned an unique id/pid, which will be 
+       used as a handle to access/control processes
+       , in the system - we will be using these 
+       pids, in system utilities and system call 
+       APIs
+    -->a typical active application /process 
+       executes, in user-space/user-mode, which 
+       means, it is less privileged - has limited 
+       access to resources 
+    -->if a process/active application requires 
+       resources/OS services, it can access 
+       system call APIs, but restrictions apply
+    -->if a process belongs to normal user session, 
+       it has limited access to high-level OS 
+       services 
+     -->if a process belongs to a root user session, 
+       it has almost unlimited access to high-level 
+       OS services          
+    -->any process/active application is provided 
+       a restricted execution environment - in this 
+       context, execution is main topic - the same 
+       applies to other resources 
+   -->with the above understanding, let us move on 
+      to process scheduling policies - these are 
+      also known as cpu scheduling policies  
+
+  
+
+   - signals/notifications 
+
+      - it is an IPC mechanism, which is used to generate 
+        notification to process/processes 
+
+      - in a typical Unix/Linux system, several signals 
+        are supported - as many as 64 signals/notifications
+        are supported
+
+      - signals/notifications are provided, in EOS 
+        and RTOS platforms, as well - their implementation
+        details are different and usage is also different, 
+        but basic principles are the same ?? 
+
+      - many of the signals/notifications have a predefined 
+        role, by the "GPOS" - in "GPOS context" ?? 
+
+      - meaning, these are generated, for specific events 
+        and purposes 
+
+      - these notifications can be generated, explicitly or 
+        by the system,implicitly - meaning, we can 
+        explicitly generate a signal 
+        /notification to a target process, using a system 
+        call API or system utility(kill) 
+
+      - in addition, system will generate several 
+        notifications/signals, 
+        for extreme events, like fatal memory faullt 
+        exceptions  and low 
+        memory scenarios,due to overcommitting of 
+        VM, for several large processes - check 
+        the policies and rules of VMM/VM 
+
+      - every process/pd maintains a signal pending field, 
+        (bit-map)where
+        each bit represents a signal/notification - 
+        so, if a 
+        signal is generated, for this process/pd,
+        corresponding 
+        bit is set - we say, that a signal is generated 
+
+      - before we understand more details on signal generation 
+        and handling/processing, let us understand certain 
+        use cases of signals 
+           - to forcibly/abnormally terminate a 
+             target process, 
+             we use SIGKILL signal 
+                 --> kill -SIGKILL  <pid> //send a signal to 
+                                          //a specific process
+
+                 --> killall  -SIGKILL  <nameofapplication> 
+                                       //send a signal to 
+                                       //every process managing 
+                                       //active instances 
+                                       //of an appplication/
+                                       //program
+
+          - whatever be the state of the target process,
+            it will be forcibly terminated  
+
+                  -->kill   -SIGSTOP   <pid> 
+
+                             //forcibly stop a process, for 
+                             //administrative reasons 
+
+                  -->kill -SIGCONT <pid>  
+                             //resume a process, for 
+                             //admin. reasons 
+
+
+                  --> debuggers may use signals/stopped
+                      state to control the execution of 
+                      the program/process, which is 
+                      being managed - if the debugger 
+                      needs to investigate, it will 
+                      suspend/stop the process - otherwise, 
+                      will resume the process  
+
+                  --> ctrl-C will generate 
+                      SIGINT to foreground processes/process
+                      - by default, the foreground process/
+                        processes are abnormally terminated
+                      - this is a form of forced termination 
+                        and a convenience 
+                   
+                  --> ctrl-Z will generate SIGTSTP to foreground 
+                      processes/process - the current foreground 
+                      process will be stopped - it is 
+                      another convenience, for foreground 
+                      processes/jobs and we may use it ???
+
+                  --> SIGSEGV will be generated,when a process 
+                      encounters a fatal exception/fault 
+                      exception, due to 
+                      illegal(permissions/privileges) memory access
+                      /invalid memory 
+                      access  ??? the process or 
+                      application will be forcibly 
+                      terminated - it is a form of crash - 
+                      in this case, system generates SIGSEGV 
+                      to the process/application - the process
+                      or application is forcibly terminated 
+                      - you will see a segmentation fault, 
+                      but is a form of memory fault, in a
+                      page-based VMM  
+
+                  --> when the system runs into low-memory 
+                      scenarios, in a virtual memory management 
+                      system,system will generate SIGKILL to 
+                      processes to reclaim the memory resources 
+                      - this is one of the possible scenarios, 
+                      where system again generates the signal to 
+                      target processes - this happens, when 
+                      there is overcommittment of VM, for 
+                      large processes, due to lenient 
+                      VM policy - this problem will not arise
+                      , in a system using strict policy   
+
+                  --> for instance, SIGHUP/hang-up signal is 
+                      generated for target processes of 
+                      services to force a reload of their 
+                      configuration files, during run-time 
+                      - this true, for most services/daemons
+                      , in an Unix/Linux system 
+
+                  --> for instance, if a typical service/daemon 
+                      is managed, using systemd 
+                      - let us assume the service/daemon is 
+                      started/launched during boot-time or 
+                      run-time - in addition,if we wish to 
+                      change its run-time configuration, we
+                      can do it, by generating a SIGHUP signal, 
+                      using  systemctl utility
+
+                  --> during the run-time, if the configuration 
+                      file is changed, using systemctl command
+                      we can force a SIGHUP to the target process/
+                      service/daemon, using appropriate options ???
+
+                  --> in this case, which process is the target 
+                      process ?? the target process will be 
+                          the service/process which needs to 
+                          reload its configuration file ???
+                           - it can be any service, like 
+                             nginx, sshd, or cron/crond, and 
+                             many more ??
+
+                  --> in this case, which entity/process/core
+                      component is generating 
+                      the signal/notification  ??  
+                           - in this case, systemctl generates 
+                             a message to systemd, using 
+                             its own IPC mechanism, like sockets 
+
+                           - systemd will generate appropriate 
+                             notification to the target 
+                             process/service
+                               
+                - SIGALRM ---> if a process invokes alarm(n) 
+                               system call API, the system/
+                               core of the system is notified 
+                               , that SIGALRM should be 
+                              generate to this process, after 
+                              n seconds - after n seconds, 
+                              system will generate this SIGALRM
+                              and the target process will be 
+                              forcibly terminated - this is the 
+                              common action, for SIGALRM
+                          ---> in this context, even if the 
+                               process is in blocked state, 
+                               it will be unblocked and terminated
+                               by the system    
+                - in the case of signals, if a signal or 
+                  notification is generated to a target 
+                  process, there will be an action/handling 
+                  , for the signal ?? this can be one 
+                  of the following :
+                      - it can be a forced/abnormal termination 
+                        of a process
+                      - it can be stopping of a process
+                      - it can be resuming a process
+                      - it can be some special processing 
+                        , like re-reading a configuration 
+                        file, in the process 
+                      - it can be someother form of 
+                        processing 
+                      - treat signals as asynchronous events, 
+                        synchronous events like interrupts and
+                        there will be some form of processing,
+                        for the target process      
+                  --> in this case,what is the action/handling 
+                      taken, for the notification of the signal 
+                      ??? 
+                           - in this case, the action taken 
+                           is re-reading the configuration file
+                           and changing the operations, accordingly 
+                            
+             - so, following is the typical summary for 
+               signal management, in a Unix/Linux systems :
+                - signals/notifications are generated, 
+                  by processes/utilities(including shell) 
+                  or system/core 
+                - when a signal is generated/notified to 
+                  a target process, corresponding signal 
+                 is recorded/generated, in the pd 
+                - once recorded, certain action/actions 
+                  is taken, as per the settings, for 
+                  the signal 
+                - in most cases, default settings and actions
+                  are used 
+                - in certain cases, instead of default settings 
+                  and actions, a customized action can be 
+                  set-up, for the process/application/daemon 
+
+                - in the case of SIGKILL, only default action 
+                  is allowed , so the system will abnormally 
+                  /forcibly terminate the target process
+
+                - in the case of SIGSTOP or similar SIGTSTP, 
+                  the default action will be to forcibly 
+                  stop/suspend the process/service 
+                
+                - in the case of SIGSEGV, system generates the 
+                  signal to the process and process is abnormally 
+                  /forcibly terminated 
+
+                - in the case of SIGHUP, instead of default action, 
+                  there will be a custom action, where the 
+                  target daemon /service will re-read the new 
+                  configuration file and take actions   
+                - in addition to all the above, most of 
+                  the signals can be masked/blocked, 
+                  if needed - so, if a signal or a set of 
+                  signals are masked, there will not action 
+                  /handling, for such signals 
+                - for instance, SIGTERM can also be used 
+                  to terminate a process, but can be masked 
+                  , but SIGKILL can also be used to terminate
+                  a process, but cannot be masked 
+  
+                    
+
+          
+
+                    
+
+
+
+                   
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+   
+
+
+
+
+
+
+
+
+  
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+
+  
+
+
+
+
+
+ 
+
+   
+  
+
+
+
+
+ 
+
+
+
+
+      
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+  
+
+
+
+
+ 
+
+
+
+     
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+  
+
+
+
+   
+

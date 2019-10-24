@@ -1,0 +1,577 @@
+
+- in the lab machines, to download files we use 
+  "ftp" command/client - this executes as a process- 
+  this communicates with a server/service, which 
+  is the ftp service - this ftp service is active
+  as a process, in another machine/server - 
+  so, we will always interact, with some server/service, 
+  in most scenarios - meaning, there will local processing
+  /processes and remote processing/processes
+    - in this case, our local/client machines
+      are Linux 
+    - whereas, the remote machine is a Windows 
+      server machine 
+    - such hybrid/heterogeneous environments are
+      common 
+    - how are different systems/machines/operating 
+      systems able to communicate/interact ???
+
+    - use which ftp to find the actual pathname 
+      of the command/utility 
+
+    - which ftp --->   /usr/bin/ftp 
+                        ---->it is a non-core component
+              --->this cmd/component enables to 
+                  communicate with the server 
+                  and download files stored on 
+                  the server 
+              ---->on the server side, there must 
+                   a service, which will receive 
+                   the requests and process - 
+                   the end result is we are getting
+                   /downloading files to the 
+                   local machines
+               --->file server service 
+
+       - when we execute/run  ftp or /usr/bin/ftp, 
+         is there a local process created ??
+             - Yes - only one process is 
+                     created 
+
+       - once created, it will be added to the 
+         Rq and eventually, scheduled and 
+         dispatched - what does it do, once 
+         it is scheduled and dispatched ??
+             - it will be blocked and 
+               waiting for user-inputs/
+               commands 
+             - it is an interactive application/
+               process/cmd 
+             - it must be loaded /launched, as 
+               a foreground process/job, in a
+               shell/terminal, since it is an 
+               interactive application
+       - what happens, when an user-input is 
+         given and the process is unblocked 
+         - further scheduled/dispatched/executed ??
+           - process the command and do the 
+             operations 
+           - this cmd/utility uses network 
+             communication/protocol, for 
+             its operations 
+           - so, its request will be sent 
+             to server /service  
+           - we may type,  
+              ----> ftp 172.12.25.28(??) 
+           - assuming the server/service 
+             responds immediately, the 
+             processing is completed and 
+             the local cmd/process blocks
+             and waits, for user-input, 
+             again 
+           - this will keep going on, 
+             until other issues/events
+           - if the server/service does 
+             not respond immediately, 
+             what happens ??
+               - ideally, the local 
+                 cmd/procsess will block 
+                 and it will be unblocked
+                 , when data arrives over
+                 the network - it is a 
+                 network IO data
+          - if we wish to quit the 
+            cmd/local service,what should 
+            we do ?? what happens ??
+                - type "quit" - this will 
+                lead to completion of the 
+                cmd/application and the 
+                process will terminate 
+                normally, as the cmd/application
+                will internally invoke exit(0)
+          - what happens, if you execute 
+            ftp command and during the run-time, 
+            press ctrl-C key-combination ???
+             - SIGINT signal is generated 
+               to the local process, by 
+               the system 
+             - this will lead to abnormal 
+               termination of the process
+               and the command/application 
+               will not complete its job(s)
+          - in the above case, assuming 
+            ftp server/service is loaded/
+            launched, in the system, what 
+            does the corresponding process/
+            service do ??
+             - ideally, it will be waiting 
+               for remote service request 
+               from client machines/cmds 
+             - can we say, that the server/
+               service is waiting, for user
+               input ??? No
+               - it will be blocked and 
+                 waiting for network IO 
+                 request data  
+             - when network IO request data
+               arrives, the server/service 
+               process will be unblocked 
+               and added to Rq - once scheduled
+               , it will process the request 
+               , send reply data to the client 
+               /cmd/process and block for 
+               network IO request data, again
+             - this server/service may be  
+               using some form of multitasking, 
+               for handling several network 
+               IO request data ??
+
+   - foreground and background processes/jobs
+     of an interactive shell/terminal:
+      - with respect to shells and terminals, 
+        there are foreground processes/jobs 
+        and background processes/jobs 
+      - in this context, with respect to 
+        the OS/kernel, all these processes/
+        jobs are treated alike - meaning, 
+        they are just processes 
+      - however, from the shell/terminal 
+        perspective, they are different 
+      - for instance, foreground processes/
+        jobs can do the following :
+        - can take user-input, from the 
+          terminal 
+        - can use blocking services of 
+          OS/kernel 
+        - will respond to ctrl-C/ctrl-Z
+          and similar key-combinations 
+          of the shell
+        - whenever a foreground process 
+          is active, the shell prompt 
+          is unavailable - meaning, shell 
+          does not take user-input and process
+          commands
+         - shell will wait, for foreground 
+           process/cmd to terminate, before
+           accepting user-input 
+         - the above is the typical design 
+           and implementation of shell/
+           terminal/foreground processes/
+           jobs   
+         - in the case of foreground process/
+           job, there can be only one foreground 
+           job per shell /terminal combination
+         - the shell treats its children 
+           processes/foreground/background
+           as jobs - this is the shell's 
+           perpective
+        - we can load/launch several background 
+          jobs/processes, in a shell - following 
+          commands is an example :
+          ---> taskset 0x00000001  ./w11&
+          ---> taskset 0x00000001  ./w11&
+          ....
+          ---> taskset 0x00000002  ./w11&
+          ---> taskset 0x00000002  ./w11&
+         - if an application/process does 
+           not use user-input from the 
+           terminal, it can loaded/launched
+           ,as a background process/job 
+         - however, it cannot be controlled
+           by ctrl-C /ctrl-Z or other such 
+           key-combinations 
+         - otherwise, it is similar to any 
+           other process, in the system 
+         - if we are creating several 
+           background jobs, using the shell, 
+           the shell does not wait for the
+           background jobs/processes to 
+           complete, it will immediately 
+           provide the shell prompt and 
+           start accepting user-input, for 
+           command processing    
+         - if we attempt to load/launch an 
+           interactive application, in the
+           background, as a background 
+           process, system will suspend / 
+           stop the process  
+           ---> the system will generate 
+                SIGTSTP directly to the 
+                background process/job 
+
+     -->top and its usage 
+        -->first, execute  top 
+        -->next, execute  f 
+             --> it will show a list of field
+                 options - following the steps 
+                 below, we can enable or disable
+                 one or more fields, as pe r
+                 our requirements 
+             --> next, scroll using up or down 
+                 arrows 
+             --> highlight every required 
+                 field option and use space-bar
+                 to select - if selected, a * will
+                 appear before the field option
+             --->if deselected, * will not appear
+                 before the field option 
+             --->select as many fields and deselect
+                 if not needed 
+             --->once done, press Escape 
+             ---> enable/extra the following only:
+                  -->UID
+                  -->RUID
+                  -->RUSER
+                  -->P 
+                      --->P provides the cpu number
+                            assigned to the process
+    -->in addition, we must use shift+> or shift+< 
+       to select a specific field of reference
+          -->for instance, we may select %CPU as 
+             a reference field or %MEM as a 
+             reference field - we can also 
+             change the reference field, as per 
+             our testing requirements 
+
+             ---> disable the following fields :
+                  --->PR
+                      ---> provides an internal 
+                           priority value based
+                           on ni or rtprio - 
+                      ----> "we will not use this 
+                           field", as it is not 
+                           used by the core of the 
+                           OS, but "used by top"
+                      ----> however, core of the 
+                            OS uses ni or rtprio,
+                            as per the scheduling 
+                            policy
+                      ----> we will ignore this field
+                            by disabling the PR field
+                    -->we need to use core priorities
+                       of the system - there are non-
+                       real-time/non-absolute priorities      
+                       and there are real-time/absolute
+                       priorities of the core/schedulers--
+                       for the ni, as per the system, 
+                       the range is -20 - 0 - +19 and
+                       for rtrio, the range is 1-99 
+                       - these are the ranges we use 
+                       , using utilities to pass scheduling
+                       parameters to the system/core/scheduler(s)
+                       - using nice or renice or chrt - 
+                       -using ps or chrt, we can extract the 
+                        current priorites of the processes
+                       - ps -e -o pid,cmd,class,ni,rtprio   
+    
+
+
+ 
+   - there can be other settings, in the core of the 
+     system, which may need to be modified, if we 
+     need certain scheduling features ???
+       - we will see these details, as per 
+         problems
+
+   - if we load/launch several instances of processes
+     , in a processor, using TS policy, there will be 
+     a practical problem ?? what is it ?? this more
+     than just overloading the processor ??
+        - what happens, if we load more than 
+          10 processes or 20 processes or 50 processes ??
+          - due to this, since there will be too many 
+            processes and the time-shares will be 
+            very small and this will lead to too 
+            many process context switches(including 
+            low-level switches) - too much overhead
+            processing and it will lead to inefficient 
+            cpu usage 
+          
+
+        - what is the solution, for such problems ??
+
+          - the scheduler will switch to time-slicing, 
+            using 1 msec slots 
+          - the other solution is to move the processes
+            from one processor to another, 
+            implicitly(system will do automatically)
+             or 
+            explicitly(manually, we bind/assign processes
+            to other processes
+          - check using OS tools 
+          - check the actual performance of the 
+            applications 
+
+       - in many cases, %cpu is one of the parameters
+         - however, %mem is also very low, in most 
+           cases ?? why is this so ??
+           - in the current systems, we are not loading 
+             or executing large applications/or load
+             conditions 
+           - however, if load /launch large applications, 
+             we will see higher physical memory usage 
+             and %mem will be higher
+           - use top  and check VIRT, RES, and %mem 
+           - use ps  and check  
+                 ---->ps -e -o  pid,cmd,stat,vsz,rsz  | less
+              - in this case vsz and rsz give the 
+                size of the process and its total 
+                physical memory allocations, respectively, 
+                in kilobytes
+
+              - in this context, vsz represents the 
+                actual size of the process, based on 
+                all its segments, including code,       
+                data, heap, stack, libraries and 
+                other segements - however, rsz is 
+                the actual total memory /physical memory 
+                blocks allocated to this process, based
+                on virtual memory management policies
+                of the system
+             - let us load/launch a large application, 
+               that uses dynamic memory, for its 
+               run-time 
+                --->ex2  2000&  //allocate 2GB of dynamic 
+                                //memory 
+                         
+                --->ex2  2500&  //allocate 2.5GB of 
+                                  dynamic memory 
+          note: on 32-bit systems, there are 
+                strict restrictions 
+                - on 64-bit systems, there is an 
+                  unlimited scope, for large 
+                  applications, but there is restrictions
+                  for physical memory allocations 
+       - currently, you have ftp client packages 
+         installed 
+
+       - if you need ftp server/service, you need 
+         to install other packages, like  
+         "vsftpd"    
+
+       - if you install such a package and start 
+         the service, appropriately, "vsftpd" service
+         /master will execute and during run-time, 
+         it will serve different requests,using 
+         multitasking or single tasking 
+
+       - in most cases, in the labs, we will be 
+         executing commands or starting services 
+         manually, but in the case of production
+         systems, there are settings/configurations, 
+         for automating the starting of services, 
+         based on the Vendors/OS distributions  
+       
+
+
+    Hint: typical Epoch is 20 milliseconds 
+
+          cat /proc/sys/kernel/sched_latency_ns 
+          provides the default Epoch, in a given 
+          system - it may be changed reasonably 
+          , not unreasonable ???
+
+       
+   - why use which command ??
+     --> which is an external command ??
+           if you type "type which" , in 
+           a shell, it will provide the 
+           external pathname of the 
+           file or command 
+           --> /usr/bin/vi 
+      --> which command uses PATH environment 
+          variable of the shell, for searching 
+          , for command, in a set of standard 
+          system directories  
+      --> if our external command is present in 
+          one of the standard directories of 
+          PATH environment variable of the 
+          shell, the complete pathname of the
+          utility is provided/listed 
+      --> there are several environment variables
+          of the shell, like PATH, USER, HOSTNAME, 
+          HISTFILE and so on so forth, which 
+          are typically used, by the shell 
+      --> some of them can be reasonably modified
+          , if needed   
+      --> we are interested, in the PATH env. variable
+          only ??
+           do "echo  $PATH" 
+      --> whenever we type a standard external command, 
+          in a bash/shell (GNU shell), shell will 
+          search the standard directories, in the 
+          PATH env. variable, currently 
+           --> if found, use the pathname and 
+               execute 
+           --> if not found, print an error 
+       --> if we use which, we can find the 
+           pathname of an utility/command, 
+           in one of the standard directories 
+       --> in the case of vi, if we do 
+           a which vi, we may get 
+           /usr/bin/vi 
+
+       --> if we do  ls -l  /usr/bin/vi, 
+           we may see some more details ???
+           - follow the symbolic links to 
+             check the actual editor's 
+             executable file
+           - follow the commands provided, 
+             in the history
+       --> now, refer to vi.txt 
+  
+
+
+
+
+
+
+
+   
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+  
+
+
+                  --->SHR
+                  --->SWAP
+             --->for our scheduling requirements, 
+                 following fields are used:
+                 -->P
+                   -->the processor/Rq/scheduler
+                      assigned to 
+                      the process 
+                 -->%cpu
+                   -->over a period of time
+                     (last 3seconds), the 
+                      %cpu allocated to this process
+                 -->TIME+
+                   -->the total cpu time/cycles 
+                      allocated to this process, 
+                      so far 
+                 -->Tasks field, at the top
+                   -->tasks field provides the 
+                      total number of processes/
+                      threads/system processes, 
+                      in the system and their 
+                      states - it is a summary
+                 -->load average at the top
+                    -->this provides average 
+                       no.of process/threads/
+                       system processes, in 
+                       all the Rqs of the system, 
+                       in a multiprocessor system 
+             --> in the case of top, we can 
+                 execute certain commands of 
+                 top, like k or r 
+                 -->k means, send a signal to        
+                    a process/pid 
+                 -->r means, set new nice value
+                    to a process/pd
+                 -->do not type regular shell 
+                    commands and external commands
+                    in a top - it is not a shell??
+            ---> if you login, as a normal user 
+                 and execute top, top will execute, 
+                 with normal user privileges 
+            --->so, r /renice will not be able to 
+                set -ve nice values, but only +ve
+                nice values 
+            --->you may execute top, as 
+                sudo  top 
+                -->in this context, top/process
+                   will 
+                   execute, with root user 
+                   id and root privileges - 
+                   now,you may use r/renice 
+                   and set -ve nice values, 
+                   as well as +ve nice values
+                -->in this context, sudo is a
+                   administrative system utility
+                   , which can provide temporary 
+                  privileges to the normal user/
+                  normal user processes/cmds/utilities, 
+                  provided the administrator has 
+                  configured the system to provide
+                  special privileges to the 
+                  specific user,using sudo
+              -->sudo is an administrative utility
+                 which is used, which is controlled 
+                 using certain system configuration
+                 file, which will be edited by 
+                 the administrator 
+               -->if a specific user-id/account 
+                  is enabled, in the configuration 
+                  file, when sudo is executed by 
+                  the user-account-id/shell , 
+                  the sudo will allow the user-account
+                  -shell to execute a command, with 
+                  root user-id/privileges
+
+      - why do we use taskset utility, in our 
+        practicals / assignments ?? 
+          -->this will force the processes 
+             to use a single processor/scheduler 
+             and this will be effectively an 
+             uniprocessor scheduling 
+          
+
+      - what happens, if we do not use taskset 
+        utility, in our practicals / assignments ?? 
+          --> if we do not use taskset, 
+              the processes will be assigned to 
+              different processors, as per the 
+              load conditions and this will 
+              not allow us to test the uniprocessor
+              scheduling and related policies     
+          --> if we wish to just test multiprocessor
+              scheduling/loadbalancing, we can 
+              use this, as per the application's
+              requirements  
+
+         
+ 
+ 
+   
+
+    
+            
+
+ 
+
+       
+ 
+ 
+
+
+ - we have a cat command ??
+         
+
+ - we also have an echo command ??
+
+  
+ - we can use appropriate command, as per the context ??
+
+    
+ - cat  /etc/sysctl.conf 
+
+ - echo  ${HOME}
+
+ - echo  ${PATH} 
+
+ - cat  ${HOME} 
+
+ - cat  ${PATH} 
+
+
+

@@ -1,0 +1,113 @@
+- there is an old vi, which is conventional 
+  and supports cryptic commands only - this 
+  is still available on many server systems
+  - core development systems 
+
+- in addition, there is an "improved version", 
+  known as vim, which supports more flexible 
+  navigation, using regular keys 
+
+- you need to check, your vi, if it is the 
+  new one or old one or some other issues
+
+- vi is typically a modal editor - meaning, 
+  it has different modes/states of operations
+  --->when we just open vi, its mode is 
+      "normal command mode" / just "command mode"
+  --> when we just load/launch vi, we cannot 
+      edit /enter text 
+  --> once we are, in command mode/normal command
+      mode, we can enter insert mode/edit mode 
+  --> typically, we can enter insert mode/edit 
+      mode, using i or I or o or O or A  
+  --> once in insert mode/edit mode, we can keep
+      typing text and keep working 
+  --> once we have completed the editing, we 
+      should press Escape - once Escape is 
+      pressed, we will again be, in normal 
+      command mode
+  --> again, we can enter edit mode/insert 
+      mode and do the work - keep repeating 
+      until you are done
+
+  --> once we are , in normal command mode.,
+      we can enter Escape line mode/Escape 
+      Line command mode/ :mode
+      --> we can enter this mode, using :
+
+           -> we can do the following:
+
+            -->   :q
+
+            -->   :q!
+
+            -->   :wq
+
+            -->   :w
+
+            -->   :wq!
+
+            -->   :w!
+
+            -->    set nu
+ - so, you can use the vi editor as needed
+   - remember the following key points 
+     -->when you load vi, we are in 
+         normal command mode 
+     -->enter insert mode/edit mode, using 
+        i/I or other keys 
+     --> after typing, use Esc to escape to 
+         normal command mode,before navigating
+     --> once you have done all the work, 
+         you can again be, in the 
+         normal command mode 
+     --> you can use x or 3x or 5x or nx 
+         to delete characters(normal command mode) 
+     --> dw or 2dw or ndw to delete words(norm."")
+     --> dd or 2dd or ndd to delete lines("" """) 
+     ---> ...like this, normal command mode 
+          provides several such options 
+ 
+     ---> after editing, using above techniques, 
+          we can exit the vi, using any of 
+          the following :
+           --> :q, if just interested, in 
+                   quitting 
+
+           --> :q!, if you are interested, 
+                    in quitting, but wish to 
+                    ignore the changes 
+
+           --> :w, if you are interested, in 
+                   just saving the file 
+     
+           --> :wq, if you are interested, in 
+                    saving and quitting 
+           --> :wq!, if you are interested,in 
+                     forced saving and quitting 
+
+  - why vi ?? why cannot I use gedit ???
+
+     --> as per conventions, developers 
+        and administrators of Unix and Linux, 
+        use vi 
+     --> we may be working on a system, where
+         only vi is installed(by default) and 
+         other packages of other editors are
+         currently not installed and we are
+         restricted to install more packages 
+     --> assuming the system is corrupt and 
+         many packages/applications/tools 
+         are not working, vi may still work 
+     --> on certain systems, like production
+         servers, very minimal packages are
+         installed, for minimal resource 
+         usage and security reasons  
+
+  
+ 
+
+
+
+
+ 

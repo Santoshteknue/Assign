@@ -1,0 +1,713 @@
+- your program/application must not terminate - 
+  if a program/application terminates, the 
+  process will terminate normally 
+
+- if a process terminates normally, the 
+  process will not be seen, in ps and top, 
+  as it will be cleaned-up - we will see 
+  more details, during process related 
+  system call APIs and programming 
+
+- in addition, our program must not 
+  user user-input or other blocking 
+  services, which will not allow the 
+  "program/process" to be ready/execute - 
+  meaning, most of the time, the 
+  program will block the process - so, 
+  the process will not be scheduled and 
+  dispatched ??? due to this, you may 
+  see S, in the state field, as the 
+  process/application blocks most of the
+  time - in addition, do not use  
+  printf() or other related functions, 
+  as these will internally lead to 
+  blocking ??? in our case, do 
+  not use printf() or related blocking 
+  APIs, inside the while(1) loop - 
+  we may use outside ??
+
+- in the future programming, using 
+  system call APIs, we will use 
+  blocking services, if needed ??
+ 
+- if we wish to load/launch a "program/
+  process", in the background, it must 
+  not take any user-input and related 
+  services - if you try to use a program/
+  background  process to use user-input 
+  and related 
+  services, the background process will be 
+  forcibly 
+  stopped/suspended, by the system 
+
+- however, if we wish to load/launch a 
+  "program/process", in the foreground, 
+  it can take user-input and related 
+  services - such a program/process 
+  will be allowed to progress and 
+  use the services ???
+
+- when we use user-input services, 
+  in the program, these are blocking 
+  services, so we cannot use them, 
+  in the current context,for testing scheduling ??? 
+
+-  program and process 
+
+    ---> processi   ---> instancei of programi
+   
+    ---> processi+1 ---> instancei+1 of programi 
+
+    ---> processi+2 ---> instancei+2 of programi
+
+- if you use "ps or top commands", there will be 
+  a stat/process state field 
+
+       R  --->  runnable(ready)/running 
+       S  --->  this is a form of blocked state/
+                waiting state - a common blocked 
+                state  
+       D  --->  this is another form of blocked 
+                state 
+       I  --->  this is another form of blocked
+                state, for certain system processes
+       Z  --->  it is called Zombie, which is a 
+                terminated(first stage of termination)
+                state 
+       W  --->  another terminated state, which is 
+                Dead state - it is a cleaned-up state
+               --->we will never see this state, 
+                   as it is a temorary state 
+   - many of these details will be cleared, in the 
+     Linux process specific details 
+ 
+- if we wish to terminate the loaded/launched 
+  processes, we can do one of the following :
+   - type the following commands on a different 
+     terminal/shell 
+
+        $kill  -SIGKILL  <pid> 
+       or
+        $kill  -SIGKILL  <pid1> <pid2> <pid3>
+
+       or 
+        $killall  -SIGKILL  <nameofcmdorprog>   
+
+- for our current requirements, we will b e 
+  loading/launching processes/programs, 
+  from a single terminal/shell, not from 
+  multiple terminals/shells - if you use 
+  multiple terminals/shells, system will 
+  use a different time-sharing policy, 
+  along with the basic time-sharing ???
+     - use a single shell/terminal 
+     - next, do the following :
+        taskset 0x00000001 ./w1& ---> assigning to 
+                                      a specific 
+                                      processor/scheduler
+        taskset 0x00000001 ./w1&
+        ...
+        ...
+        taskset 0x00000002 ./w1&
+        taskset 0x00000002 ./w1&
+        ...
+        ...
+        .........
+  - we wish to assign a set of processes/pds to 
+    a cpui/scheduleri/Rqi, such that all these
+    processes are scheduled/managed by a 
+    single scheduler , for a processor/cpu cycles 
+  - these processes may be assigned same policy 
+    and priorities or different policies 
+    and priorities ???
+
+
+ - there will be several system processes, in 
+   the system - these may be part of CLI or 
+   GUI or networking services - they will 
+   reside, in the system and process, when 
+   needed - so, many of them will be, in 
+   blocked state and when awakened, they 
+   will do some processing and block again
+
+- we may not be able to interpret all the 
+  processes/fields, at this point, but 
+  may be clear, in the future ???
+
+- assuming you have loaded/launched 
+  w1, using taskset , do the following:
+ 
+   ---> renice -n -5 -p <pid>
+        - this will fail, due to 
+          permissions/privileges - 
+          you are currently working, 
+          as a normal user ??
+        - you are disallowed to 
+          set -ve values, which will 
+          provide higher importance to 
+          the processes/programs ??
+   ----> sudo  renice -n -5 -p <pid> 
+        will allow us to change the 
+        nice value to -ve, since sudo 
+        will execute temporarily, with  
+        root privileges -?? what does this 
+        mean ??
+
+- when we run/load taskset 0x00000001 ./w1&
+  or  taskset 0x00000002 ./w1& , in 
+  a given terminal/shell combination,
+  the corresponding shell process will be 
+  the parent process of the ./w1's instance
+  - we can connect, with the parent's process
+  id, ppid - we can use ps or top to verify ??
+  - for our scenarios/contexts, we need to 
+    use the same shell/tty combination, which 
+    will give us a basic scheduling set-up ??
+
+  - if we use different shell/tty combinations, 
+    there are other OS policy issues, 
+    which may affect time-sharing and other 
+    scheduling policies 
+   
+- for a processi/programi, following are
+  is the set-up :
+
+       - processi, pidi
+       - parent processi, ppidi
+       - associated, with a programi
+       - a scheduling policy is set
+       - a set of scheduling parameters
+         is set
+       - a terminal may be associated- 
+         can be treated, as an operating 
+         system resource 
+       - virtual address-spacei
+       - page-tables 
+       - page-frames
+       - swap-space/page-slots 
+       ....
+       ................
+       - ideally, the parent process and children
+         processes work together, using certain 
+         co-ordination/synchronization ???
+       - whenever, a child process terminates, 
+         the child process will be moved to 
+         zombie state - the parent process is 
+         expected to clean-up the child process
+         pd/pid - this is the normal set-up 
+       - however, due to extreme cases,if the 
+         parent process terminates before the 
+         children processes, the children processes
+         will be reparented to the system process, 
+         with pid 1 
+       - ideally, from there, the system process
+         should take care of the reparented 
+         processes 
+- for the current requirements, in most cases, 
+  we will be dealing, with a single process 
+  managing a single application, and no 
+  further multitasking, using processes or 
+  threads - which means, we are dealing, with 
+  applications, which just use a single process
+  and a single thread of execution.
+
+- however, there may be several real-world 
+  scenarios, which are application dependent 
+  and in these cases, these applications will 
+  be using several processes and/or threads, 
+  for their multitasking - one, the applications
+  use differnt multitasking sw models - two, 
+  there are different programming techniques, for 
+  such multitasking - due to these, one is that 
+  you will see different details, in the ps 
+  and top - another is controlling these 
+  applications may be different and depends
+  on the applications' characteristics ??
+    - say, for instance, you may load 
+      a browser, which has its own 
+      form of multitasking ??/
+    - say, there may a multimedia 
+      application, which may work 
+      differently ?? its performance
+      or resource utilization ???
+
+------> what does taskset <cpumask>  ./cmd
+        do effectively ???
+         create a process, for cmd and 
+         associate the process to 
+         a specific processor/scheduler ??
+         --->taskset 0x00000001 ./w1&
+              -->assign to cpu0
+         --->taskset 0x00000002 ./w1&
+              -->assign to cpu1
+         ........ 
+
+- ------>   taskset  -p   <pid>  
+             -this will provide the current 
+              processor pinnings, for the
+              process
+  ------->  taskset  -p   <mask>  <pid> 
+            - this will change the mask 
+              of a process
+  ------->  taskset  -p   <pid> 
+          --> the above commands are used
+              to set the cpu masks of 
+              currently active processes, 
+              in the system 
+
+  ------->  cat  /proc/cpuinfo 
+  ------->  lscpu is also useful 
+       -->these two commands will help us
+          understand the processors, in 
+          the system and accordingly, 
+          use taskset or related commands 
+
+  ------->  taskset  -p  $BASHPID
+            - this will provide the cpu pinnings
+              of a specific bash/shell, which 
+              will be use to set the cpu pinnings
+              of its children processes 
+
+            - if this can be changed, it will have 
+              the same effect on its children 
+              processes 
+
+            - if you wish to explicitly set it, using
+              taskset, you can do so  
+
+  ------->  taskset  -p  1
+
+- in a given system,when a process is 
+  created, it is provided a default set 
+  of parameters, including its cpu 
+  affinity/pinnings - invariably, it 
+  will be a set of bits supporting 
+  all the processors - you can check 
+  this, with cat  /proc/cpuinfo ???   
+- later, we may use different cpu 
+  affinity masks, like 0x00000003, 
+  0x0000000f, or other combinations, 
+  if an application uses other forms 
+  of multitasking, using several 
+  processes and threads ???
+      -->we may wish to modify the 
+         default cpu mask of the 
+         processes/active applications  
+           
+- using kill command - common uses :
+
+   ----> kill -SIGKILL <pid> 
+         - this is to absolutely terminate 
+           a process - cannot be 
+           masked 
+   ----> kill -SIGTERM <pid>
+         - this will also terminate, 
+           but such a signal/notification 
+           can be masked, by the 
+           application/process     
+   ---->  however, do not terminate unrelated
+          processes or other application 
+          processes, as they may other 
+          responsibilities and rules 
+
+- real-time vs non-real-time scheduling 
+  policies and priorities 
+- absolute priorities vs non-absolute 
+  priorities 
+   - in the case of absolute priorities 
+     (real-time), a process with a 
+     high priority can completely 
+     monopolize 100% of cpu cycles 
+   - however, if we use non-real-time/
+     non-absolute priorities, it will 
+     provide a proportional allocation 
+     of cpu cycles, not 100% allocation -
+     for instance, if a process is assigned
+     TS policy and nice of -5, it may be 
+     provided 70% of cpu-time vs 30% for 
+     lower-priority of 0 ???    
+   - whereas, in the case of absolute 
+     priorities, if a process is assigned
+     10 and another 5, the higher priority 
+     process will be assigned 100% cpu-time ???
+
+- parent-children relationship is not, 
+  about scheduling/processor issues - 
+  it is about maintaining a connection 
+  between the processes, for system's 
+  requirements - a parent process may 
+  be executing on a process and children 
+  may be executing on other processors ??
+
+- use chrt, as below :
+
+    taskset  0x00000001  ./w1& 
+    sudo chrt -f  -p  <rtprio>  <pidofprocess>
+    
+    what is the effect of the above on 
+    the process and the other processes on 
+    processor 0 ???
+
+- WARNING: if we are using FF /RR policies, 
+           for our processes/threads, the processes
+           may monopolize the cpu-time and 
+           none of the processes are allocated 
+           cpu-time, including system processes, 
+           like shell/terminal emulator/others 
+           and this will lead to a system freeze ??
+
+          - so to avoid, such system locking scenarios,
+            we need to use alarm() system call API, 
+            in our applications ???
+ 
+          - once invoked, alarm(n) notifies the core 
+            of the system to generate SIGALRM signal 
+            to the specific process - the process 
+            will be forcibly terminated - if the 
+            system is affected, by such a process, 
+            the system recovery is possible  
+            
+
+- in the case of real-time policies, use the following 
+  scenarios, as per assignment and more : 
+      - assign FF policy and equal RT priority 
+        to a set of processes/pds and assign 
+        these processes/pds to a specific processor/
+        cpu/scheduler instance 
+      - assign a set of TS processes/pds to the 
+        same processor, as above ???
+      - in this set-up and scenario, what are the 
+        results ??? we need to interpret and 
+        understand ??  
+
+      - repeat the above set-up, by binding/pinning
+        FF policy processes to a processor/scheduler 
+        instance and TS policy processes to another 
+        processor/scheduler instance - what are 
+        the results ??? understand and interpret ??
+
+      - assign RR policy and equal priority to 
+        a set of processes and bind/pin them 
+        to a specific processor/scheduler instance  
+      - in addition, add a few TS policy processes
+        to the same processor 
+      - next,test and find the results ?? 
+         interpret ?? 
+
+      - in the above RR /TS case, bind/pin the 
+        RR processes to a processor/scheduler instance
+        and TS to another processor/scheduler instance 
+ 
+      - let us understand a typical multiprocessor 
+        set-up, for scheduler instances :
+
+         ----> cpu0 --> TS scheduler instance0-->Rq0
+         ----> cpu1 --> TS scheduler instance1-->Rq1
+         ----> cpu2 --> TS scheduler instance2-->Rq2
+         .....
+         ...........
+
+         ----> cpu0 --> FF scheduler instance0-->Rq0
+         ----> cpu1 --> FF scheduler instance1-->Rq1
+         ----> cpu2 --> FF scheduler instance2-->Rq2
+         .....
+         ..........
+      - in a given scenario, we may have a set of processes
+        pinned to TS scheduler instance0/Rq0/cpu0 and 
+        another set of processes pinned to FF scheduler 
+        instance0 /Rq0/cpu0
+     
+      - in another given scenario, we may have a set 
+        of processes pinned to TS scheduler instance0/
+        Rq0/cpu0 and another set of FF processes
+        pinned to FF scheduler instance 1/Rq1/cpu1 
+
+ - if we do assign cpu pinnings/affinities to 
+   processes/pds, system will provide a default 
+   value - which can be verified, by the doing 
+   the following: 
+         -----> ./w1&
+
+         -----> find its process/pid
+
+         -----> taskset -p  <pid> 
+
+         -----> the above command will provide 
+                the default cpu pinnings 
+                assigned 
+ 
+         -----> if the bindings support multiple 
+                processors/cpus, the system will 
+                assign a processor/scheduler instance
+                to the process, as per the internal 
+                policies/load conditions - it may 
+                also be changed dynamically ???
+
+         -----> in our case, we wish to bind 
+                a set of processes to a processor 
+                and another set to another processor,   
+                as per our requirements and test ???
+
+ 
+ - let us understand yielding and related system 
+   call API, and how to use it,if needed ???
+     - in this context, there is no system utility, 
+       for yielding  
+     - as per the rules of OS and scheduling, 
+       yield system call API is allowed, for 
+       FF policy, with equal priority processes 
+       only - we must not use it, with unequal 
+       real-time priorities and FF - do not use it, with 
+       RR policy ?? it does not make sense to 
+       use sched_yield(), with FF policy and unequal 
+      priorities, as FCFS is not effective - we can 
+      use sched_yield(), with FF policy and equal 
+      priority, since FCFS is effective - 
+      do not use it,with TS policy ?? it does not 
+      make sense
+--->refer to scheduling big pictures, for understanding 
+    yielding  
+     - yield system call API works, for 
+       FF and equal priority processes, not 
+       FF and unequal - it is meant for a 
+       co-operative scheduling among processes
+       or threads or other entities ??
+     - if a process invokes a yield system 
+       call API, it will do the following - the 
+       system call API /service will do the following :
+        - current process/pd will be added to 
+          the tail of the Rq, as per its 
+          RT priority
+        - scheduler will be invoked to 
+          select/schedule/dispatch/execute the next 
+          eligible process/pd, at the same 
+          priority level 
+        - ideally, a process/application, 
+          can invoke sched_yield(), in its
+          code, after a certain job(s)
+        - this is repeated, for every process
+          involved, in the list of processes
+--->using sched_yield()/yielding mechanism, 
+    we can implement co-operative scheduling 
+    , for the applications, if needed 
+  - based on the above details and usage, 
+    we can do the following, as per 
+    applications' requirements :
+        - we may use sched_yield()/or similar
+          system call API, with processes 
+        - we may use sched_yield()/or 
+          similar system call APIs, with 
+          processes or threads of a process 
+        - we may use sched_yield()/or 
+          similar system call APIs, with 
+          threads of specialized, embedded applications
+  - in addition, FF policy can be used, in 
+    one of the following forms :
+     - FF , along with equal priority processes
+       and blocking operations(used by applications)
+        --->this is a form of co-operative 
+            scheduling  
+     - FF, along with equal priority processes
+       and sched_yield()(yield operations used by
+                         applications)
+         --->this is another form of co-operative 
+             scheduling 
+     - FF, along with unequal priority processes
+       and blocking operations(typically, if a
+       high priority process is executing/running,        
+       other lower-priority processes will be 
+       preempted and starved, but if the higher
+       priorty process completes its jobs 
+       , in a reasonable time-slot and blocks, 
+       lower-priority processes can be allowed 
+       to execute - this will be true, in the 
+       case of real-world applications, as the 
+       nature of the jobs will be so )
+       ---> application + OS + policies + 
+            parameters + configurations will 
+            work together, if properly set-up 
+            and managed  
+     - FF and TS policies can be used, with 
+       different processes, along with 
+       blocking operations 
+     - RR and TS policies can be used, with 
+       different processes, along with blocking 
+       operations
+   - in all the above use cases,application's 
+     characteristics matter - meaning, we can 
+     pick-up the right set of policies and 
+     priorities, as per the multitasking 
+     and jobs of the application  
+    
+- taskset and mask settings :
+
+  ---->if we use this mask 0x00000001 
+       -->do not treat this , as a number, 
+          but it must be interpreted, as 
+          a bit-map - every bit has an 
+          interpretation - each bit represents
+          a cpu - bit0 represents cpu0, 
+          bit1 represents cpu1, so on.... 
+       ---->0000000000000001b --> cpu0
+             -->we select cpu0 only 
+             -->we do not select other 
+                cpus,for our process/application
+  ----->taskset 0x000000001 ./w11& 
+         --> what is effective, after the above 
+             command  ??
+             -->the cpu affinity mask/bit-map 
+                of the process/pd of w11 will 
+                be set to 0x00000001 and
+                this process/pd will be managed
+                only by cpu0's Rq/scheduler??
+                other Rqs/schedulers of other 
+                cpus will not be servicing this 
+                process 
+             -->after executing the above 
+                command, use top and ps to 
+                verify ??  
+ 
+  ---->0x00000002
+       ---->0000000000000010b --> cpu1
+             --->selects cpu1 only 
+       ---->taskset 0x00000002 ./w11&
+            ---> what is effective ??
+                --> refer to the above 
+                    discussion - in this 
+                    context, "cpu1" will be
+                    used, as the "bit 1" is set
+                ---> test and verify, using 
+                     top and ps 
+  ---->0x00000003
+       ---->0000000000000011b --> cpu0 or cpu1
+         --->selects cpu0 or cpu1, as per 
+             the system's choice 
+         --->in this context, interpret the 
+             bit map/bits, for appropriate 
+             cpus - so, we are selecting 
+             bit0, for cpu0 and bit1 for 
+             cpu1 - what does this mean ??
+             meaning, effectively, what does
+             this mean ??
+          
+           ---> taskset 0x00000003  ./w11&
+              --->what is effective ??
+                 -->in this context, we are
+                  setting the cpu affinity 
+                  mask/pinnings to 3, which 
+                  means, we are allowing the 
+                  OS/scheduler to select 
+                  cpu0 or cpu1, for this 
+                  process/active application
+              -->execute the command and 
+                 test and verify using 
+                 top and ps ?? 
+
+  ---->0x00000016 
+       ---->0000000000010110b --> cpu1/cpu2/cpu4
+
+  ---->0x000000ff
+       ---->0000000011111111b 
+      
+  ----> to find all the cpus, in the system, 
+        do one or all the following :
+
+           taskset -p  1
+             ---> this is for the system process/
+                  service, "systemd" or "init", 
+                  with process id 1 
+             ---> these system processes are 
+                  provided a default processor
+                  affinity/pinnings  
+           taskset -p  $BASHPID 
+            ----> this is for the shell/process
+                  of the current session 
+            ----> the shell/process is also 
+                  provided a default processor
+                  affinity/pinnings 
+           --->taskset -p  <pid>
+              -->in this context, taskset will 
+                 provide the current cpu affinity
+                 mask/pinning mask, from the 
+                 pd of the process, with <pid>
+
+
+
+
+           cat  /proc/cpuinfo
+             -->it will provide more details, 
+                than lscpu, so we can extract 
+                more information, about the
+                cpus   
+
+           lscpu 
+             --> find the number of cores?? 
+                 - we can use these many 
+                   core, in the system 
+                 - for the total number of 
+                   cores, we will be having
+                   cpu0, cpu1, ..., cpun-1, 
+                   where 'n' will be the 
+                   total number of cores ??
+                 - no.of cores ??
+ 
+
+
+
+
+
+
+
+
+   
+
+  
+ 
+
+
+ 
+ 
+  
+   
+    
+  
+
+
+ 
+       
+
+
+
+
+
+  
+
+   
+     
+ 
+
+
+ 
+
+
+
+
+         
+
+
+
+
+
+ 
+  
+ 
+
+
+ 
+
+
+ 
+
+
+
+  

@@ -1,0 +1,414 @@
+- you can visualize operating system, as a set of 
+  programs(not exactly) and these work together to 
+  different jobs and provide services 
+
+- they are set-up, using a well defined architecture
+  and well defined designs 
+
+- because of the above, we need to understand the 
+  set-up and the rules ???
+
+- certain parts of operating system are "hidden 
+  and abstract" - core of the operating system 
+  is a set of hidden "components/modules", 
+  which are not typical programs, but are 
+  just passively resident, in the main memory - 
+  they are not executed normally, like 
+  programs 
+      - there is a cpu scheduler module/component
+      - there is a process manager module/""""
+      - there is a virtual memory manager """"
+      - there is a thread manager """"
+      - there can be several IO device drivers """
+      - there are several networking components """
+      - refer to big pictures 
+- on the other hand, "non-core components" are 
+  "visible" and "directly accessible" - these do 
+  not provide core services, but provide other 
+  OS services, like "CLI", "system status", "file 
+  operations", and other "common jobs" to be 
+  done on the system - these are treated like 
+  common programs, but they are provided by 
+  operating system developers/vendors - these 
+  are managed, using processes   
+        - shell is for CLI 
+        - terminal emulator, which manages 
+          terminals for CLI 
+        - ls for listing the files, in the 
+          system 
+        - ps is for providing status of 
+          processes, in the system 
+        - top provides dynamic information 
+          of processes, in the system - 
+          more interactive operations for processes,
+          in the system 
+        - shell has internal commands, for operations
+        - there are several external commands/
+          utilities, in the system, which are 
+          non-core - less / grep / wc ......
+        - which  ls 
+        - which  ps 
+        - which  top
+        - which  less
+        ..................
+        - ls is used to "list information of the 
+          files/directories", in the system - 
+          to get all these information, it 
+          still needs to "access core services
+          of the OS, using system call APIs"
+
+        - ls -l  /root/  |  less
+-->similarly , for   ps -e  | grep 'bash' 
+-->in this context, we are loading/launching 
+   active program instances of ls and 
+   less
+--->shell will create a child process and load/
+    execute /usr/bin/ls 
+--->shell will create another child process and
+    load and execute /usr/bin/less 
+
+
+    - in this context, we are loading/
+      launching two system utilities, ls 
+      and less
+    - as per operating system rules, 
+      these will be executed, as processes
+    - these two processes need to be 
+      linked, using another OS service, 
+      called pipe IPC mechanism - inter
+      process communication ??? in this case, 
+      the IPC mechanism will be an unnamed pipe
+--->in this context, ls will generate a stream of 
+    data and this data will be passed to less 
+--->less will output the data to the terminal 
+    one page, at a time - we can scroll the data
+    presented, by less - this is the convenience  
+     
+         Pi--->ls               Pj---->less
+          |                     |
+          ------->==========---->(a pipe)
+           - in this context, unnamed pipe is a 
+             core service managed, by OS 
+           - for this entire set-up, who 
+             is setting-up the processes, 
+             pipe, and linking them ???
+             - processes are created 
+               , with the help of 
+              system call APIs and 
+              shell invokes the system call 
+              APIs, for process creation  
+             - pipe is created, using 
+               a system call API and 
+               shell does the request 
+             - linking the processes 
+               and pipe is done, 
+               using system call APIs, 
+               but requested by shell
+--->in the above context, creation of processes, 
+    IPC set-up, and linking of processes, using 
+    IPC is done, by shell , using system 
+    services/system call APIs  
+     - in a modern OS system, processes 
+       are managed, using certain 
+       hierarchy - there will be a well 
+       defined parent-children set-up, 
+       in the system - processes are 
+       created and managed systematically 
+     - in a modern OS system, processes 
+       are the main entity, which are used 
+       to manage active applications and their 
+       resources    
+        - in the above case, a shell process
+          is the parent process and it 
+          has created two children processes
+          to manage ls -l(ps)  and  less
+        - shell has created children processes
+          with the help of core of the OS  
+      - similarly, there are other utilities/
+        tools, which are used, for other 
+        generic operations
+        - one such is  /usr/bin/okular 
+        - this is a non-core utility, 
+          which can be active,using 
+           a process
+        - this utility is used to 
+          read/view a pdf file 
+        - if we need to read/view several
+          such pdf files, we need to create
+          one active instance per pdf file, 
+          so there will be several processes
+          
+          Pi----->/usr/bin/okular--->a pdf filei
+          Pi+1--->/usr/bin/okular--->a pdf filei+1
+          ...
+          Pi+n--->/usr/bin/okular--->a pdf filei+n
+      - based on all the above discussions, 
+        core components provide core services, 
+        like scheduling/cpu allocation, file 
+        IO, memory allocations, and other such 
+        services - we will see more services, 
+        as we progress
+      - non-core components are visible and 
+        provide convenient services, like 
+        listing a file, listing contents of 
+        a file, but they need to  access 
+        core services, like file IO, for 
+        providing the convenient services 
+
+      - for example, take 
+          --->cat   pro_1_introduction.txt 
+
+         - what happens, when we type cat ??
+            simply put it, it will list the 
+            contents of a file - however, the 
+            shell needs to create a process 
+            to manage the cat program/utility 
+            -shell uses process creation service
+            of OS to create a new process, for 
+            cat ??               
+
+         - what does cat do ??
+             - it uses file IO core services
+               of to get file contents(low-level)
+               from 
+               the system/file and list the 
+               contents(this is high-level)
+
+         - does cat use core services of OS ??
+              - as above, uses file IO core 
+                services
+
+ - what are hw interrupts and how are these 
+   generated ??
+        - IO chips /controllers, in the 
+          hw platform 
+        - for instance, network IO chip
+        - for instance, USB bus chip 
+        - for instance, timer chip of 
+          the system 
+        - these IO chips generate hw interrupts
+          due to external/ events 
+        - for instance, if there is new 
+          network data received, in the 
+          network chip of the system   
+        - USB bus chips are responsible,
+          for USB bus data transfers of 
+          keyboard/mouse and other devices
+          - these use hw interrupts,for 
+          data arrival events 
+        - timer chip used to manage timing
+          of the system - without this chip 
+          and its hw services, OS services
+          like cpu scheduling and network 
+          services will not work - these 
+          generate int. events to the processor
+          and these events are processed, by 
+          OS code/core components, like 
+          scheduler and time-management 
+          services  
+ - what is the processing done, for hw interrupt 
+   events ??
+        - for instance, if there is new network 
+          data and it arrives and int. is generated, 
+          it will be processed by OS, using 
+          interrupt processing routines(ISRs) 
+          and data will be passed to networking 
+          components of the core of the OS -
+          this data will be further passed to 
+          applications,as per networking 
+          services requested, by the 
+          applications ??
+        - can we say, that interrupts are 
+          inevitable low-level hw features
+          needed, for OS and applications ???
+           - YES
+           - interrupt processing done, 
+             with the help of OS
+           - further OS will process and 
+             provide services to applications  
+         - in addition hw timer chip generates
+           ints./events every few msecs and OS does
+           processing and one of the main 
+           processing is invoking and executing 
+           scheduler/dispatcher, for multitasking
+           of processes 
+            - for this, let us see a demo ???  
+
+ - what are system call APIs ?? what is special
+   about these APIs ?? are they similar to 
+   hw interrupts ???
+      - for core services, system call APIs
+        are provided 
+      - core services/core components are
+        hidden, but system call APIs are
+        used to access them - system libraries
+        are used to provide system call APIs 
+        - these system call APIs are used to 
+        access one or more core services, for
+        utilities/applications
+      - let us visit the system call API/
+        system call processing diagram ??
+      - every system call API uses a 
+        "special machine instruction/ 
+        trap instruction" - this machine
+        instruction generates a "sw interrupt
+        event", for the processor - so, further
+        processing is done, as per interrupt 
+        processing, but it is not the same, 
+        as interrupt processing - here, 
+        there will be no IO processing, but 
+        some other OS core service processing
+      - the trap instruction switches control 
+        to the system /system processing of 
+        system call routine
+          - for example, it may be a 
+            process creation system call
+            /service routine
+          - it may be a process deletion/
+            termination 
+          - it may be setting a scheduling 
+            parameter 
+          -- it may be accessing a file 
+            in the system
+       - once processing is done, it will 
+         return control to the active 
+         application/process     
+       - see more comments, in the next 
+         question ??
+ - what is the processing done, for system 
+   call APIs ??
+       - every system call API/system 
+         call processing is done, 
+         in the context of a process, 
+         as the process is requesting 
+         for OS services - meaning, 
+         system call APIs are invoked
+         by active applications/processes 
+         - in addition, machine instruction 
+         is hard-coded, in the system call 
+         APIs/hidden - in addition, in 
+         each system call API, there is 
+         a hidden system call no., which 
+         is hard-coded and passed to 
+         the system - this no. is used to 
+         process/service a specific routine, 
+         in the system space - in a modern 
+         OS, there will be several system 
+         call APIs - there hundreds of 
+         system call APIs - we will use 
+         a few, in our assignments/practicals
+   
+  
+ - how are the core services/components executed
+   and what are the contexts of execution ??
+       - the core services are processed, 
+         by processing appropriate 
+         service routines of the system - 
+       - we say, that the process is executing 
+         , in this context    
+ 
+       - in the case of interrupt processing, 
+         we do not say that process context
+          /process is executing, but we say 
+         that IO processing or interrupt 
+         processing done - context of execution 
+         is interrupt context, not process/
+         application   
+       
+       - use strace  -o  trace.txt  <cmd> 
+         for tracing the list of system 
+         call APIs invoked, in the cmd -
+         this is a tool, which can help
+         us debug certain scenarios, but 
+         used here, for a demonstration 
+ - in yesterday's lectures, we understood
+   low-level/processor privileges - what 
+   does this mean, for OS and applications 
+   ???
+     - this is a low-level processor / 
+       hw feature and it is used to 
+       manage/protect resources/memory, by 
+       OS 
+     - the OS programs the processor to 
+       execute, with less privileges 
+       and because of the processor's 
+       mode, the applications and 
+       user-space components are 
+       provided less privileges and
+       due to this, there is restricted 
+       access to hw resources and memory 
+       regions of the system - this is 
+       done, for better resource management 
+       and protection of the OS and 
+       resources  
+     - the OS programs the processor to 
+       execute, with more privileges, for 
+       core services/components of OS - 
+       so, core services have almost  
+       unrestricted access to hw resources
+       and system memory regions 
+
+ 
+   - if we login into Linux/Unix/Windows
+     system, using a normal user account, 
+     we are provided less privileges 
+     to access OS services - these 
+     less privileges are managed, by OS, 
+     not processor 
+       - every user account is assigned 
+         a "login id" and based on this 
+         "login id", the system decides to
+         provide "more privileges" to 
+         access "most OS services" or "less
+         privileges" to access "minimal 
+         OS privileges"
+       - for a normal user's login id, 
+         mostly lesser privileges are
+         provided
+       - for a root user/administrator 
+         login id, most OS privileges 
+         are provided, so the root 
+         user/administrator can access
+         most of the OS services
+
+       - use the demos of renice 
+         and accessing /root/  directory
+         /folder of the system ??
+       - if we try to access special 
+         system files, like 
+         /dev/tty1 or /dev/tty2, which 
+         are used to access low-level 
+         resources of the OS, system 
+         will disallow normal users and 
+         allow root user - these 
+         privileges are due to OS 
+         restrictions, for normal user
+         , compared to root user 
+       - whenever any user-account is 
+         to login into the system, corresponding 
+         login id is used and this id is 
+         stored, in every process/active 
+         application of the login session 
+         -this id of a process/active 
+          application/command is checked
+          for every operation - if the 
+          id is privileged, the process/
+          active application is allowed 
+          to complete the operations/
+          resource access - otherwise, 
+          if the id is less privileged, 
+          the process/application is 
+          also less privileged 
+            
+ 
+ 
+
+
+
+          
+
+ 
+  
+
+
+ 

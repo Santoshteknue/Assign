@@ -1,0 +1,221 @@
+ - first, understand the concepts
+      - related to basic theory
+      - follow the lectures/notes 
+ - architectures of systems/sub-systems 
+      - this is not about concepts, 
+        but actual set-up of systems 
+      - initially, it will be big-pictures
+        and abstractions 
+ - read more on these architectures - 
+   in addition lectures ??
+ - "OS related architectures" 
+ - hw related architectures - ???
+ - "application related architectures" 
+ - you need to understand designs - 
+   of different components/sub-systems 
+   - processes/process management/other 
+     core-components, like scheduler  
+   - other non-core components - shell/
+     other utilities 
+ - without understanding concepts, 
+   architectures, and designs, we cannot 
+   understand the system and work ??
+ - "constant reading and revisions" ??
+     - you need to link the details ??
+       - for instance, we need to 
+         link "process to scheduler to 
+         interrupts/handlers" 
+
+ - practicals will provide the opportunities
+   to test our understanding and skills ??
+     - basic to complex problems 
+       to be tested on the system ??
+
+ - because of all the above,understanding 
+   improves, as you do the practicals ??? 
+
+ - while doing all these, you should 
+   ask questions ??
+     - this will help understand your 
+       understanding ??
+
+ - some key points on process states 
+   and life-cycle :
+
+     - whenever a new process is created, 
+       it is added to Rq/ready state - 
+       basically, this means, pd of the 
+       process is added to a Rq/ready state
+
+     - based on the scheduling policy, 
+       scheduler will select and dispatch
+       the process/pd to the processor - 
+       the process will be executed/it 
+       will be running 
+        - we need to understand more of 
+          scheduler, during scheduler
+        - we will understand scheduling 
+          policies 
+        - what about dispatching - 
+          using hw context, for 
+          dispatching ??
+           - refer to the lecture notes 
+           - also, refer to another 
+             set of slides - look 
+             at the dispatcher code -
+             low-level code
+         - you need to "understand more 
+           of the scheduling policies" 
+        - you just need to "understand 
+          the basics of dispatching" 
+
+        - these hw contexts are stored
+          in pds and used, during 
+          scheduling/blocking/preemptions
+
+     - let us understand blocking 
+       and termination of a process :
+         
+        - there is a normal termination 
+          of a process, when the application
+          /program/utility completes
+          - let us see simple examples
+          - in these examples, exit() 
+            is invoked, which leads to
+            normal termination of the 
+            process - the programs 
+            invoke exit() - refer to 
+            while11.c 
+           - in the case of cat > cat.txt, 
+             it will wait for user-input 
+             - once user input is given, 
+             it will execute and again 
+             block and wait, for user-input
+             - if ctrl-D is entered, the 
+             cat utility will complete 
+             and invoke exit() system 
+             call API 
+        - let us understand the lifecycle
+          of a process using while11.c 
+          with a continuous while(1) loop:
+           - it is loaded and added to  
+             Rq
+           - since it is immediately 
+             scheduled, it will use 
+             50% of cpu time, along 
+             with another w1
+           - we cannot normally terminate
+             this process, since the
+             program design does not 
+             support exit() 
+           - we can stop/suspend this 
+             process using SIGSTOP
+           - we can resume this process
+             using SIGCONT 
+           - we can abnormally/forcibly 
+             terminate this process
+             using SIGKILL 
+        
+        - in any "system call API execution",
+          there will be a "machine instruction" 
+          or "trap instruction", which will 
+          be executed and the "processor 
+          will do several low-level operations"
+          and finally, there will be 
+          "jump to the system-space / 
+          system call handler" - after this, 
+          system call handler will do OS
+          related processing and invoking
+          service routine(s) and finally, 
+          complete the system call handler 
+          and again, execute another 
+          special machine instruction 
+          - due to this, control/jump
+          is transferred to the user-space
+          /process/active application - 
+          processor takes care of return 
+          jump and control
+
+       - as per earlier discussions and 
+         understanding, scheduler is 
+         invoked due to the following 
+         actions :
+          interrupt events 
+                |
+                 ----> ISR(s)
+                        |
+                        ------>processing
+                                 |
+                                 ---> scheduler 
+       - as per the above design, 
+         due to hw interrupts, 
+         scheduler is invoked at 
+         the end of interrupt handlers
+         and other such OS handlers, 
+         in the system space ??
+
+   - Pi ---> active progi(one instance)
+               |
+               ---->codei,datai,heapi,stacki
+                     |
+                     ---->there are different segments
+   - Pi+1 --->active progi(another instance)  
+                |
+                ---->codei,datai',heapi',stacki'
+                      |
+                      ---->there are different segments
+
+     - why codei is used, in both the processes ???
+            - why not codei' ??
+            - in this case, code segments are 
+              different, but they are shared-
+              this is achieved, using certain 
+              hw memory management techniques
+              - we will see the details, during
+                memory management ??  
+
+     - there are several ready queues / wait 
+       queues, in the system - so, for instance, 
+       there may be one wait queue /list per 
+       resource, in the system - there can be 
+       several Rqs/lists, in the system - it depends
+       on the implementation of the scheduler
+
+     - in a typical OS set-up, processes may be 
+       managed, using parent-child relationship 
+       - normally, every process has its 
+         parent process - this hierarchy is 
+         well managed 
+       - if the child process terminates, its
+         state will be set to Zombie - pd 
+         is still maintained, but resources 
+         are freed
+       - after this, the "parent process" will 
+         "clean-up" the "child process" and the 
+         "child process/pd is deleted" - parent 
+         process does not terminate the child process
+         - we will discuss certain details  of 
+           this "clean-up", during "system 
+           call APIs and programming"
+       - normally, a single process is used 
+         to manage an instance of active 
+         application 
+       - however, in the real-world applications, 
+         multiple processes are used to manage
+         a single active instance of an 
+         application - see the related 
+         text files ??
+          - see the pro related text file, 
+            as well    
+          - please refer to IIS server+ 
+                           .net worker 
+                           processes+threads
+          - refer to nginx server + 
+                        worker processes  
+
+          - 
+    
+    
+
+
+

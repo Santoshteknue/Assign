@@ -1,0 +1,2469 @@
+-->there are certain misconceptions :
+
+   -->OS is theoretical - nothing like that 
+      -->this is the perception due to text books, 
+         which provide the theoretical perspectives
+      -->however, when we understand the practical 
+         designs/details, OS is a practical system 
+         based on theoretical foundations
+   -->so, need practical exposure to the systems 
+      and related details
+-->read and revise text books, as needed, but 
+   align with the real world systems 
+   -->responsibility is to complete the practical 
+      learning  
+
+a typical OS does the following :
+ -->manage resources of the computing system 
+
+ -->virtualize resources of the computing system, 
+    in addition to managing
+      -->abstrations are presented  
+
+ -->there are several subsystems/components, in a 
+    typical OS 
+
+      -->there are too many components and 
+         their details 
+     -->it takes a reasonable amount of time 
+        to cover the details  
+
+ -->most of these subsystems/components work together
+    to provide functionality 
+
+      -->need to link the details of different 
+         components/subsystems
+
+      -->it takes more time to link the details, 
+         as it is not straight forward  
+-->in these areas, learning is a continuous process
+-->terminology is critical , in these areas, 
+   as there are different conventions, but 
+   basics remain the same 
+-->terminology is much to do with topics and 
+   context 
+-->most of the big-pictures and other diagrams 
+   are representing actual architectures/designs/
+   details 
+- let us look, at a few big-pictures of 
+  OS architectures and components
+  - in any system , there is a hw platform
+    - hw system 
+       -->as part of the requirements,we 
+          will be learning certain parts
+          of hw platforms
+  -->on top of the hw platform, typically, 
+     OS sw stack is loaded - the OS stack is 
+     on top of hw and managing hw resources 
+     and other responsibilities
+      --->like any sw stack, there are several 
+          "components /modules" and there is 
+          "layering"
+      -->OS is like any other sw stack, but 
+         a bit special ??    
+  - on top of this, there is an OS platform 
+    - the "core of the OS", which is called 
+      "KERNEL" - there are several components, 
+      in the "core of the OS" - we will see the
+      details, below  
+--->the core of the OS/kernel is loaded 
+    just above the hw platform, for managing 
+    resources and core responsibities of the 
+    OS 
+--->in typical text books, the term OS means, 
+    core components of the OS - however, the books 
+    use the 
+    term just OS - actually, in the real-world, 
+    core components of the OS , along with 
+    non-core components  of the 
+    OS provide the complete OS 
+    - these "core components/KERNEL" interact 
+      closely with the hw and are responsible, 
+      for "resource management" 
+    - core components do much more, than just 
+      manage "hw resources" - there are other 
+      details, that we will understand, as we 
+      study more  
+    - just above the core of the OS, there are
+      several "non-core components" and "applications"
+--->a set of non-core components are stacked above 
+    the core components, as part OS architecture 
+    and design
+--->many of the core components are linked together, 
+    using certain OS mechanisms
+-->similarly, many of the non-core components 
+   are linked to the core components, using hw 
+   mechanisms and OS mechanisms
+     -->we need to understand hw details and 
+        hw mechanisms 
+     -->we need to understand OS details and 
+        OS mechanisms   
+  -->refer to lecture diagrams, for big-pictures 
+    - it is these non-core components, along with
+      core components provide "a complete OS"
+-->when we install an OS on a system, both core 
+   components and non-core components are installed, 
+   in the system 
+      -->a set of sw components/modules make up 
+         core of an OS 
+      -->another set of sw components/modules make up 
+         non-core of an OS 
+      -->so, an OS is a large set of sw components 
+         linked together to make the Operating 
+         system stack - it is a sw stack  
+    - core components provide core OS services, 
+      including resource management ??
+        -->we will see core services, like 
+           OS mechanisms 
+    - non-core components use these core services
+      and provide further services to the 
+      end-user/developer/administrator ???
+        -->in this context, non-core components 
+           are dependent on core components to 
+           do their jobs
+        -->without core components, non-core 
+           components and applications cannot 
+           function
+-->very basic services, like cpu resource and 
+   memory resource management cannot be done, 
+   without core services
+     -->some of these details will be cleared, 
+        during process management module and 
+        cpu management module  
+        -->applications use the services of 
+           core components and non-core components
+           to complete their jobs   
+  - there are different perspectives of OS, 
+    which depends on the user /developer/ 
+    administrator ??
+-->why we need OS and the different perspectives ??
+--->apart from providing resources and several 
+    mechanisms, OSs provide interfaces to 
+    applications/user/administrators
+    -->one of the common interfaces is CLI or 
+       GUI
+    -->for professions requirements, CLI and 
+       GUI are used - in fact, CLI is very 
+       popular
+    -->for instance, we may understand CLI 
+       interfaces, as part of understanding 
+       non-core components of OS     
+       - it may be used to run just commands 
+       - it may be used to run  programs 
+       - it may be used to run certain scripts 
+       - it may provide a set of interfaces 
+       - there can be a combination 
+         of the above 
+       - there is no single right way of 
+         approach/perspective ???
+       - there are many abstract 
+         perspectives of OS ??
+            - many components, features and 
+              services are hidden ???
+--->many of the features of OS are hidden and 
+    abstracted - many services are provided, 
+    in abstract forms to the end user/developer/
+    admministrator
+--->we can understand the details of some of 
+    these services, but some are more complex 
+    and deeply hidden
+--->while learning OS, certain topics can be 
+    understood, but certain topics are deeply 
+    hidden    
+              -->what are the reasons,
+                 for such abstractions ??
+              -->why the details are hidden ??
+                 -->deep layering and modularity
+                   -->refer to some of the 
+                      lecture bigpictures ??
+-->based on the above details, can we completely 
+   ignore the hidden design/details of OS components ???
+    -->we cannot ignore all the details, but we 
+       need to understand a good amount of details 
+         -->several os components/modules are
+            layered and interlinked to work 
+            together - eventually, os components
+            work together and provide services ?? 
+            -->most of these services are exported
+               to user-space /end user/developer/ 
+               administrator  
+       - we need to understand the underlying 
+         architecture(bigpictures) / 
+         design(more details)/ 
+         certain working principles/mechanisms/
+         policies
+         -->we are going to study more on these 
+            specific topics 
+- one of the best places to start understanding 
+  an OS, is from the "architectures" - because 
+  architectures give us "bigpictures" - a 
+  typical "OS"/"GPOS" is a large system, so bigpictures
+    -->general purpose operating systems
+       are the best starting points
+   -->for a typical DAC student, GPOS systems 
+      are the best places to learn and work  
+       -->however, we are biased towards 
+          desktop systems  
+--->OS sw stack is different, since it directly 
+    use hw mechanisms, unlike other sw stack ?? 
+- in addition, there are "several low-level 
+  details of hw"(hw mechanisms) and 
+  "core of the OS"(core OS mechanims), apart 
+  from what we see and understand ??
+  -->we need to learn certain essential 
+     low-level hw / core OS mechanims 
+       -->one set is the hw mechanisms
+       -->core OS mechanisms
+   -->these two work together, as described below 
+- "core of OS"(mechanims) uses 
+   "low-level hw features"(mechanims) and 
+  "resources" and provides "high-level OS services", 
+  along with "non-core components" to the end
+  "users/developers/administrators" ???
+   - in most cases, we may be directly using 
+     "high-level OS services", at the end-user 
+     level ?? this is one perspective  
+    
+       applications(??) --->
+                                    |
+                                    | 
+                      non-core OS services + 
+                      core OS services(mechanims) 
+                               ---> 
+                                  |
+                                  |
+                           low-level hw 
+                           services + resources 
+                         (mechanisms)
+
+     -->in many of these cases, to understand 
+        and work with high-level services of 
+        OS platforms, we need to understand 
+        low-level core services/mechanims of 
+        the OS platform ??? 
+  - in most sw architectures, including OS, 
+    there will be layering and modularity - 
+    this is part of any SW stack , in the 
+    real-world ??
+-->what is a sw module ?? what is modularity,in 
+   sw stacks  ??
+  --> a fairly independent sw component of a
+      sw stack , which can be developed and 
+      maintained independently - but this 
+      sw module will be linked/interfaced to 
+      other sw modules, as part of the 
+      sw stack
+  -->a sw module need not be a program  
+
+  - OS is said to be one of the best 
+    sw models, for  a SW stack ???
+-->many other sw stacks are built on top of 
+   OS sw stack and similar designs are used 
+    -->OS sw stack is known as a supervisor 
+       sw stack
+--->supervisor means, more privileged
+ 
+         -->supervisor, for hw resources ??
+         -->supervisor, for applications/
+            application sw stacks ??  
+    -->also known, as system sw stack
+        -->not to be confused, with 
+           application sw stack ?? 
+  - a sw stack will contain several 
+    "modules/components" and "layering of 
+    these modules/components" ??
+      -->these modules are interlinked 
+         and layered, as per their 
+         functionalities and design of 
+         the OS 	
+
+  - what is a sw stack ??
+      -->REFER to the answers above 
+
+  - what are the components/modules, in 
+    a sw stack ?? why there are modules/
+    components ?? why there is modularity ??
+       - development and maintenance 
+         of components and modules is 
+         convenient, for sw engineering ??
+--->these statements are true , for any sw stack  
+          - different modules/components 
+            deal, with different functions/jobs
+            of the core/non-core of OS
+          - it is just not possible to 
+            develop and maintain a single 
+            big component/module,for the OS 
+-->there are several benefits, due to modularity 
+   and layering, as per sw engineering   
+          - for instance, a module/a functionality
+             may 
+             be removed /disabled
+--->the architecture and the design of sw stacks
+    support, such features  
+          - another module may be added, 
+            if another functionality is needed
+          - in general modularity is common, 
+            in sw stacks
+     -->the above points are true, for any 
+        sw stack and we will be focusing 
+        on OS stacks  
+  - why are they layered ??
+--->this is true, for any layered sw stack
+    -->components/modules are stacked on 
+       top of other modules  
+      - components are dependent on 
+        other components/modules - that 
+        is the design and this is common, 
+        in sw stacks  ?? we will understand
+        some of these details, from OS 
+        perspective 
+-->typically, many of these modules are 
+   linked/layered to work together and 
+   provide services 
+  - how do they work together ??
+     -->refer to the above comments
+
+  - how are they linked together ??
+     -->refer to the above comments     
+--->in the above discussions, there are clear 
+    details, for modules and layering
+-->following details explain, how these 
+   components are executed, during ??
+   -->many of these OS components are 
+      not programs,meaning they do not 
+      execute conventionally  
+   -->so, their execution is unconventional 
+  - how are the different components/
+   modules of an OS stack  executed ??
+      - this is very critical, for understanding
+        any sw stack, including OS ??
+        -->the detailed answers are provided
+           below, in this document
+        -->typically, system library APIs
+           are invoked to trigger execution 
+           of OS services/components
+           -->this is the design and the working 
+              of OS stack
+-->we will see more details, during system call 
+   APIs and system call executions - system call 
+   APIs involve certain low-level/micro-level 
+   hw mechanims  
+        -->there are other triggers , which 
+           we will see, as we progress  
+        -->one of the other triggers is hw 
+           interrupt events and their processing  
+ - in the  case of OS, following are some of 
+   the modules/components, which are layered ??
+     - "system libraries" /several components 
+       are provided to user-space, which 
+       provides "system call APIs"/"system 
+       calls" - system call APIs provide access to 
+       core services of the system 
+--->system libraries are provided, in user-space 
+--->system utilities are provided, in user-space 
+       -->system libraries are part of non-core
+          components of an OS 
+       -->tools/utilities are part of non-core
+          components of an OS 
+       - using these core OS services/system call APIs, 
+       applications/
+       utilities(non-core components/modules)
+       interact /interface, with actual core services
+       /components of OS 
+        -->for instance tools/utilities use
+           system call APIs/system libraries 
+           to access core services of OS - actual 
+           core components are accessed  
+       -->applications can use system call 
+          APIs to access core services/actual 
+          core components 
+       -->in these discussions, one or more
+          core components are utilized, but 
+          hidden - one such core component is 
+          system call interface layer  and many 
+          others exist, like process manager, 
+          process memory manager, scheduler, 
+          IO subsystems
+--->typically, as a developer/administrator /user, 
+    user-space and user-space components are 
+    visible /accessible
+     -->as part of user-space, we will be dealing, 
+        with CLI /system utilities/tools   
+-->however, system space /system space components 
+   are hidden/ not directly accessible
+   
+      -in this context, there is a system call 
+       interface layer is hidden, in the system 
+       space / core of the OS, but tightly linked
+       to system libraries - these two layers
+       work together ?? we will see more details, 
+       during system call APIs and system call 
+       execution ??? due to these two components, 
+       system calls are executed 
+      -->with the help of system call interface
+         layer, system libraries/APIs can connect 
+         /link to core components/services of 
+         OS - this is done, in order to enable 
+         applications/utilities/user-space 
+         components to access core services of 
+         OS - this is the architecture and design 
+         of any typical GPOS
+          -->a GPOS can be used to manage 
+             a desktop or a server or another 
+             system 
+
+          -->based on the usage, a GPOS may provide 
+             different services  
+      - this system call interface layer is 
+        connected to several core components 
+        /modules of the OS core - for instance, 
+        following are some of core components 
+        /modules/real-world examples :
+
+           - process manager
+           - thread manager 
+           - cpu scheduler 
+           - multiprocessor scheduler/load balancer 
+           - physical memory manager 
+           - virtual memory manager 
+           - IO components/device drivers
+           ..... many more such components
+-->we will discuss the design and details of 
+   the above mentioned core components, as part 
+   of our learning 
+     - in the above cases, all these component s
+       work together and execute together - we will
+       understand more on their execution, during 
+       hw interrupts/triggers and system call APIs
+       /triggers ???
+        -->all these components are linked 
+           together, using design of OS 
+        -->we need to understand certain 
+           "hw mechanisms" and "low-level core 
+           OS mechanims" to understand the working 
+           of "hw interrupts" and "system call APIs" 
+--->initially, let us understand hw interrupts and 
+    their processing 
+--->similarly, let us understand system call APIs 
+    and their processing
+--->in a typical OS, there are several background 
+    processing actions, apart from foreground 
+    processing/executions  
+     - interrupts are hw services, which are used
+       by OS and in turn, provide services to 
+       applications, like cpu scheduling and 
+       IO processing/network processing - these 
+       are background processing actions 
+       -->low-level services like hw interrupts
+          enable high-level services, like 
+          application scheduling   
+-->for instance, an application does not execute ??
+    -->application may not be scheduled 
+    -->applicaton may be provided resources
+    -->certain IO data is not available, like 
+       network IO 
+--->how do we find the real cause of the problems ???
+--->refer to big pictures, for undertanding interrupts 
+    and system call APIs 
+
+     - let us initially understand certain 
+       characteristics of hw interrupts and 
+       their processing ??  
+-->we will be using certain conventions, for 
+   representing active applications/processes
+    -->we can use the terms "active applications
+       and processes", interchangeably 
+    -->we will understand processes, as we 
+       study about process managment, in 
+       OS  
+-->we will be using certain conventions, for
+   explaining interrupt processing /actions
+-->in the case of interrupt processing, certain 
+   hw mechanims will be involved, but these 
+   are real, micro-level details of "hw/processor"
+     - let us understand interrupt events and 
+       processing, using a scenario/context:
+--->active applications/processes are extended 
+    copies of programs - for instance, we can 
+    have multiple copies of active instances
+    of a program - refer to the lecture diagrams  
+          - let us assume, that there is a
+            an "active application instance"
+            (application 
+            level/perspective ) managed, by 
+            "a process"(os level/perspective) 
+          - let us assume, that this process/
+            active application is currently        
+            scheduled and dispatched on the 
+            processor - scheduling/dispatching 
+            an active application/process is 
+            a service of OS - this 
+            means, that the process/active
+            application is 
+            currently running/executing on the 
+            processor - code
+            of the active application is executing
+            /running on the processor   
+          - what happens, if there is an 
+            interrupt event/hw signal, 
+            like hw timer event(hw/hw mechanim) or
+            network IO event(hw/hw mechanim) ???
+            (hw level/perspective) 
+            -->these are asynchronous events 
+             - see the lecture diagram ??
+            - the process/active application will 
+              be interrupted(execution flow
+              /control will be disturbed) 
+              and control 
+              will be passed to OS core 
+              and a routine/ISR(part of 
+              OS core) will be 
+              processed ?? there will be a 
+              special jump - this is  part 
+              of the hw/OS set-up and it 
+              works correctly ???
+--->in most cases, these are part of the hw/OS set-up 
+    and their mechanisms  
+        -->the above action is treated as a 
+           special jump - such a special 
+           jump is due to interrupt/hw mechanism - 
+           as part of this action, active 
+           application is temporarily 
+           interrupted/suspended(interrupted is a
+           better terminology)   
+          - as part of this interrupt 
+            processing, there will be 
+            processing/execution of core components
+            and once the processing is 
+            done, control is returned 
+            back to the application/process
+--->in this context, core component(s) are processed
+    /executed, due to interrupt triggers
+--->interrupt service routines/ISRs are 
+    part of OS core components  
+      -->once the interrupt/ISR processing
+         is done, using another hw mechanism 
+         , control is transferred back to 
+         interrupted/suspended active application
+
+     -->once the control is returned back to the 
+        user-space, the active application/process
+        resumes its work
+ 
+     -->as part of the interrupt processing, 
+        ISRs will invoke other core components, 
+        as part of OS set-up 
+          - as part of the above, hw level 
+            and OS level features/services
+            are used ???
+          - why there are interrupt events/interrupt
+            processing, 
+            in the system ??
+             - for resource management - 
+               for instance, to manage 
+               cpu scheduling/cpu resource
+               management, hw interrupts 
+               are needed ??
+          - why there are interrupt events/
+            interrupt processing, 
+            in the system ?? 
+             - for instance,for processing 
+               cpu scheduler or IO data or 
+               some form time management
+-->using cpu resources and cpu scheduler, OS 
+   implements multitasking 
+-->in addition, hw interrupts /events/triggers 
+   play an important role, in multitasking 
+--->there are several OS services, that require 
+    hw interrupt events, in the system 
+          - there are several low-level 
+            details/processing involved, 
+            in interrupts and their processing-
+            we may understand certain parts 
+            and ignore certain other parts ?? 
+       -->we will add more details, in the 
+          next set of topics, like cpu 
+          scheduler - as part of the special 
+          jump, there are several low-level 
+          actions taken, at the hw level - 
+          we will discuss these, in the upcoming 
+          topics 
+--->many of the hw features of hw interrupts are
+    passed on to system call APIs/mechanims
+--->system calls/system call APIs/processing 
+    use similar hw mechanisms, like hw 
+    interrupts/processing 
+--->refer to big pictures of system calls /system 
+    call APIs
+--->system call APIs are typical sw interfaces/
+    library APIs, but special
+--->if we invoke one or more system call APIs, 
+    certain OS services will be processed
+--->once we have understood the above details/diagrams, 
+    read the following      
+    - what are system call APIs and their 
+      working - involves certain hw low-level 
+      mechanims ?? - system call APIs' actions
+      are similar to hw interrupt's actions, 
+      but there are certain differences ??
+          - all core services of the OS 
+            are accessible, using system call 
+            APIs - there will be one system call 
+            API, for a specific core service - 
+            for instance, processes/
+            threads/virtual memory/IO services
+            and many more ?? for any core service, 
+            one or more system calls/APIs are 
+            invoked, by the application/system utility 
+          - we may use these core services 
+            directly or indirectly, but they 
+            are used ?? meaning, we may invoke 
+            system call APIs directly or 
+            indirectly ?? directly means, our 
+            program /code directly uses 
+            system call APIs - indirectly means, 
+            our code/program uses another sw 
+            stack, which may use system call 
+            APIs  
+    - why do we need to use system call APIs ??
+           - same as above..
+       -->these are typical interfaces to interact
+          with OS core components / services 
+-->system call APIs are a form of interfaces to the 
+   OS core/services - system call APIs are one of 
+   the lowest-level interfaces to the OS  
+--->in addition, there are other forms of interfaces, 
+    which can be used to interact, with OS, as per 
+    requirements 
+  - what happens, when a process/active application
+    invokes a system call API, directly or 
+    indirectly ??
+
+    -->refer to lecture diagrams/pictures
+    -->active applications use system call 
+       APIs provided by system libraries 
+      -->as part of the system call execution/
+         actions, there is a special jump - 
+         following actions are taken 
+--->why this is known as a special jump ?? details 
+    follow ?? 
+      - control is switched/passed to 
+        operating system - "system call 
+        handler" - this handler is part of 
+        system call interface layer - the control 
+        is passed to 
+        system call handler, with the help
+        of an interrupt table of the OS/mechanism - 
+        similar action is taken, for hw 
+        interrupt processing - the interrupt 
+        table maintains appropriate OS 
+        routines/handlers, as per the set-up - 
+        this system call handler 
+        will use a system call table/
+        trap table(part of the system call interface
+        layer/which is part of the core components) to 
+        pass control to a system service 
+        routine of "a specific core component of 
+        OS" , for completing a system call 
+        service request ??? this service routine 
+        will do the real job of core service 
+        requested  
+      - every system call API /service 
+        request will pass a hard-coded 
+        no./system call no. to the 
+        system call handler - this no. is 
+        used by the system call handler to 
+        select an entry, in the system call 
+        table/trap table, for selecting the 
+        service routine to be executed - for every 
+        service/service routine, there is a fixed 
+        /hard-coded system call no./system call API  
+      - once the processing is completed, 
+        control is passed back to the 
+        system call handler and eventually, 
+        control is switched back 
+        to the process/active application - the 
+        interrupted active application resumes 
+    - what is the difference between 
+      an interrupt event processing 
+      and a system call API processing??
+
+    - what is the difference, in their 
+      processing ???
+       - hw interrupts are generated 
+         due to hw events, like IO(IO controllers
+         of the hw/network IO) or 
+         timing(hw timer controllers of the 
+         system), which are not controlled
+         by applications/developer/high-level 
+         platforms(java) - interrupts/interrupt 
+         processing enable background processing, 
+         in a computing system - corresponding 
+         ISRs are processed   
+       - however, in the case of system call 
+         APIs, applications/developer/
+         high-level platforms(java) will explicitly 
+         invoke system call APIs - closer to 
+         code/program/applications/users - typically, 
+         these are sw triggers  
+       - end result of interrupts and system 
+         call APIs lead to control switch/jump to 
+         system/core of the OS and again, 
+         control switch back to the application
+         /user-space
+       - the underlying low-level hw mechanism 
+         is similar, for hw interrupts and 
+         system call APIs
+--->in many of these discussions, hw mechanisms
+    are involved - for a typical DAC student, 
+    certain level understanding is sufficient  
+       - in the case of system call APIs, every 
+         system call API invokes a hard-coded
+         "hw machine instruction/trap instruction" -
+         this hw machine instruction and its 
+         mechanism is a hw mechanism - 
+         this machine instruction /trap 
+         instruction executes and generates a
+         special jump/control switch - this 
+         effect is similar to a hw interrupt 
+         event, but not the same
+--->hw interrupts are hw events 
+--->system call APIs are sw triggers, 
+    but similar effect  
+---> a highlevel service of OS is process - 
+     without process service, most of the 
+     non-core components can be active - 
+     no application can be active 
+--->in addition, most of the OS services are built 
+    around processes, in the system  
+--->so, one of the best places/services to start is 
+    process /process management  
+  - in a typical OS set-up, most non-core components 
+    will be managed and executed, using processes
+--->refer to big pictures of processes 
+    -for that matter, any application is 
+     managed and executed, as a process or 
+     a set of processes 
+     -->many OS utilities need to be managed/
+        executed, using processes/active 
+        applications ??
+     -->any user application also requires 
+        a "process"/"active application", for 
+        managing and execution - an active 
+        application can be controlled by OS, 
+        not a program 
+    -->we will discuss a typical set-up of
+       a process, during process management topic    
+--->specialized operating systems exist , in 
+    the real world and these are not GPOS 
+    systems 
+  - in a typical GPOS, like Unix, Linux, Windows 
+    and others are treated, as GPOS - general 
+    purpose operating systems ?? most non-core
+    components are managed, as processes - 
+    in any case, every application requires 
+    a minimal of one /single process - an 
+    application may 
+    require multiple processes /instances ??
+--->in our initial discussions, we will only 
+    consider a single process to manage an 
+    active application instance 
+--->however, in the real world, there are complex
+    scenarios/applications, that use 
+    multiple processes, for managing  a 
+    single active application   
+
+  - in addition, these non-core components 
+    need to interact/interface with OS core
+    components, using system call APIs ???
+--->many of the non-core components are 
+    treated as programs and managed, using 
+    active applications/processes - "this is 
+    a common set-up, in GPOS systems" 
+  - in addition, most of the core components 
+    are modules/not programs, which are 
+    loaded into memory and used differently - 
+    these are not stand-alone programs, 
+    but components/modules, that provide 
+    code and data - 
+    code and data of these modules are executed, 
+    as part of system call executions or 
+    hw interrupt processing executions  
+
+  - we say, that most of the core components/OS
+    are loaded and resident, passively, in 
+    the system ?? 
+    -->what does this statement mean ??? 
+      -->we will have better understanding, 
+         as we discuss more 
+  - however, non-core components and application
+    (s)/service(s) are loaded and are managed, 
+    using active 
+    processes ?? these are said to be active 
+    entities, in the system - 
+    these components invoke the 
+    services of core of the OS/kernel, using 
+    system call APIs  ??
+     -->once these components are managed, using 
+        processes, they are said to be 
+        active components - again, we will understand
+        more, as we progress 
+--->most of these points will be understood, 
+    eventually ???
+--->can we provide a formal definition, for 
+    operating system(s) ???
+    -->sum of the core components of an OS 
+       can be used to define an OS - of course, 
+       we need non-core components to effectively 
+       use/deploy the OS - however, in most 
+       text books, the formal definition includes
+       the core components only
+     -->professionally, sum of the core components
+        of an OS is known as kernel of the OS
+     -->professionally, a complete /useful OS is the 
+        sum of 
+        core components and non-components
+   
+  - if most of the core components/kernel are passively 
+    resident, how are these components executed
+    ? how is the OS/kernel executed/running ???
+     - most of the core components are passive 
+       components, which are processed/invoked
+       , when system call APIs are invoked, 
+       by "non-core components(utilities)/
+       applications"/services
+  -->in these contexts, applications/system utilities
+     are the causes of trigger of system call APIs
+       -->system utilities are used by users/
+          developers/administrators    
+      - we say, that these components are 
+        processed,as part of system call APIs ??
+      - when these core components are processed, 
+        we still say, that the processes/
+        active applications are 
+        executing - normally, processes/active
+        applications are executing, "in user-space
+        and user-mode" - if these processes/
+        active applications invoke system 
+        call APIs, we say that the core 
+        components are processes, in system(kernel) 
+        space and kernel mode - only difference is that 
+        processes are not executing user-space
+        /application code, but system's core 
+        components/code
+--->user-space /system-space and user-mode/system-mode
+    are based on low-level hw mechanims and OS 
+    mechanisms  
+   -->based on the bigpictures, for hw interrupt 
+      processing and system call processing, following 
+      are the key points :
+      -->if a an active application/process is 
+         executing on the processor and executing 
+         application code, following is the 
+         state of the execution, as per hw/OS set-up:
+          -->the memory space is user-space - 
+             a set of memory regions are used, as
+             per the set-up   
+          -->the processor mode is user-mode, as
+             per the set-up  
+          -->in this state/mode, the process/
+             code is said to be less privileged
+             - the execution context is less 
+             privileged - processor is executing, 
+             in less privileged mode - so, the 
+             code of the application is also 
+             executing, in less privileged mode   
+          -->this is set-up is achived, using 
+             low-level hw mechanisms and OS 
+             mechanims  
+ 
+      -->if a an active application/process has 
+         invoked a system call API and a 
+         system call is being processed, 
+         on the processor and executing 
+         core/system code, following is the 
+         state of the execution, as per OS set-up:
+          -->the memory space is system-space/
+             kernel-space  
+          -->the processor mode is kernel-mode/
+             system-mode 
+          -->in this state/mode, the process/
+             code is said to be  privileged
+          --->in this mode, the execution context 
+              is privileged - the processor executed, 
+              in privileged mode and so, the code 
+              executes , in privileged mode   
+          -->this is set-up is achieved, using 
+             low-level hw mechanisms and OS 
+             mechanisms 
+    -->in unprivileged state/mode, access to 
+       resources is restricted - this is as per 
+       hw and OS set-up  
+    -->in privileged state/mode, access to 
+       resources is unrestricted - this is as 
+       per hw and OS  set-up  
+      - in several scenarios/contexts, interrupts
+        also trigger invokation/processing of 
+        core components of the system - in this 
+        context, we say, that core components are
+        processed, in an interrupt context/processing 
+        - this is not part of process execution/
+        context
+        - otherwise, the space is system-space
+          and mode is system-mode - privileged
+          execution and privileged access
+ --->in these discussions, we mostly deal, with 
+     system calls /processing - very few scenarios 
+     are used to describe hw interrupts /processing  
+      - in the case of sytem call APIs, they 
+        are closer to applications and 
+        core of the operating system - core
+        components 
+
+      - however, in the case of hw interrupts, 
+        they are closer to hw services/features
+        and in addition, closer to OS components
+        and services, like IO management and 
+        device drivers - eventually, hw interrupts
+        will indirectly service applications, but 
+        not directly   
+--->refer to big pictures of system call APIs, for 
+    understanding special jumps and switches  
+      - so, in the context of system call APIs, 
+        when a system call is being processed, 
+        we say, that the corresponding 
+        process/active application
+         is being executed, but system 
+        code/core component is being processed -
+        when a process is executing application
+        code, it is executing, in user-space - 
+        when a process is executing system code, 
+        we say, that it is executing, in 
+         system-space 
+
+      - we say that there is a process context 
+        of execution ??
+           ---> may execute, in user-space/
+                application code
+           ---> may execute a system call/kernel 
+                code/core component code,
+                in system-space 
+
+      - we say that there is an interrupt context 
+        of execution ??
+           ----> IO processing or scheduler 
+                 processing 
+
+   - you are expected to find the service used
+     for data-base/server and in addition, find 
+     the form of multi-tasking used, in the 
+     service/data-base - also find the 
+     hw configuration, if it was uniprocessor 
+     or multiprocessor system ?? what are 
+     the advantages, if we use some form 
+     of multitasking on a multiprocessor 
+     system ???
+      -->answer the above questions, once
+         you are familiar, with data-base
+         services 
+
+  - in the case of non-core components, can 
+    you provide one or more examples of 
+    non-core components, in a typical GPOS system ???
+    -->in this context of discussion, we have 
+       lifted examples from Unix/Linux systems 
+       -->we will be using many of these utilities, 
+          during our lab sessions 
+    -->if you are working on other GPOS platforms, 
+       you can take appropriate examples 
+      - ps utility
+      - ls """
+      - /bin/bash - a shell utility 
+      - chmod     - a file utility 
+      - grep      - .....
+      - nfs utilities 
+       .......................
+      - most of these components are installed
+        as part of OS packages, when the OS 
+        is first installed or later updated
+        , when we explicitly 
+        install the packages ??
+   - you can use the following commands to 
+     extract information, about the core 
+     of the OS ?
+           ---> uname -r 
+           ---> uname -v
+           ---> cat /proc/sys/kernel/ostype
+           ---> cat /proc/sys/kernel/osrelease
+
+   - we can extract the version of the complete
+     OS/"distribution", using :
+
+          cat  /etc/os-release ???
+
+---->you must try the above commands on your 
+     lab systems - in addition, refer to other 
+     commands and assignments, as needed     
+  
+- broadly, the system is divided into core and non-core 
+  components 
+         - according to the "underlying OS" and 
+           "hw architectures", certain design and 
+           implementation details may vary, but 
+           basics remain the same  
+         - in any system, core and non-core will 
+           be present - just they way they are 
+           managed will be different  
+- they are further resident in two different spaces - 
+  user-space / system -space
+     - in such GPOS design and implementations, there will 
+       be an effective separation of user-space and 
+       system-space memory regions - this is denoted, 
+       by a dotted-line - this "isolation/separation/  
+       protection" is done, with the help of hw features
+       and OS management - low-level features of 
+       hw and OS are used
+     - what is the meaning of protection, in this 
+       context ???
+        - user-space components/non-core/applications 
+          cannot access core components/services, 
+          directly ?? this is a form of 
+          protection /isolation 
+        - however, user-space components/non-core/
+          applications can access core components/
+          services, using system call APIs ??
+          -->when system call APIs /system 
+             calls are used, there is a special 
+             jump, which switches the processor
+             mode to system-mode - this is 
+             part of special jump - refer to 
+             the above discussions on system 
+             call APIs and connect ?? connect 
+             the details 
+        - user-space is allowed to access 
+          core services, using restricted 
+          access allowed, by system call APIs ??
+          -->as part of the isolation/protection, 
+          restricted access to core services 
+          are provided by system call APIs
+--->using user-space and system-space, non-core 
+    components/applications are provided 
+    restricted access to system-space/core 
+    components - this is part of the set-up  
+  -->we will understand more, during memory 
+     management discussions 
+-->in many of the discussions, there will be 
+   foreground processing, in the context of
+   applications /users 
+-->there will be several background processing, 
+   in the context of OS, mainly, interrupt 
+   processing and system call processing - this 
+   is the hidden processing, but eventually, 
+   enables foreground processing  
+-- Architecture --> design --> implementations --> ???  
+     - architecture deals with the set-up 
+       of modules , layers , and dependencies
+     - design deals more with the actual 
+       details of the system, like isolation/
+       protection 
+     - implementation will deal, with actual 
+       objects/data/code/related details 
+- user-space is set-up, using 
+  "address-space of processes" -
+  this is done, with the help of 
+  hw attributes of the 
+  processor, along with hw memory management 
+  mechanisms/techniques
+--->refer to a bigpicture describing a process 
+    address-space 
+  - in this context, we will deal with virtual 
+    addresses/virtual address-space of processor 
+    (mechanisms) and processes
+--->virtual addresses are provided and supported 
+    by hw/ processor
+-->OS uses virtual addresses, as it is convenient
+-->we will understand more of these virtual addresses
+   and address-spaces, as part of memory management 
+--->virtual addresses/address-spaces are part 
+    of processes/and their set-up  
+    -->hw and OS mechanisms manage virtual addresses/
+       address-spaces  
+ - some of these details will be explored, in 
+   memory management
+ - processor address-space(s) are divided into user-space 
+   and system-space 
+      --->user-space part is given to a process/ 
+          its active application 
+      -->system-space part is given to kernel/core
+         of the OS
+--->is this process address-space/user-space/system-space
+    set-up, an abstract set-up/virtualized set-up - 
+    eventually, it is connected to the reality ??
+         YES
+--->is this set-up,real ?? YES - it is eventually 
+    connected to real/physical memory/addresses, 
+    using memory management techniques      
+ - in the context of core components, kernel-space/
+   system-space is relevant 
+ - in the context of applications/non-core components, 
+   user-space/application-space is relevant 
+ 
+ - let us use a lecture diagram, for process
+   address-space and other related details:
+     - user-space is used to manage 
+       various segments of an active
+       application, in a process
+--->we will be understanding these abstractions 
+    and set-up, using memory management 
+ --->initially, let us understand simple scenarios, 
+     for these abstractions and later, understand
+     more complex scenarios ??
+  
+ - in further discussions, we will understand 
+   system-space and its usage ??
+    -->we have more discussions, in memory 
+       management sections  
+
+ 
+
+note: we will be studying more on processes, soon ???
+note: we will study and understand address-spaces/
+      logical
+      - address-spaces and virtual address-spaces 
+- system-space is also set-up, using address-space of 
+  processes - this is also done, with the help of 
+  hw attributes and hw memory management techniques - 
+  more, during memory management
+--->we will discuss the benefits of virtual addresses,during
+    memory management topics  
+- more discussions, during "process address-space"
+- "address-space" is popular, in OS platforms - 
+   OS perspective 
+  
+
+- refer to the diagrams, in linux_slides_1.pdf - this 
+  diagram will be explored, during memory management 
+
+- core components are typically resident, in 
+  kernel-space 
+  and the arch. of the kernel /core of 
+  OS is "monolithic"
+ -->in many text books, since the core of the OS 
+    is treated, as OS, it will be mentioned, that 
+    the architecture of "OS is monolithic 
+    architecture"
+  - in this context, how do we interpret monolithic 
+    archictecture of kernel /core(conventionally, OS)?? 
+    - a "single kernel image/sw image/OS image" 
+      is created 
+      using several "core components" of 
+      the OS - this "sw image" is the "kernel 
+      image/monolithic kernel image"/monolithic 
+      OS image" - still, the core components are
+      managed, as modules/layers, but for practical 
+      requirements, linked together to create a
+      single sw image 
+  -->what do we understand, from this statement ??
+     -->understand from sw image perspective - 
+        all other details remain the same   
+  - meaning, all the "core components/modules" 
+  are linked 
+  together to form a single kernel/OS image, which is 
+  loaded, during the "boot-up time" - as part of 
+  boot-time activity, the kernel image /OS image
+  is loaded into the system, using complex 
+  mechanisms -  the kernel image
+  /monolithic image contains "static modules", not 
+  dynamic modules - "ignore dynamic modules/
+  components, for the time being"
+--->for our discussions, a good understanding of 
+    static modules is sufficient  
+    - as per OS platform, following are typical core 
+      components : 
+         - process subsystem/manager
+           (a static component/module)
+         - thread subsystem/manager(another static 
+                                    component/module)
+         - cpu scheduling subsystem/manager(static)
+         - IPCS mechanisms/sub-systems(static)
+         - IO  subsystems + (static)
+         - device driver modules(may be a static 
+                                 or 
+                                 dynamic component )  
+         - ......
+--->we will discuss more components, as we progress 
+    - in the above case, static modules are
+      permanently linked to the core / kernel 
+      image of the OS/an OS image  
+note: based on the GPOS platform, the exact list of 
+      components and their characteristics will 
+      change ??? these are very practical  
+note: in the context of core of the operating system, 
+      components are typically implemented, as static 
+      or dynamic modules - for the time-being, 
+      let us assume, that static modules are only 
+      used
+--->ignore dynamic modules, for the time-being  
+- for practical convenience/flexibility, dynamic  
+  modules, which will be loaded / unloaded, as needed 
+- in a typical GPOS system, static and dynamic modules 
+  are popular
+note : in this document, Linux is used, as the 
+       OS/GPOS platform, for reference - Linux 
+       is considered a good GPOS platform, for 
+       learning and understanding OS concepts/
+       architectures/designs/other details 
+--->we keep adding practical points, as below to 
+    provide a better understanding of the OS 
+    components and their set-up  
+- the typical OS images/kernel images are 
+  present under /boot directory 
+   -->we will be using vendor provided/generated
+      kernel /OS images 
+   -->some specialized systems/engineers/developers
+      may generate their own images, as per 
+      project requirements 
+- whereas, dynamic modules are typically present, in 
+  the  /lib/modules/<kernel-version>/*   directories 
+   -->these dynamic modules are implicitly used
+      by the system/kernel/OS, so we need not 
+      understand specific details 
+--->many directories/files are used to store
+    core components, in the system - similarly,  
+    there are several directories/files
+    are used to store non-core components
+--->as we progress, we will see specific details, 
+    as needed  
+- depending upon the kernel configuration/set-up, 
+  certain modules will be added as static modules 
+  and certain modules will be added, as dynamic modules 
+
+- refer to the kernel configuration details of the 
+  Vendor's kernel - you may need to update/upgrade the 
+  kernel images/modules, as needed ???
+     --->this is a professional requirement, for 
+         projects 
+
+- kernel image / dynamic modules reside, in the kernel 
+  space/system space, after loading 
+
+note:in the case of GPOS, the above set-up is a common 
+     architecture and design
+note: initially, we will accept and assume, that 
+      the OS archicture and design will be 
+      monolithic and there is an user-space/system-space   
+      division of processor address-space 
+
+- typical kernel components/static modules are passive 
+  entities, in the kernel space/system-space - 
+  meaning, they are loaded and resident 
+  passively - there are certain exceptions to 
+  this rule - we will see, as needed ???
+
+- typically, core components will execute 
+  , during system booting, for initialization 
+  - once initialization is done, they are 
+  resident, as passive entities 
+
+- what is the meaning of passive entities ???
+    - passive, in this context means, they are 
+      not "processes"/threads/kernel threads - they 
+      are just modules, which are loaded and resident, 
+      in the system ?? since these are passive 
+      entities, they will not be scheduled/executed, 
+      explicitly - if they are not explicitly 
+      scheduled, normally, they are not executed ?
+      how are they executed / processed ???
+      - these components are event triggered - these 
+     events are hw interrupts and their processing, 
+     system call APIs and their processing, and 
+     processor fault exceptions and their processing ??
+     - the processing is done, as part of some 
+     event processing - these are some of the 
+     true characteristics of a monolithic kernel/OS 
+--->most of the above and below discussions are 
+    based on monolithic OS archicture - many operating 
+    systems, including Linux/Unix and Windows follow 
+    a typical monolithic OS archicture, with minor 
+    changes   
+    - in these discussions, let us assume, that 
+      there is an active application/process 
+      currently executing, in the user-space of 
+      the system ---> application code is executed  
+    - while this active application/process 
+      is executing,what happens, if there is a 
+      hw interrupt event ?? refer to above 
+      discussions  
+    - what are the actions taken, by the hw and 
+      operating system ??? 
+       -->refer to above discussions 
+
+    - refer to lecture diagrams on hw int. events 
+      and system call APIs ??? understand 
+      , how these events are processed, in an 
+      OS platform ???
+       - there are several hw actions and 
+         OS actions - we will see more details 
+         , in the upcoming sessions ???
+       - in these contexts, as part of 
+         ISR/handler processing, apart 
+         from regular processing, kernel 
+         components/modules/services will be 
+         invoked - that is the design and set-up
+       - once the basic processing is done, 
+         as before, the process/active application 
+         is resumed
+       - there are principles and rules, for writing 
+         OS-aware-ISRs ??? 
+       - we will also understand the details, using 
+         appropriate scenarios ??? 
+       - system call APIs and their services is 
+         commonly used, in OS platforms - this is 
+         how OS exports its services 
+       - system call APIs use special machine 
+         instructions, which generate interrupt 
+         like events - these instructions are known, 
+         as "low-level trap instructions" - the basic 
+         principles of interrupts and system call 
+         APIs/machine instruction/trap are same, 
+         but implementation details are different 
+       - refer to the lecture diagrams on 
+         system call APIs and their internal working 
+         ???
+   -->more details are presented, in the above 
+      discussions 
+       - in the case of a typical system call API, 
+         an interrupt like jump is executed an d
+         after the jump, there is a thorough processing 
+         ,using tables and system call service rountines - 
+         - for each system call API, a specific routine
+         is processed and a system service is 
+         completed ??? -->refer to above 
+          discussions 
+--->following descriptions provide a different 
+    perspective to OS 
+-->a typical OS provides several frame-works, for 
+   the system and applications to work - these 
+   frame-works provide tables/objects/system call 
+   APIs and similar infrastructure      
+note: for the above set-up/frame-works to work, 
+      low-level features of processor/hw and 
+      OS are used, which eventually, provides
+      high-level services to user-space 
+      and applications
+
+-->as per the above discussions and below, 
+   if a processor is programmed to execute, 
+   in lesser privileged mode, the executing 
+   code/sw module/component is also provided
+   lesser privileges - hw mechanism is affecting 
+   sw components - now, understand the following 
+   details ??
+
+
+ -->following discussions must be connected 
+    to user-space/applications/utilities 
+    and similarly, system-space/core-components 
+      - if the processor is programmed(OS) to 
+        execute, in lesser privilege mode, 
+        the corresponding code/user-space component
+        will also be assigned lesser privilege??
+         - this will disallow direct access to 
+           hw resources, like network IO/chip
+           or another form of IO/chip 
+         - so, any such resource access 
+           must go through OS services/
+           system call APIs/modules
+         - the less privileged components 
+           are given restricted access to 
+           memory regions, in the system
+           -->we will see more details, during 
+           memory management    
+--->there are many mechanisms and many policies, 
+    in OS implementation details  
+      - if the processor is programmed(OS) to 
+        execute, in higher privilege mode, 
+        the corresponding code/component 
+         will be assigned higher privilege ??
+         - in this case, any resource/hw 
+           IO access is allowed, without 
+           restrictions - this is the hw 
+           privilege characteristics  
+         - the privileged components are 
+           provided access to most of the 
+           memory regions of the system  
+
+note: what is user-mode/less-privileged mode ??
+      in this "processor mode",the privileges 
+      are restricted, like limited access 
+      to memory-map/address-space and 
+      "hw resources" - what is the practical 
+      implication of this low-level privilege
+      on application/code executing, in 
+      user-space ??  in this context, 
+      OS programs the processor to execute
+      , with lower-privileges - see the 
+      explanation below ??? applications are
+      restricted  
+note: what is system-mode/privileged mode  ??
+      in this "processor mode",the privileges
+      are "unrestricted access" to memory-map/
+      address-space and "hw resources" - 
+      the OS programs the processor to 
+      work, in more privileged mode of 
+      execution ??? what is the practical 
+      implication of this on the core 
+      components of OS ??? without this set-up, 
+      core components of the OS cannot manage 
+      resources   
+note: these manipulations of processor modes/
+      privileges  are done, 
+      by kernel of the OS, as per architecture
+      and design ???   
+note: what is the practical impact of these 
+      modes on operating system components and 
+      applications ??? 
+      - core of the OS/kernel is provided 
+        unrestricted access to hw resources    
+        and memory-map/address-space - core
+        of the OS manages hw resources 
+      - however, non-core components and applications
+        are not provided direct access to the 
+        hw resources and memory-map - there is 
+        limited access and any access to 
+        the resource is via OS core services ??
+      - however, the non-core components and 
+        applications are provided restricted 
+        access to 
+        hw resources and other services of 
+        kernel, using system call APIs ???
+        - refer to the lecture diagram on 
+        system call API and switch, in 
+        processor privilege levels ??  
+        - after a system call API, there is a 
+        temporary mode switch to privileged mode
+        and appropriate service routine is 
+        executed,as part of the special jump - 
+        once the service routine 
+        is completed, there will be return 
+        from the interrupt action/system call 
+        action  and the 
+        mode will be again switched back to 
+        less privileged and execution 
+        resumes, in user-space ???
+
+-->when active entities are implemented, using processes/
+   threads, multitasking models are achieved - based
+   on the OS services used, we can achieve different 
+   multitasking models 
+- what is the meaning of active entities, 
+  in an operating system platform  ???
+    - active entities are managed, using processes/
+      threads, explicitly - most non-core components/
+      utilities/services  
+      are managed, as "active entities", using 
+      processes/threads - processes/threads are
+      OS mechanisms/entities, that will be used 
+      to support active entities, in the system - 
+      it depends on the 
+      "multitasking sw model" used, in the 
+      utility/application/service  - based on the 
+      "multitasking sw model", "processes" may used or 
+      "threads" may be used, or 
+      a "hybrid multitasking 
+      of processes and threads" will be used ??
+      - can you find one or more production 
+        grade services, which use one or more
+        of the above "multitasking sw models" ??
+      - why do these services use these 
+        "multitasking sw models" ??
+--->one multitasking sw model used, in a an 
+    application will use processes 
+    only 
+--->another multitasking model used, in an 
+    application will use a single 
+    process and multiple threads/lwps
+--->yet another multitasking model used, in another
+    application will use 
+    several processes and in addition, several 
+    threads, in a process - hybrid  
+
+note: initially, we will be dealing, with a simple 
+      multi-tasking model, using processes only 
+note: however, as per the OS platforms and application 
+      requirements, we may encounter different 
+      multitasking sw models, like hybrid and 
+      threads only ??
+-->conventionally, let us learn process based
+   multitasking sw model(s), before learning 
+   thread based multitasking models and other 
+   hybrid models ??
+
+    - every "system utility" is managed, using 
+      a process, when loaded/launched - initially, 
+      when we use GPOS system, for our learnning, 
+      we will execute several utilities, like 
+      system utilities, for regular operations - 
+     all these utilities are loaded and 
+     managed, as processes ???
+     -->these rules and set-up apply to any 
+        GPOS system, including Linux/Unix /
+        Windows 
+--->this means, we are executing system utilities/
+    related commands  
+--->for the time being, we will use the following 
+    scenarios/examples, for practical understanding
+ 
+    - for instance, when we type a command
+      on a CLI(shell(non-core component)+
+      terminal emulator(a non-core component) + 
+      terminal(a core component), 
+      shell enables running the 
+      commands, but with the help of core
+      services of OS, like process management
+--->shell is the visible part, that most users
+    connect to - other components are hidden 
+    and abstracted  
+       - shell requires core services of OS, 
+         like process management/process 
+         and system call APIs 
+       - every instance of a shell requires 
+         a process instance, for active 
+         execution - a shell without a 
+         process, is a just a passive 
+         component  
+       - in this case, we are using non-core
+         services and core services of OS  
+--->most of our interactions will be with the 
+    non-core components, like shell, but the 
+    core services are used, in the background  
+  
+    - in addition, there will be several system 
+      "processes/daemons", which will be also 
+      loaded/launched and managed, as processes ??
+      - in this case, you need to understand 
+      characteristics of special processes, like 
+      daemons ?? another term for daemons is 
+      services  
+  --->we will be formally studying processes and 
+      their management, in the next set of topics 
+   
+  -->initially, let us assume, that the hw 
+     systems are uniprocessor and the operating 
+     system supports uniprocessor systems only - 
+     however, in the real-world, most systems 
+     are multiprocessor and operating systems 
+     are multiprocessor-aware/capable
+ 
+   - ideally, most modern GPOS systems, like 
+       Unix / Linux "support multiprocessing" - 
+       there is support, "for multiple processors" - 
+       the main support is provided, by the 
+       kernel / core of the OS and its components - 
+       for instance, 
+       there is support, for "multiprocessor 
+       scheduling", in addition to regular cpu 
+       scheduling - as part of this, several 
+       features are implemented, like load 
+       balancing of processes/threads among 
+       the processors, one set of RQs are supported 
+       per 
+       processor, setting processor affinities/pinning, 
+       for processes, and many more
+--->many of these OS features will be discussed, 
+    during  system utilities and practicals 
+    -->we will see more details , during practicals 
+        - in the above case, it is a core 
+          service, which supports multiple 
+          processors/multi-processing 
+        - we may need certain non-core 
+          services , for certain 
+          core multi-processing service
+          -->we will be using certain 
+             system utilities/system call 
+             APIs, for managing multiprocessor 
+             systems 
+
+        - refer to class demo on 
+          taskset  ??? refer to further documents
+          -->during the demos, for scheduling, 
+             we will be, using taskset utility, 
+             for uniprocessor , as well as 
+             multiprocessor scheduling
+--->we will be able to use taskset, after understanding 
+    cpu scheduling and related details
+         
+      --->type, taskset 0x00000001 ./w1&
+
+       -->type, taskset 0x00000002 ./w1& 
+
+       .....................
+   
+   
+note: real-world systems are multi-processor systems 
+      and a sophisticated OS is needed to manage 
+      resources and applications on a multiprocessor
+      system
+   -->in uniprocessor systems, multitasking is 
+      supported, but not parallelism - no parallelism 
+      means, no parallel execution of active 
+      applications/processes on different processors 
+   -->in multiprocessor systems, multitasking 
+      is supported and also, parallelism is 
+      supported   
+     - in a multiprocessor system, multitasking 
+       is supported, along with parallelism - this 
+       can support several active applications/
+       processes/threads to 
+       simultaneously execute on different processors
+  -->do applications/services benefit, due to 
+     multitasking and parallelism ?? main 
+     benefits will be better responsiveness and 
+     throughput,for applications     
+note: we will be using multiprocessing services of 
+      OS , during our  
+      labs and assignments ???
+
+     - most of these core services are exported to 
+       user-space and it is upto the high-level 
+       applications
+       and services to exploit appropriate services ???
+         - high-level services(can be non-core components 
+           of the OS/system services) may use a form 
+           of multitasking sw models/multiprocessing
+           features  
+note : non-core components are system utilities + system 
+       libraries + system processes/services of 
+       a given OS 
+--->in many scenarios/contexts, we will come across
+    system processes - these are processes created, 
+    for the system services, not to execute applications
+    and their jobs  
+     - in addition, non-core components execute, as 
+       processes, with following characteristics: 
+            - the "low-level cpu execution privilege" 
+              is less-privileged-level  
+             
+            - as a consequence, they have restricted 
+              access to resources / IO /kernel space 
+ 
+            - they are allowed to access core services
+              /kernel space, using system call APIs, but 
+              there are very strict restrictions 
+
+            - many of these issues will be seen, when 
+              we use different system utilities and 
+              system call APIs 
+
+            - all non-core components are loaded and 
+              executed, in user-space of their  
+              respective processes and they do not 
+              have direct access to kernel-space of 
+              the system 
+note: in GPOS systems, most activities and features 
+      of OS are built around 
+      "processes/threads/files/memory management"
+
+        - both applications' processes and "system utilities/
+          services", invoke "system call APIs", for their 
+          requirements - whenever a system call API is 
+          invoked, there is a special jump to the kernel- 
+          space and in addition, there is a mode switch - 
+          meaning, cpu's low-level privilege level is 
+          set to privileged - this is done, implicitly, for 
+          each system call API - after this, appropriate 
+          system service routines of kernel components are 
+          executed - kernel components reside, in kernel 
+          space and execute, with higher low-level privilege -
+          this gives them access to most resources, including 
+          IO - still there are restrictions,due to high-level 
+          privileges of the OS - this is based on policies, 
+          like normal user/root user/others
+--->in addition to hw privileges, there are other 
+
+    OS privileges, 
+    that we will come across, during certain policies  
+--->if we remove the shell and many of the system 
+    utilities, it is very inconvenient to interact/
+    interface, with the OS
+ 
+   - what are system utilities ??
+   - why do we need system utilities ??
+       - to do common jobs, in an OS platform ??
+
+       - there is a system utility, for listing the 
+         processes, in the system
+       - there are utilities to forcibly 
+         terminate one or more 
+         misbehaving processes, in the system  
+       - we may wish to create a new 
+         directory or a file,using system utilities 
+       - os provided editors - 
+         we may wish to edit a configuration 
+         file of the system ???
+       - shell utility enables 
+         to load/launch  applications ??
+
+       - these are developed/tested and 
+         provided, by OS developers and 
+         Vendors
+         -->these utilities are installed, 
+         in the system, using OS tools  
+
+       - what do these system utilities 
+         do ?? how ?? they use 
+          system call APIs to do their 
+          jobs ???
+         -->these system utilities also use 
+            certain system call APIs, for 
+            accessing OS services to get the 
+            appropriate jobs done 
+ 
+        - refer to the big picture diagrams 
+
+        - most of the above rules apply to hw interrupts and their 
+          processing - mode switching and higher low-level privileges
+          are the same 
+
+        - so, if there is an application/non-core component executing, 
+          in user-space, 
+          we say, that a process is executing, in "user-space" - this 
+          is known as a "process context of execution"
+
+        - in addition, if a non-core component/application invokes 
+          a system call API, some core services/components are 
+          invoked /processed, in the same process context - so, 
+          when a system call is executing, we still say, that 
+          a process/process context is executing 
+note:     many principles of process context apply to thread context, 
+          as well 
+        - without a process (or a thread context), 
+          blocking 
+         , suspension, or other operations are disallowed,
+          in an application - 
+          this is the design philosophy of Unix /Linux 
+--->without a process entity/process management, 
+    active applications cannot be managed - they will 
+    just be executed, without control, if we do not 
+    have processes/process management services
+  
+ -->in a typical OS platform, our applications are
+    allowed to execute, with restrictions and 
+    control - meaning, our applications cannot 
+    execute, without OS restrictions and 
+    control - this is a typical set-up , in a 
+    GPOS system - there are a few exceptions, 
+    but these require administrative privileges, 
+    in an OS platform 
+--->in most cases, every application is restricted
+    and controlled - there are certain scenarios, 
+    where we use administrative privileges to 
+    provide unrestricted privileges, temporarily
+      -->most of these are controller by 
+         system administrators   
+
+  - even in the "case of resources/managment", "processes 
+    play main role" - "memory management" is a topic, which 
+    is completely built "around processes"  
+ -->in an operating system platform, resources and 
+    memory management are done, with the help of 
+    processes/process management - without processes, 
+    most of the resource management of applications 
+    is disallowed 
+
+        - in addition, if there are int. events, corresponding 
+          ISRs/handlers are processed, in "interrupt context" 
+          of execution, "not process context" of execution - 
+          there are several restrictions, for interrupt context 
+          of execution, in the system - typically, interrupt 
+          events / their processing deals, with time-management 
+          , scheduling, IO processing - eventually, after processing 
+note      so, as in a typical embedded firmware, interrupt 
+          processing is highly restricted to critical 
+         jobs only and major jobs must be completed, in 
+         processes/process contexts ???
+          after int. events, corresponding process/service will be resumed, 
+         unless there is a preemption / rescheduling - some of these 
+         points will be cleared, after understanding cpu scheduling,
+         in operating systems ?? 
+
+        - system call APIs generate "system interrupts/traps" and 
+          their behaviour is similar to hw interrupts, but the 
+          context of execution is process - in addition, system 
+          call APIs generate synchronous interrupt events - 
+          the behaviour of system call APIs is not the 
+          same as hw interrupts, due to their context of 
+          execution ??? in the case of system call 
+          APIs, internally, a machine instruction 
+          is used to generate a trap, which is a form 
+          of low-level processor exception/interrupt  
+
+        - whereas, hw ints. typically generate asynchronous 
+          interrupt events - asynchronous processing, whereas
+          system call APIs are synchronous events and 
+          processing is synchronous  ???
+
+
+nnote : in addition, in GPOS/RTOS platforms, ISRs/ interrupt 
+        processing will also invoke kernel components/ 
+        methods/call backs
+
+
+noteL in the case of OS platforms, similar approach is 
+      followed and in addition, there are few more rules 
+      to be followed, in the OS platforms  
+ 
+
+    - following are some of the typical examples, for processes 
+      used, in managing system processes/services :
+
+         - shells/CLI utilities - non-core - every active
+           shell instance is managed, using a process 
+
+         - basic system utilities//query the system /ps /top 
+                  ---non-core
+         - system daemons/services, like 
+            "init" or "systemd" or "cron/crond" or 
+             "sshd" or any suitable system service/daemon 
+                  --non-core
+
+--->many of the following points/discussions can be 
+    understood,during Linux study
+--->we will revisit these sections, during Linux 
+    study  
+ 
+     - in a typical Unix/Linux system, processes 
+       are created and managed, in a parent-child 
+       hierarchy. - this begins, with the first set of 
+       processes, including init or systemd 
+                   - this enables better process management, 
+                     in the operating system platform 
+   -->the above process management set-up will be 
+      clear,during Linux process memory management - 
+      basics will not change, but certain specific
+      implementation details will change                   
+
+    - what is special about init or systemd system 
+      processes/services ??
+       - depending upon the Linux distribution and 
+         version, init or systemd will be the 
+         first user-space process/system process 
+         created, by the core of the operating system
+  -->as part of the process management, there are 
+     initial system processes created by the 
+     core of the OS - such set-up is common, 
+     in GPOS systems  
+    - as part of the booting/initialization of 
+      the core of the OS, several system processes 
+      are created, including kernel threads - 
+      kernel threads are light weight processes 
+      created, in system space and managed, in 
+      system-space, for core services
+ -->normally, during boot-up several system processes
+    will be created and in addition, applications 
+    will create several processes, as per their 
+    requirements - so, a typical GPOS system will 
+    have system processes, as well as application 
+    processes  
+
+       - in addition to these kernel threads, there 
+         are several user-space processes created, 
+         starting with init or systemd 
+note :   in any OS, including GPOS or EOS or RTOS, 
+         a set-up is 
+         managed, using a set of processes or 
+         threads or hybrid  
+
+
+   - once systemd(+ other system processes) are started, 
+     it will use 
+     a large set of configuration files of the 
+     OS to load/launch/create system services, 
+     as per the system's user-space configuration 
+-->a typical OS platform uses ids, for managing 
+   processes/threads/users/other OS services/
+   entities 
+     - typically, the process id of init/systemd is 
+       1 - so, it happens to be the parent of the 
+       entire hier. of user-space 
+
+     - in addition, once all the set-up is done, 
+       we can login and create sessions, which 
+       contain shells and terminals
+       --->as part of the OS set-up, many of these
+           OS entities are created and set-up  
+
+     - using shells' CLI, we can run external 
+       and internal commands, for administrative 
+       or testing purposes
+ -->based on the above set-up, regular users/ 
+    administrators/developers get access to 
+    operating system services  
+
+   - whenever we run/ load external commands 
+     on a shell , the shell acts as the 
+     parent process and generates children 
+     processes - this is based on the 
+     parent -child hier., as mentioned before 
+
+          - administrators also interact, with systemd
+          , using systemctl to launch/testing services
+            manually - in these cases, systemd is the 
+            parent process of the services/daemons 
+            started 
+
+                   - in most cases, systemd can be automated to 
+                     launch/load services, during boot-up time of 
+                     the OS, but the basics remain the same 
+
+                   - due to the parent-child hier. design principle, 
+                     ideally, a parent process must clean-up a 
+                     terminated children processes 
+
+                   - however, if the parent process terminates, before
+                     the children processes, the orphaned children 
+te
+                     processes are reparented to the init or systemd 
+                     of the system - so, the orphaned processes 
+                     are assigned ppid 1 - similarly, daemon processes
+                     are also assigned ppid 1 
+
+                   - a shell is a system utility, which is run, as 
+                     process, for CLI - each shell instance uses 
+                     a system terminal/interface for user interaction -
+                     - based on the shell/terminal set-up, there are
+                     following handles/descriptors - standard input 
+                     descriptor, standard output descr., and std. error 
+                     descriptor of the associated terminal - these 
+                     handles/descriptors are maintained, as part 
+                     of the shell process  
+
+                   - so, the shell uses the above descriptors/handles 
+                     to access the corresponding terminal - the same 
+                     handles/descriptors are passed to external commands
+                     /utilities/and their respective processes - in the 
+                     case of external commands, it is also maintained, 
+                     as part of processes 
+
+ 
+
+                   - in the context of Linux, bash shell is the 
+                     commonly used default shell, but you may 
+                     use other shell implementations, as per choice 
+
+
+                   - a shell supports internal commands, which are 
+                     interpreted and executed, by the shell program/
+                     process, without additional children processes 
+
+                   - however, if external utilities/programs are 
+                    executed, for each external utility or program, 
+                    one or more children processes are created and 
+                    launched
+
+                   - typically, when a command/utility is executed 
+                      on the shell prompt, without &, a foreground 
+                    process/job is created - this means, the current 
+                    terminal is used, by the foreground process/job 
+                    and the shell is not available, temporarily -
+                    in this context, process is a generic OS term 
+                    - job is specific to shell/session, in Unix/
+                     Linux system  
+                    - as long as a foreground process/job is 
+                     active, the shell/shell prompt is not 
+                     available , for servicing - shell will 
+                     not be able to respond to user-inputs ??  
+                              
+- the comman        - foreground command/utility can take inputs, 
+                      from the user, as well as ouput data 
+                      to the terminal
+
+                   - in addition, certain hot-keys are applicable to 
+                     the foreground job/process - ctrl-C/ctrl-Z 
+                     are effective on the foreground process/job 
+                     - for instance, if we use ctrl-C, the current
+                     foreground process/job will be forcibly 
+                     terminated                                                        
+
+                   - interactive commands/utilities need to be 
+                     executed, as foreground jobs/processes - 
+                     if the command/program/utility does not 
+                     need user-inputs and interaction, the 
+                     command/process can be executed, in the 
+                     background, as background process/job 
+                                                                                      i                 
+                   - on the other hand, if we execute a command
+                     or utility as a background job/process , 
+                     it does not use the terminal, for input, 
+                     but can use it, for output - in addition, 
+                    the shell can be available and interactive
+                    using the terminal - we can use the shell, 
+                    when one or more background processes are 
+                    executing ??? 
+
+                   - we can have several background jobs/processes 
+                     executing, in a given shell 
+
+                   - so, using foreground processes/jobs or 
+                     background processes/jobs is more of 
+                     practical convenience   
+
+
+      - from a typical OS perspective, these system 
+        services/utilities are
+        just processes - 
+        however, from shell and 
+        terminal perspective, we have jobs - 
+        it is just the context and certain features 
+
+                  -  we can use jobs built-in command to 
+                     list the shell's jobs 
+ 
+                  - we can manage jobs/processes, using 
+                    kill command, which is a built-in - 
+                    it can take a job no or process no - 
+                    still, it does the same operating, but 
+                    the usage and perspective is different 
+
+                  - one of the features of the shell is 
+                    terminal redirection, where a descritor 
+                    of a process is redirected to another 
+                    sink or source, other than terminal 
+                   
+                  - for instance,in the case of 
+                    ls -li  >  ls.txt, following is done :
+ 
+                    - the standard output of the 
+                      child process executing ls is 
+                       being redirected to a file descriptor
+                       of ls.txt 
+
+                    - so, effectively the output of ls will 
+                      be pushed into ls.txt 
+
+                   - for instance, what happens, in the case of 
+                     ps -e -o pid,ppid,cmd,stat  | less ??
+
+                       - ps is an external command, which is 
+                         used to list the attributes of the 
+                         current processes 
+                       - less is another external command, 
+                         which is used to take input and 
+                         display one page, at a time 
+                       - shell creates 2 children processes, 
+                         for ps and less, respectively 
+
+                       - so, one child process will load 
+                         and execute ps and another will 
+                         load and execute less 
+
+                       - shell will also create an unnamed 
+                         pipe, which will be used to 
+                         interlink the processes - we say 
+                         that pipe is an IPC object/entity/
+                         mechanism of OS services - in this case
+                         , shell uses this service,for its 
+                        children 
+
+                       - in addition, standard output of the 
+                         process of ps is redirected to 
+                         input descriptor of the pipe 
+                         - same way,input descritor of 
+                         less is redirected to output 
+                         descriptor of the pipe
+
+                       - this effectively creates a link 
+                         between the two child processes and 
+                         effectively the utilities 
+
+                       - in the above set-up, it is the shell 
+                         that invokes appropriate system call 
+                         APIs of the OS/kernel to facilitate 
+                         the execution of commands and interlinking, 
+                         as needed - shell is a classic example 
+                         of a non-core component, but uses 
+                         core services/system call APIs, for 
+                         most of its responsibilities ??
+
+                       - let us use a few special commands, 
+                         like sudo or su ??
+                           - for instance, let us deal, with 
+                             su - root 
+
+                           - what does su - root do ?? 
+                              - effectively, what does it do ??
+                                - when this command is executed, 
+                                  a new login shell/session is 
+                                  set-up, with uid/euid set to 
+                                  that of root - gid/egid is 
+                                  that of the current normal user
+
+                           - what does su - babu do ??
+                              - effectively, what does it do ??
+                                - when this command is typed 
+                                  , a new login bash/session 
+                                  is set-up, with the corresponding 
+                                  normal user's credentials, like 
+                                  uid/gid ?? also, euid and egid ??
+
+                           - based on the above set-up and details, 
+                             what are we achieving, after 
+                             su - root ??  
+                               - this shell/process is privileged, 
+                                 as it is empowered, with uid /euid
+                                 of root user
+
+                               - in addition, all children processes 
+                                 created from this shell will inherit the 
+                                 same uid/euid and privileges 
+
+                               - so, we can access most OS services, 
+                                 using appropriate system call APIs 
+                            - if we do a listing of su or sudo, 
+                              we will see  -rwsr-xr-x, which means, 
+                              an extra attribute set-uid is set, in 
+                              file's permissions - this extra attribute 
+                              will change the uid/euid of the process, 
+                              which executes su or sudo - from here on, 
+                              su or sudo will be able to create  
+                              powerful shells, as per the credentials 
+                              of the target login user   
+
+
+
+i                           - similarly, sudo is another utility, which 
+                              can be more controller, by the administrator 
+                              and delegate limited powers to other normal 
+                              users, whereas su is too powerful, for 
+                              root user permissions
+
+
+Note: the last set of sections of this document 
+      will be covered,during Linux system study/
+      interactions 
+
+
+  
+
+
+
+
+ 
+
+
+
+
+
+
+                               
+                               
+                           
+
+                    
+
+                     
+                          
+
+
+
+
+
+
+
+
+  
+                   
+                     
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+                 
+
+
+
+n i                    
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+       
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

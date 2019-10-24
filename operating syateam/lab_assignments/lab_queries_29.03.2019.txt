@@ -1,0 +1,28 @@
+- what is interpretation of ni priority ??
+     --> read your other text documents
+         of scheduling, cmds, lab queries 
+     --> if we use a "+ve range of ni", 
+         we will be reducing the time-share
+         of a process, "proportionally", 
+         as "per ni value" 
+     ---> proportional cpu cycles /time - 
+          in this context, we call it time-shares
+
+     --> refer to other text files - search 
+         using  grep -i  "string" *.txt | less
+
+     --> for real-time priorities, the 
+         range is 1 - 99 - these are 
+         absolute priorities - if a process 
+         is assigned a higher rt priority, 
+         the process will be allocated 
+         100% of the cpu time of the scheduler 
+         /cpu instance 
+
+      --> non-realtime/non-absolute is proportional 
+          and in the case of rt priorities, 
+          it is absolute, meaning the 100% of 
+          cpu time/cycles will be allocated  
+
+ 
+

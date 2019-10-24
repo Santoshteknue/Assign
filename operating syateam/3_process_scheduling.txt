@@ -1,0 +1,1340 @@
+- let us assume, that a system and its 
+  services/applications
+  are executed, using several 
+  "processes/multiple processes"
+     - this is the "basic multitasking" of 
+       the system and used by applicatons
+---->Pi(processi) ---> applicationi 
+        |
+        |
+        +------->a Threadi(main thread)
+                     |
+                     +---cpu0(a single processor/core)
+
+- in this document, let us assume, that we will 
+  be dealing, with  "single threaded 
+  processes", in the system - later, we will 
+  extend scheduling to "multithreaded processes/
+  applications" 
+note: in these discussions, there are 2 more 
+      assumptions- 
+      one is that we are using "uniprocessor 
+      systems" and the other is "single threaded 
+      processes" - in addition, we will be dealing
+      , with GPOS systems  
+      - these design details can be easily 
+        extended to "multiprocessor systems", 
+        after the basics are cleared
+   
+- in these discussions, let us assume, that 
+  several different 
+  applications/services are managed, 
+  using different processes, 
+  for multitasking - this is what is the 
+  conventional multiprogramming
+    Pi---->applicationi---->Threadi(main thread)
+    Pi+1----->applicationi--->Threadi+1(main thread)
+    Pi+2------>applicationi+1-->Threadi+2(main thread)
+    Pi+3------>applictaioni+2-->Threadi+3(main thread)
+
+    --->the above set-up is not multithreading, 
+        but just multiple processes, with 
+        single thread assigned to each process  
+
+- in addition, let us also assume, that 
+  certain services/
+  applications use two or more processes, 
+  for their 
+  multitasking - for the time being, we are 
+  ignoring this case  
+
+- in these discussions, let us assume, that each process 
+  is "single threaded" - meaning, there is a 
+  "single, main thread of the process", 
+  which is created, when the  
+  process is created - "no additional threads" are 
+  created, 
+  in these scenarios - for this document  
+
+
+- do we need processes, for our active applications ??
+
+- do we need threads, for our active applications ??
+     - we need light weight processes - these
+       are known as threads 
+     - processes can also do multithreading 
+       and threads can also do multithreading 
+     - processes are heavy /expensive, in terms
+       of resources
+     - threads will be light weight/less 
+       expensive, in terms of resources 
+     - we will see more details, as part 
+       of OS perspective and application 
+       perspective 
+-->the actual understanding of threads and
+   their usage, in applications is covered, 
+   in multithreading document
+ 
+- from here, in this document, we will 
+  be dealing , with processes only - 
+  these processes will have a single 
+  thread, main thread only 
+- with the above assumptions,let us assume, 
+  that these 
+  processes are scheduled, 
+  as per appropriate "scheduling
+  policies /parameters", for achieving 
+  "multitasking" - the "scheduling policy and 
+  parameters fields" are managed/stored, 
+  in "pd of the process" - 
+  "these fields' values can be changed, using system 
+  utilities or system call APIs" - in our 
+  case, we will change the policy and 
+  parameters, using system utilities, initially ??
+    -->following are typical scheduling 
+       parameters:
+        -->scheduling policy field 
+        -->time-slice /quantum field
+        -->real-time priority field 
+        -->non-RT priority field 
+        -->time-share field 
+        -->other fields may exist, as per 
+           implementation details 
+      - we may not have access to system 
+        call APIs, in our high-level 
+        program/application
+      - we may not have access to the 
+        source code 
+      - after we load/launch the application/
+        service, we need to use certain 
+        utilities to modify the scheduling 
+        policy / parameters of the process/
+        pd of the system ???   
+      - we will use some of these techniques, 
+        in our discussions/practicals 
+      - for each process, in each pd, a set 
+        of scheduling parameters are maintained
+        - these scheduling parameters are 
+        used by the scheduler/policy, as per
+        run-time - following are typical 
+        scheduling parameters stored, in 
+        the pd :
+             - scheduling policy field
+               which will contain the 
+               scheduling policy assigned 
+               to this process/pd 
+             - there will be a time-slice 
+               field which will be used, 
+               for time-slice scheduling 
+             - similarly, there will be a 
+               times-share which will be 
+               used by time-share scheduler 
+             - there will be a real-time 
+               priority, which will be used
+               by PRIO scheduler 
+             - similarly, there can be a
+               non-real-time priority , which 
+               will be used by time-share 
+               scheduler /time-sharing scheduler   
+  -->many of these fields will be manipulated
+     , directly or indirectly, as per the 
+     scheduling policy/parameters 
+
+ 
+
+- initially, let us assume, that the systems 
+  are uniprocessor
+  systems 
+
+- if multiple processors are supported, these scheduling 
+  policies are extended to multiple processors, using 
+  appropriate features 
+note: initially, let us understand 
+      "basic/simple forms"
+      of "process scheduling policies" and later, 
+      "actual forms of design and implementations", 
+      which are "hybrid forms of scheduling 
+      policies", meaning "they merge/modify 
+      two or more 
+      simple scheduling policies" and 
+      provide " hybrid scheduling policies"
+note: let us refer to "big pictures of scheduling", 
+      along with this document 
+--->as part of the basic understanding of  
+    scheduler, it is a core component, which 
+    is passive, but is triggered/processed, 
+    due to events/triggers, like interrupts/
+    system call APIs 
+      
+-let us understand a simple/basic scheduling 
+ policy, FCFS/first-come-first-serve 
+  - refer to the big picture - assume that 
+    there are several processes, in the Rq
+    and these are scheduled using FCFS 
+    policy/algorithm ??
+       - let us say that there are 4 ready 
+         processes, in the Rq - they are 
+         in a certain order, Pi, Pi+1, Pi+2, 
+         Pi+3, in the queue/list - order of 
+         arrival into the Rq 
+       - the scheduler will select  Pi and 
+         give it the cpu  
+       - once Pi is given the cpu, how long 
+         will Pi execute/Run on the processor ??
+           - until the process terminates(??) 
+           - until the process blocks --> let
+              assume that the process blocks 
+           - until the process yields(??)
+       -->let us understand process termination 
+          and blocking, for now - yielding 
+          is another scheduling mechanism, 
+          which we will discuss, in the 
+          Linux sessions
+      -->what happens, if a long-living 
+         process is scheduled/dispatched, 
+         but it does not block/terminate ??
+          -->a classical case of starvation  
+       - if Pi executes and does its job, 
+         it will block, using an OS service
+         - this is common,in the real-world
+       - once Pi blocks, Pi is added to 
+         a wq and scheduler is invoked - 
+         the scheduler will select another
+         process from Rq and execute - it will
+         Pi+1  
+       - again, Pi+1 will do its job and block - 
+         again, scheduler will be invoked and 
+         the above blocking and scheduling
+         will continue 
+       - after all the processes are blocked, 
+         they will be unblocked, due to 
+         other events/resources 
+       - again, they will be added to Rq  - 
+         again, they will be scheduled/
+         dispatched 
+       - this will keep continuing ....... 
+-->in these cases, let us assume, that processes/
+   active applications/their jobs are well 
+   behaved - meaning, these long-living jobs, 
+   but they invoke system call APIs/services
+   of OS frequently and hence, they block 
+   their processes and scheduler is invoked 
+   -->many real-world applications are blocked
+      often, due their jobs' characteristics 
+
+  - first come first serve(fcfs), as per the order of 
+    arrival and queing, in the Rqs ?? the head 
+    (process/pd) of the queue is selected and 
+    dispatched - it will complete its job, 
+    as part of the service  -  
+    it will be blocked and unblocked -
+    when the process is unblocked, it will be 
+    added to the tail of the Rq - if a process 
+    is newly created and added to the rq, it will 
+    be added to the tail of the Rq 
+
+- let us take look, at certain diagrams ???
+    - there are certain assumptions :
+       - there are several processes, in the Rq
+       - these are of equal priority
+          - in this scenario and "simple 
+            scheduling policy", "equal priority 
+            is assigned to processes" 
+-->in a simple/conventional FCFS policy, 
+   all processes/pds are implicitly/explicitly 
+   assigned equal priority  
+       - each process/application/job is designed 
+         and implemented to execute a certain 
+         "job iteration" and "block" - this is 
+         based on the "application's characteristics"
+         and may change, if the applications change
+         - "this is a scenario" - "there are other 
+         possible scenarios" ?? 
+-->many of these discussions are dependent on 
+   applications' characteristics, which means, 
+   we need to analyse based on applications'
+   perspective  
+       - in this scenario, this will ensure, 
+         that "every process is 
+         fairly scheduled" and "allocated fair
+         cpu time" 
+       - however, if a process or "a set of processes
+         do not block and execute for longer durations", 
+         other processes will be temporarily starved - 
+         there will be  "a form cpu starvation" - "this 
+         is possibly another scenario" 
+         -->the application/user will see poor 
+            performance/throughput/responsiveness
+-->in the late 80s and early 90s, GPOS systems
+   used FCFS, as default scheduling policy, for
+   the applications
+-->current systems do not use FCFS, as default, 
+   but still provide FCFS policy, as a configurable
+   scheduling policy, if applications need
+-->operating system processes/system processes 
+   may use FCFS policy   
+       - so, "this policy may not suitable", for 
+         "certain applications, if responsiveness 
+         is critical"(we are not refering to 
+         real-time applications) - this policy may not be 
+         suitable, for certain applications
+       - according to the "services and applications, 
+         you may need to select and manage scheduling 
+         policies/parameters"
+          -->developers may need to decide
+          -->administrators may need to decide 
+       - "this is a non-preemptive scheduling policy"-
+         in this policy, "a process will never be 
+         forcibly removed from the processor" and 
+         preempted - preemption is not same 
+         , as interruption 
+       - interruptions are more due to hw interrupt
+         events 
+       - whereas preemptions are due to scheduling
+         policies, in the system - in the case of 
+         simple FCFS, preemption is not supported
+-->in legacy/older GPOS systems, non-preemptive 
+   scheduling/scheduling policies were popular
+-->modern GPOS systems, preemptive scheduling 
+   /scheduling policies are popular      
+ 
+note: in the case of OS platforms, we will be having 
+      interruptions, or interruptions and preemptions, 
+      based on scenarios and scheduling policies   
+note: in modern GPOS platforms, simple FCFS is 
+      not implemented, but a hybrid form of 
+      FCFS is implemented
+       -->this means, FCFS is merged, with another
+          scheduling policy, like real-time PRIO 
+- let us understand "simple/basic time-slicing / 
+      round-robin scheduling policy" :
+--->this policy was popular, in many of the 
+    older GPOS systems - these are still available
+    in GPOS systems, but not commonly used - 
+    however, there are certain specialized OS 
+    platforms, where these may be used 
+      - refer to the big picture of time-slicing
+        scheduler: 
+         - there are four/4 processes, in the 
+           rq
+         - all are of equal priority, in a simple
+           RR policy 
+         - there is a time-slice allocated
+           to each process/pd - after the time-slice
+           (few milliseconds), 
+           the process/pd will be preempted and 
+           added to the tail of rq - another 
+           ready process, at the head of the rq
+           is selected/scheduled/dispatched 
+         - this will continue for every process, 
+           after it is scheduled/dispatched/
+           executed/time-slice expires 
+         - what is the "exact working of 
+           preemption points/preemption", in the 
+           "time-slicing scheduler/scheduling" ?? 
+            - let us assume, that a process 
+              /program is scheduled/executing - 
+              it is assigned a time-quantum- 
+              when it is executing, a timer interrupt
+              will occur and timer ISR will manipulate 
+              and check the time-slice field of 
+              pd - if the time-slice field is 
+              set to 0(time-slice will be reset to 
+              0, if time-slice/quantum expires), 
+              time-slice is expired- 
+              if time-slice expires, 
+              time ISR will invoke scheduler/
+              (a low-level mechanism) - 
+              scheduler will preempt the current 
+              process and schedule/dispatch 
+              another ready process/pd - the preempted
+              process will be addded to tail of 
+              rq - as part of these actions, 
+              cpu hw context of preempted process is 
+              saved, in pd/related fields and 
+              cpu hw context of the newly selected 
+              process/pd is loaded into the cpu - 
+              sum of all these actions is 
+              known as a preemption
+          - is this policy acceptable/fair, for 
+            all the processes/active applications??
+            -->if all the processes are assigned 
+               fair cpu cycles ??? YES - in addition, 
+               there are no starvations, as the 
+               scheduling policy is preemptive and 
+               fair 
+          - in this "set-up/scheduling", all the 
+            "processes are allocated fair cpu time
+            and there is no starvation" - if the 
+            "processes do not have blocking operations", 
+            still the scheduling/scheduler will 
+            preempt processes ??  
+ 
+        - in this policy let us assume that all 
+          processes are of equal priority
+        - each process is assigned a time-quantum 
+          parameter
+          - there will be a fixed time-quantum 
+            of "1 msec" or 
+            "10 msecs" or "100 msecs", as per the 
+            OS platform / system configuration 
+        - the processes/pds are scheduled, as per 
+          their order of arrival, in the Rq
+        - in addition, if a process/pd is scheduled/
+          dispatched, 
+          it will be allowed to execute, for a 
+          certain time-quantum assigned(implicitly 
+          assigned by OS)- after this 
+          time-quantum, the process will
+          be preempted from the processor  and 
+          another process from the Rq will 
+          be selected and dispatched - after
+          preemption, a process/pd is added to 
+          the Rq and assigned another time-quantum
+          - when this process is again allocated
+          cpu, it will again execute, for the 
+          time-quantum -- this will repeat - 
+        - this cycle of scheduling/dispatching, 
+          time-quantum, 
+          preemption will continue, in a round-robin 
+          fashion
+        - this policy is a preemptive scheduling 
+          policy - there will be forcible preemptions, 
+          by timer ints/ISRs / scheduler 
+        - in this policy's implementation, "timer int. 
+          events" and their "timer ISR" play an important 
+          role in "preemption and scheduling" - 
+          as part of the 
+          preemption, "the timer ISR will 
+          manipulate/decrement" 
+          the "time-slice/time-quantum field of pd" - 
+          if it 
+          is "decremented to 0", current process 
+          is preempted 
+          and scheduler is "invoked to schedule/
+          dispatch" 
+          another eligible process, from the Rq  
+
+        - refer to "lecture diagrams", for timer 
+          ints./ISR/preemptions  ???  
+           - how is the timer int. events 
+             and timer ISR involved, in the 
+             preemption of processes, after 
+             time-slice expiry of processes ???        
+               - refer to the statements above??
+               - time-slice manipulation will be 
+                 done, by the ISR and it also 
+                 depends on the period of timer 
+                 int. events, which may be 100msecs 
+                 or less, depending upon the 
+                 implementation details  
+
+                
+  - let us understand simple PRIO scheduling policy ??
+     - let us understand the big picture of 
+       "simple PRIO policy and scenario":
+         - a "lower priority process/pd" is 
+          " currently scheduled and executing" 
+         - another "higher priority process/pd" 
+           is currently "blocked and waiting" 
+           for some event/IO data 
+         - let us assume that there is a hw 
+           int. event for IO data arrival 
+         - this int. event is generated 
+           by an IO chip
+--->we can assume, that ISRs are part of the 
+    core of the OS - they are involved, in 
+    background processing and IO processing - 
+    as part of their jobs, they will unblock 
+    processes waiting/blocked, for IO data or 
+    other events - this is very common, in 
+    GPOS, as well as other systems    
+         - due to this int. event, corresponding 
+           ISR will processed - this ISR will 
+           awaken/unblock the blocked 
+           higher priority process, as part of 
+           IO data processing 
+           - ISR will remove the pd of the blocked
+           process from a wq and add the pd to the 
+           Rq - state of the process/pd is set to 
+           Ready - after this, ISR will invoke 
+           the scheduler and the scheduler will 
+           preempt(forcibly remove) the 
+           lower priority process 
+           and select/schedule/dispatch higher
+           priority process/pd, immediately -      
+           once scheduled/dispatched, the higher 
+           priority process will start executing - 
+           the preempted, low-priority process 
+           is added to the Rq - 
+           in this context, there is no 
+           time-slicing - it just depends 
+           on real-time(absolute) priority 
+           based scheduling 
+           of processes, based on the 
+           priority assigned to the processes/pds
+       - there is no time-slicing, in this 
+         policy, so processes are not preempted
+         due to time-slice/time-quantum - 
+         only possible preemption is due to 
+         higher priority processes are unblocked
+         and added to Rq - when high priority 
+         processes enter the Rq 
+       - since we are dealing, with priorities
+         and processes/pds are scheduled/selected
+         due to their priorities, why are we 
+         maintaining a queue/list ???
+           - in a practical system, there will 
+             be one Rq list per priority level - 
+             for each priority, there will be 
+             one Rq list/queue - there will  be 
+             several Rq lists, for different 
+             real-time priorities  
+           - all pds of a specific abolute priority 
+             will be maintained, in a 
+             specific queue
+           - whenever the scheduler is  
+             invoked, the scheduler will 
+             pick-up a pd, from the queue
+             of highest importance and 
+             dispatch 
+
+               ======> listi ---->pdi,pdi+1,....  
+               ======> listi+1--->pdj,pdj+1,....
+               ======> listi+2--->pdk,pdk+1,....
+                       ......
+                       ......
+                       ......
+             where, each list maintains processes/
+             pds of a specific priority level
+  
+
+     - in this policy, there is support, for "real-time/ 
+       absolute priorities" - in this context, "real-time 
+       is just used as a terminology", not for 
+       "real-time applications", in GPOS systems - 
+       as per the scheduling 
+       policy and its "real-time priority", a process 
+       will be assigned an "absolute importance" - if 
+       this "process" has the "highest priority", 
+       it will be provided "100% of the cpu cycles", 
+       if it is in ready state - "if this process is 
+       not in 
+       the ready state", other "processes will be 
+       provided cpu cycles" ??  
+note :  
+       it is  implemented,in GPOS systems - 
+     - the range of real-time priorities will vary, from 
+       one implementation to another - in the case of 
+       GPOS/Linux, will  be 1-99 
+
+     - where, 1 is given "lowest importance" and "
+       "99 is of highest importance" 
+       - in this context, let us assume, that the 
+       system supports "user-space and kernel-space
+       preemption points", which will make the 
+       policy and priorities more effective  
+     - whenever the "scheduler is invoked" to schedule
+       and dispatch a process, the process with the 
+       "highest importance/priority is selected and 
+       dispatched"
+     - there is no time-slicing implemented  
+
+     - if there is a "processi currently executing" on 
+       the "processor", if another "processj enters/added 
+       to Rq", with "higher importance/priority", 
+       "the current 
+       process will be preempted" and the "higher priority 
+       process will be scheduled and dispatched" - refer to 
+       the lecture diagram, which illustrates the following :
+           - currently, Pi is running executing, with 
+             "rtpriority" set to 10 
+           - if there is an "IO interrupt event" and 
+             this "event executes an ISR", which  
+             "unblocks/awakens another high priority, 
+             blocked process", the "unblocked process 
+             will enter the Rq" - in addition, as 
+             "part of the OS design", at the "end of any
+             ISR, if scheduler is invoked", it will 
+             "complete the job of rescheduling" - this is 
+             a form of preemption - at the end of the 
+             int./ISR processing, current process is 
+             preempted and another high priority process
+             is scheduled and dispatched - what happens
+             to the preempted process/pd - the preempted
+             process/pd will be added to tail of respective
+             Rq, as real-time priority  
+            
+     
+     - in general,in a GPOS system, processes are added to 
+       the Rq, when they are created, as well as , when 
+       they are unblocked/awakened, due to interrupt 
+       events or other events 
+
+   notes : in a typical GPOS system, processes are 
+           blocked and preempted often - blocking of 
+           a process is due to "resources" and "IPCs" - 
+           when a process is blocked, its state is 
+          set to blocked/sleeping and the process/pd 
+          is added to a wait-list/wait-queue - 
+          in addition, scheduler of the OS/kernel is 
+          invoked - this leads to a "process context 
+          switch", which is done, as part of 
+          dispatching - meaning, there is a switch from 
+          one executing/running process to another 
+          executing/running process - such process 
+          switches are known as "voluntary context switches"
+          or "involuntary context switches"
+          ---->involuntary context switch -->
+                      a preemption due to time-slice
+                      expiry - current process is 
+                      preempted and another process
+                      is selected and dispatched 
+          ---->voluntary context switch -->
+                      a process may request for 
+                      a resource/IPC, which is 
+                      currently unavailable and 
+                      the process is blocked - 
+                      such blocking operations 
+                      and related context switches
+                      are voluntary 
+                    -->termination of a process 
+                      also leads to voluntary 
+                      context switching     
+-->when we understand IPC mechanisms, blocking 
+   mechanism will be clearer  
+     note: what is a process context switch, in the case 
+           of multitasking and scheduling ?? such 
+           context switches are common, for events, like 
+           preemptions and blocking - the "hw context of the 
+           current process/pd needs to be saved" and 
+           "hw context of the next process/pd of the 
+           is to be loaded" into the processor - this set 
+           of actions is typically known as process 
+           context switching     
+
+
+   notes : in a typical GPOS system, processes may be 
+           forcibly preempted, due to scheduling 
+           policies, like time-slicing and priority 
+           scheduling - in these cases, due to time-quantum 
+           expiry or higher priority processes, there 
+           can be involuntary preemptions or forced 
+           preemptions / process context switches ???
+notes: irrespective of the above context switches, 
+       whenever there is a scheduler invokation, 
+       there will be a process context switch 
+
+  - let us understand "basic/simple time-sharing scheduler", 
+    which is "default scheduling policy, in 
+    many GPOS systems"  : 
+        - for a typical "user process/application 
+          process created", in the system, 
+          the "default scheduling policy/priorities
+          are based on "time-sharing", non-real-time 
+          scheduling policy" - non-real-time, 
+          as this policy may use non-absolute 
+          priorities / non-RT priorities  
+           --> if we use "ps command", we can 
+               check the class field - if the 
+               class field of a process is set 
+               to "TS", the scheduling policy is 
+               "time-sharing" - if this field of 
+               a process is set to "FF", it is a 
+               form of "hybrid policy" - similarly, 
+               there are other classes, which 
+               will be understood below 
+--->in the above, as well as below discussions, 
+    we must not finalize the numbers and stick to 
+    these - meaning, numbers can change - these 
+    are justy representative numbers  
+
+      - in this policy, "cpu time" is "first divided" into 
+        "Epoch slots" and managed - these "epoch slots" 
+        are the "scheduling slots", for the "scheduler" - 
+----->refer to lecture diagram/big-picture  ??       
+         - typically, "Epoch is set to 20 milliseconds"
+           or 40 milliseconds or some other value ??
+         - some of these parameters can be seen
+           using system interfaces ??  
+
+      - in each "Epoch slot", 
+        based on the "no. of processes", 
+        "in the Rq"(Rq length),"time-shares" 
+        are divided and allocated to the 
+        "ready processes" - 
+        refer to lecture diagram/bigpictures ??
+
+      - for instance, for "a given Epoch value", E, 
+        if there are "2 processes, in the Rq", 
+        "each process is assigned Epoch/2",as 
+        "time-share"(time-share is not time-slice) - 
+        if the Epoch value is 
+        20 milliseconds, what is the time-share    
+        per process(time-shares are not fixed,but 
+        time-slices are fixed)  - 10 milliseconds
+        refer to lecture diagrams ?? these are not 
+        time-slices, but time-shares - these are
+        "not fixed, but dynamic" and based on the 
+        "run-time, Rq length", which will change, 
+        "as per load conditions"   
+
+  --->this dynamic scheduler will assign time-shares, 
+      based on the load conditions, meaning no. of 
+      processes, in the Rq, Rq length    
+          - refer to your text book for 
+            time-sharing scheduler ??? 
+        -->the presentation is different, but 
+           basics are the same - do not 
+           confuse the basics 
+      - if the "no.of processes, in the Rq is 4", 
+        each process is assigned "a time-share of 
+        Epoch/4" - in this case, what is the time-share
+        per process ??? it will be 5msecs,if Epoch 
+        is 20msecs 
+        
+
+      - so, in this policy the processes are dynamically 
+        assigned time-shares, 
+        not fixed time-quantums/time-slices 
+
+      - as per "emperical testing", this is supposed to be 
+        a "superior scheduling policy", compared to 
+        "times-slicing" - this is better than time-slicing 
+
+    demos: if we create processes, in a Linux/GPOS, 
+           the processes are assigned 
+           "TS(time-share) policy", 
+            by "default", "unless we explicitly change 
+            the settings" ??? we may use system 
+            utilities to change the default 
+            scheduling policy of a process, if 
+            needed 
+      - in the "basic TS policy", there is "no non-RT/
+        non-absolute priorities" - "all processes are
+        treated equally", but "actual implementations 
+        vary" ???
+--->in the basic time-sharing policy, every process/
+    pd is assigned equal non-RT priority, for 
+    TS policy - typically, this non-RT priority 
+    value will be 0 - in Unix/Linux systems, this 
+    non-RT priority is known as "nice" value 
+      - in addition, in modern systems, additional features 
+        are added to "time-sharing scheduler", like 
+        "assigning non-real-time priorities", known as 
+        "nice values" - by "default, every process is 
+       assigned a nice value of 0" - for such a "nice 
+       value, default time-share" is provided - basically, 
+       if all the processes/pds are assigned the same 
+       nice value of default/0,they are assigned 
+       equal time-share,based on the Epoch and 
+       load conditions    
+note : the "name nice value is historical", from "Unix" 
+       - our understanding of the nice values and 
+         their usage is important 
+      - by default, the system assigns equal time-share
+        , for every process - nice value is set to 
+        0, by default  
+      - on the other hand,if we wish to "assign a larger 
+        time-share" or "smaller time-share" to processes, 
+        we need to assign appropriate nice values - 
+        these "non-zero nice values can be used to assign 
+        unequal time-shares" ??
+
+      - for instance, in a Linux system, it is 
+        "-20 - 0 - +19" - in an Unix system, it may 
+        be -20 - 0 - +20
+-->for our case, we will be dealing, with Linux 
+   systems  
+      - 0 ---> +19, is for assigning lower-importance
+        and the corresponding process will be 
+        assigned lower time-share - meaning, +ve 
+        nice values are assigned to provide 
+        less importance, in turn lower time-shares 
+      - -20 ---> -1,  is for assigning higher 
+        importance to processes , which will assign 
+        higher time-shares - as per the rules/
+        conventions, -ve values are used to 
+        assign higher importance and higher 
+        time-shares 
+-->based on the applications' requirements, 
+   we may fine tune/assign different 
+   nice values to processes of applications 
+      - a normal user account and its processes 
+        can be typically assigned +ve values, not -ve 
+        values, by the normal  user-login sessions-
+        normal user account is less privileged     
+
+      - in addition, root account and its 
+        processes can be typically assigned 
+        -ve values and
+        +ve values - root user account is 
+        more privileged
+ 
+      - in addition, if we in a root account 
+        session, we can use commands/utities 
+        to re-assign -ve nice values to 
+        processes/active applications of 
+        normal users' sessions  
+
+      - these "nice values are non-real-time 
+        priorities", which can provide "non-absolute
+        importance to processe"s, meaning, as per 
+        "nice values, cpu time/shares are provided
+        proportionally" - "not 100% cpu-time or 
+        absolute control over cpu-time" 
+         -->in the context of real-time/absolute
+            priorities, a process/pd with higher
+            importance/RT priority will be provided
+            100% cpu time and lower, RT priority 
+            process may be starved, if the 
+            higher priority processes are cpu 
+            intensive  
+
+      - if a -ve value/lower nice value is assigned 
+        to a process, the process will be assigned 
+        higher time-share, proportionally 
+
+      - if a +ve value/higher value is assigned to 
+        a process, the process will be assigned 
+        lower time-share, proportionally 
+
+      - we will discuss more of this, in the context of 
+        our assignments - in the assignments, we will 
+        provide different scenarios  
+
+      - nice priorities/values are non-real-time/ 
+        non-absolute priorities
+      - in this case, if we assign a higher priority or 
+        importance, it will be treated, as increase in 
+        time-share, not 100% cpu share 
+      - such policies are acceptable, in GPOS systems, 
+      
+      - 
+
+  
+note : although there are different basic/simple 
+       scheduling policies, in the OS theory, 
+       actual implementations are hybrid forms, which 
+       merge two simple policies to provide a 
+       more flexible/sophisticated policy - such 
+       hybrid policies are popular - in addition, 
+       these hybrid scheduling policies take care
+       of corner cases/scenarios ?? 
+   - let us discuss a "hybrid scheduling policy" combining 
+     "PRIO and FCFS" :
+     -->this Linux policy is known as FF policy - in 
+        addition, it is primarily a real-time PRIO
+        policy - in addition, FCFS is supported, for 
+        specific conditions  
+        - in Linux, this policy is known as FIFO/FF policy
+           - this is a hybrid policy, not a basic 
+             /simple policy 
+        - in this policy, there is a "real-time priority", 
+          with a range of "1 - 99" , where 1 is of lowest 
+          importance and 99 of highest importance - 
+          these are absolute priorities  
+
+        - there is "one Rq instance per priority level" - 
+          meaning, "all processes/pds" of "a given priority 
+          level" are added and maintained, in the 
+          "same Rq level" - in a "single processor system", 
+          there will be "several Rqs", with "one Rq per     
+          priority level" - in the case of multiprocessor 
+          systems, this set-up will be scaled-up - 
+          in the multiprocessor system, for each processor
+          , there will be a separate set of Rqs- 
+          for cpu0, there will be a set of Rqs and 
+          processes/pds and for cpu1 ,there will be 
+          one more set of processes/pds   
+           -->in the case of uniprocessor system, 
+              there will be one set of Rqs, for 
+              supporting different levels / 99 
+              levels 
+           -->the set-up is duplicated , for 
+              each processor, in a multiprocessor 
+              system - 99 levels * no.of cpus/cores  
+
+          --->cpu0/there is a FF scheduler instance for cpu0 
+             (10)priority leveli====>Rqi------>pdi,pdi+1,....
+             (11)priority leveli+1====>Rqi+1---->pdj,pdj+1,....
+                    ....
+             (99)priority leveln ====>Rqn------>pdn,pdn+1,....
+          
+         --->cpu1/   there is a FF scheduler instance for cpu1
+             (10)priority leveli====>Rqi------>pdi',pdi'+1,....
+             (11)priority leveli+1====>Rqi+1---->pdj',pdj'+1,....
+                    ....
+             (99)priority leveln ====>Rqn------>pdn',pdn'+1,...
+
+          ....................
+         --->cpun/   there is a FF scheduler instance for cpun
+          
+             (10)priority leveli====>Rqi------>pdi'',pdi''+1,....
+             (11)priority leveli+1====>Rqi+1---->pdj'',pdj''+1,....
+                    ....
+             (99)priority leveln ====>Rqn------>pdn'',pdn''+1,...
+
+        - for 99 priority levels, there are 99 lists 
+          maintained, in a array /table 
+        - initially, let us understand the working
+          of a single cpu instance and the FF scheduler
+
+        - fundamentally, this is  a PRIO scheduler
+          - basic characteristics of this scheduler is 
+            PRIO  
+          - so, whenever the scheduler is invoked, 
+            it will pickup the highest priority level 
+            containing processes and  at that level, 
+            pickup the head/first process/pd and dispatch it
+-->what happens, if at the selected, highest priority level 
+   , there are multiple processes, meaning multiple processes
+   with the same priority ??? 
+          - in addition, if at the highest level of 
+            selection, two or more processes/pds are
+            listed, they will be treated, as per 
+            FCFS scheduling policy - for a priority level, 
+            the equal priority processes/pds are treated 
+            as FCFS - basically, PRIO, but FCFS, for 
+            a given set of processes, at a  level 
+          - so, it is a hybrid policy, with PRIO and 
+            FCFS used together, appropriately 
+          - rest of the basics of scheduling remain 
+            the same 
+          - if we need to "assign this policy to 
+            processes", we can do so, using 
+            appropriate "system call APIs" or 
+            "system utilities" - "a typical developer 
+            may use system call APIs", if needed - 
+            otherwise, "developers/admins." can set 
+            the "policy and parameters", using 
+            "system utilities or "system configuration 
+            files provided", by operating systems 
+          - for FF policy, we may use "chrt utility" or 
+            "systemd's"(a system process/a system 
+             service) and its unit files
+            (this is for GPOS administration)
+-->in our labs, we will be using chrt or similar 
+   system utilities, for setting scheduling 
+   policies and parameters  
+          - for FF policy, we may use certain system 
+             call APIs , like sched_setscheduler() 
+    ---> chrt  -f  -p  <rtprio>  <pidofprocess>, 
+         where -f means, set FF policy and -p 
+         means, set the policy of an existing 
+         process, with <pid>
+-------> we can use chrt  -o  -p 0 <pid> to  
+         revert its policy to the original 
+         TS policy and the corresponding 
+         non-RT nice value - we are allowed to 
+         pass 0 for priority
+  ----->scenario1 
+           ---> we will use chrt utility to 
+                set the policy and parameters 
+           -->let us assume that there are 4 
+              processes, with FF policy and 
+              unequal priorities - say, 
+              10,11,12, and 13 
+           --> Pi --> FF ---> rtprio 10
+           --> Pi+1 --> FF ---> rtprio 11
+           --> Pi+2 --> FF ---> rtprio 12
+           --> Pi+3 --> FF ---> rtprio 13
+         - what will be the behaviour of 
+           scheduling policy and the 
+           processes/applications, in 
+           the system ???  
+             ---->let us assume, that all the 
+             processes "scheduled-execute-blocked/unblocked
+             -scheduled-
+             execute-blocked/blocked-scheduled-execute......"
+             ---->since the processes execute and 
+                  block, other low priority processes
+                  are scheduled and executed - 
+                  which means, there is no starvation
+             ---->what happens, if two or more processes
+                  enter the Rq, after unblocking, 
+                  simultaneously ?? 
+                  --->the process with highest priority
+                      will win the scheduling and 
+                      be executed 
+                  --->the scheduled process will complete
+                      its job and block - this is the 
+                      nature of the process- due to 
+                      this, the next process is scheduled 
+                      and dispatched 
+                  ---> the above cycle continues ???
+--->in all these discussions, certain amount of 
+    application perspective is needed, for 
+    a practical understanding 
+               --->will the processes get cpu cycles??
+                      yes,if all the processes are 
+                      well behaved and are blocked, 
+                      often  
+               --->will the processes face starvation 
+                   of cpu cycles ??
+                      no, if a specific process is 
+                      not using cpu cycles, for 
+                      longer durations 
+               --->will the applications of the processes
+                   be executed and perform,as per 
+                   requirements - it needs testing ???
+                   --->needs thorough testing 
+  ----->scenario2 
+           ---> we will use chrt utility to 
+                set the policy and parameters 
+           -->let us assume that there are 4 
+              processes, with FF policy and 
+              equal priorities - say, 
+              10
+           --> Pi --> FF ---> rtprio 10
+           --> Pi+1 --> FF ---> rtprio 10
+           --> Pi+2 --> FF ---> rtprio 10
+           --> Pi+3 --> FF ---> rtprio 10
+         - what will be the behaviour of 
+           scheduling policy and the 
+           processes/applications, in 
+           the system ??? 
+             - what happens, if the processes
+               are using blocking operations ??
+               --->all the processes will be 
+                   scheduled/executed/blocked 
+                   and cpu cycles will be
+                   provided - no starvation 
+
+
+            - what happens, if the processes
+              are not using blocking operations ?? 
+              ----> all the processes will 
+                    enter Rq, but one of them 
+                    will be scheduled and 
+                    dispatched 
+              ----> because of this, other 
+                    processes will be starved
+                    of cpu cycles 
+
+      --> you can refer to PRIO scheduling 
+          policy discussions, at the top of 
+          this document - it describes more 
+          scenarios ?? 
+--->many of these scenarios will be applied, 
+   in our assignment problems ???
+note : "FF(hybrid) and RR(hybrid)" share the same 
+       "scheduling frame-work" of the system - the 
+        same set of real-time priorities are 
+        used - the same set of Rqs/tables are
+        used, but the policies are different, 
+        in the context of FCFS and RR ??  
+  - "another hybrid policy" combining "PRIO policy" and 
+    "time-slicing/RR policy" - PRIO+RR  :
+          - in this policy, "real-time priorities 
+            are supported, in the range of 
+            1-99, as above" - same range, as above 
+          - in addition, the no.of Rqs are same, 
+            as that of the above - queues are shared 
+          - in addition, if the scheduler is 
+            invoked, "highest priority Rq is selected 
+            and the first process/pd, in that Rq is 
+            selected and dispatched" - 
+            "basically", RR(hybrid) 
+            is a "PRIO scheduler", 
+            "with RR/time-slicing, for 
+            equal priority processes only" ?? 
+          - however, "if there are multiple processes/pds"
+            ,at "a given level",they are 
+            "scheduled/dispatched"
+            ,based on "time-slicing/RR policy" - 
+           the frame-work 
+           and most of the rules are the same, but this 
+           part(time-slicing) of the policy is different,
+           for equal priority processes, at a given 
+           level   
+          - this policy can be assigned, using 
+            system call APIs or "system utility", like 
+            "chrt" or "system configuration files, like 
+            unit files of systemd( administrative 
+            approach - used for automation of the 
+            services/set-up )"
+   --->during assignment problems, we will 
+       apply one or more scenarios ?? 
+  - the other "hybrid policy is CFS", known 
+    as "completely fair scheduler(hybrid)", based on 
+    "time-sharing policy(simple)", along with additional 
+    features, "like nice values/variable time-shares", 
+    and others - this policy is the "basic TS policy" +
+    "nice values", for "different time-shares" ?? 
+     
+      - refer to the details above, for this hybrid
+        policy, in the same document, for time-sharing 
+        scheduler policy  
+      - we can change the parameters(nice/non-RT 
+        PRIORITIES of processes) of this policy, 
+        using system call APIs, 
+        "nice or renice system utilities", 
+        and system configuration files, like 
+        unit files of systemd(this is, for system 
+        administration)
+      - in this context, we will be using renice command, 
+        for setting renice values of processes, with 
+        TS policy 
+--->as part of the demos, we will be using appropriate 
+    commands and we will understand their 
+    convenience  
+----> renice -n <nivalue> -p <pid>  is typically used 
+      to change the nice value/non-RT priority of  
+      an existing process, with <pid> 
+
+-----> renice -n -10  -p  <pid> 
+ - for assigning and modifying parameters, for real-time 
+   policies of FF/RR(hybrid), we need higher user  privilege 
+   levels - one way of achieving this is, by using 
+   root user's privileges - for these scheduling policies
+   /services, we need higher user privileges - normal 
+   user cannot assign these policies/paramters, as he 
+   is assigned lower privileges 
+--->so, we need to use system utilities, like  
+    su(switch user) or sudo(super-user do)
+    --->these are special system utilities/ 
+        power utilities/administrative utilities 
+-->in both cases, we need the support of the 
+   administrator of the systems - administrator 
+   needs to provide appropriate rights to 
+   specific users 
+-  in the case of TS policy, to assign positive nice 
+   values, normal user privileges are sufficient, but 
+   to assign -ve(higher importance/ higher time-share) 
+   values 
+   , root user privileges are required, so normal 
+   user privileges are insufficient ???
+--->in this context, we may need to use su or 
+    sudo system utilities  
+
+ - in a GPOS system, we may deal with multi-user 
+   scenarios and related credentials and OS/high-level
+   privileges
+   - this is not same, as processor/low-level
+     privileges(closer to hw) ??
+   - multi-user privileges/root privileges are more, 
+     from OS perpective, not processor(high-level 
+     services/privileges)  
+   - normal users of the system are disallowed
+     to access certain OS services, like 
+     real-time policies /priorities and 
+     -ve nice values/higher time-shares/many 
+     other administrative services of OS  
+   - in these cases, we may need to use 
+     special utilities/commands to achieve
+     higher privileges, for our settings/
+     changes  
+   - in many cases, we may need to use 
+     "su - root" to login, as root user 
+   - in certain cases, we may use sudo 
+     to execute these privileged commands ??
+
+---->let us have a summary and scenarios/samples
+     of scheduling related discussions :
+
+   -->a typical GPOS system supports processes, 
+      for multitasking - processes need to be 
+      scheduled, using scheduling policies of 
+      GPOS systems - refer to the above discussions
+
+   -->in addition, typically, there will be several 
+      different applications and these are managed
+      ,using appropriate scheduling policies - 
+     in most of the cases, there will be one 
+     process instance, for a specific active 
+     application
+        -->refer to upcoming demos/assignment 
+           problems 
+   -->in addition, in many scenarios/applications, 
+      there may be more than one process instance, 
+      per active application instance 
+        -->refer to *pro* documents 
+
+   -->if there are several processes created to 
+      manage multiple applications or several 
+      processes created to manage a single 
+      application, scheduling policy is 
+      applied on the processes, as per the 
+      set-up of the GPOS system 
+ 
+   -->in the above case, if the system is an 
+      unioprocessor system, the processes will
+      be multitasked, concurrently - this 
+      multitasking uses some form of time-slicing 
+      or time-sharing or other mechanisms - 
+      this is not parallelism 
+
+   -->in the above, if the system is a multiprocessor
+      system, the processes can be parallely 
+     executed on multiple processors, simultaneously 
+     -->this form of multitasking is known 
+        as parallelism 
+
+   -->what is the typical benefit of concurrency ??
+      -->if there are multiple applications/
+         processes, fairness and responsiveness 
+         of applications is provided 
+
+
+
+   -->what is the typical benefit of parallelism ??
+     --->in this context, if there are several 
+         processes of different applications or 
+         same application, throughput increases -
+         responsiveness also increases   
+  
+     -->in addition, parallelism can support 
+        concurrency, at a specific processor 
+        level, as well 
+   
+     -->broadly, scheduling policies are 
+        of two categories - one is preemptive
+        and another is co-operative 
+
+     -->in the case of co-operative scheduling 
+        policies, a process is not forcibly 
+        preempted, during its execution - 
+        a good example if FCFS policy - refer to 
+        FCFS discussions above 
+
+    -->most of the other policies are preemptive 
+       - meaning, processes can be forcibly preempted
+       ,during their execution, as per scheduling 
+       policy and parameters 
+
+   -->in a typical modern day GPOS, user-space 
+      preemption and system-space preemption are 
+      allowed - this will increase responsiveness
+      of scheduling policies - in the case of 
+      older/legacy GPOS systems, only user-space
+      preemption was allowed, so responsiveness 
+      was poor 
+       -->refer to lecture big pictures 
+       -->if a process is executing, in  user-space
+          and event triggers preemption, it is 
+          known as user-space preemption 
+       -->if a process is executing, in system-space, 
+          processing a system call, if an event 
+          triggers preemption, we say that it is 
+          a system-space preemption 
+
+
+----->let us add hints, 
+      for assignment problems, for scheduling 
+      below :
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+         
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+  
+          
+
+
+
+
+
+
+
+
+    
+
+     
+
+
+
+
+
+ 
+
+
+
+   
+      
+
+
+
+
+    
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+  i 

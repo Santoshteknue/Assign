@@ -1,0 +1,1782 @@
+- there are different forms of multitasking, 
+  in the real-world 
+
+- OSs provide "different multitasking features", for 
+  implementing 
+  multitasking, for "applications"
+     --->processes provide a sw model, for 
+         multitasking 
+     --->there are threads, for multitasking - 
+         another sw model , for multitasking- this 
+         is a light-weight form of multitasking  
+     --->in the case of embedded OS/RTOS, we may 
+         come across very light weight threads, 
+         known as tasks 
+     --->depending upon the hw platform/sw platform/
+         applications, there are different 
+         sw models, for multitasking  
+
+- the hw platform/processor/OS platform all are dependent 
+  on the applications - this is more so, in the case
+  of embedded/real-time applications 
+
+- for instance, one of the common services/techniques is to use 
+  multiple processes, for implementing multi-tasking 
+   - using different processes to multitask 
+     different applications - one form of multitasking  
+   - using different processes to multitask
+     a single application - second form of multitasking
+   - in the real-world, you may see  some 
+     combination of the above - hybrid form or another
+     multitasking model 
+       -->some of these models are very practical 
+          and initially, we will understand from 
+          OS perspective and later, application 
+          perspective 
+- there are other services/techniques, 
+  like "multi-threading", where "multiple processes 
+  are used to multitask different applications" 
+  and use "multiple-threads to multitask a given 
+  application" 
+       -->initially, understand multithreading, 
+          in a GPOS system and basic application
+          programming technqiues - this will be a
+          generic multithreading model 
+       -->later, we will be dealing, with a specific
+          multithreading model, based specific 
+          hw platform and OS platform - all these
+          will also be due to application requirements
+            --->some of these details will be 
+                discussed, in the context of RTOS 
+                platforms  
+        
+- there are hybrid services/techniques, 
+  using processes and multi-threading, where these
+  services are used, as per the convenience 
+
+  of applications 
+         --->we may see more sophisticated 
+             scenarios  
+
+- there are related terms, like concurrency, 
+  "concurrent programming", 
+  parallelism, "parallel programming", and more 
+
+- in many cases, we may come across "direct concurrency 
+  or parallelism" 
+  or indirect concurrency or parallelism ??
+        -->understanding and working, with 
+           concurrent programming, in a GPOS 
+           environment 
+
+
+- in the real-world applications, multitasking is present,
+  in one form or the other ???
+    - many of these applications will be naturally 
+      requiring multitasking services, in one form 
+      or another 
+
+- refer to certain txt documents, which contain such 
+  applications 
+  and scenarios ??? 
+
+- for the current context, we will be using    
+  GPOS platforms and related scenarios - 
+  later, we will be map many of these details
+  to embedded scenarios 
+
+- for instance, you may come across a web-server, 
+  like nginx, 
+  which uses OS low-level processes, for multitasking - 
+  this multitasking will in turn service several client 
+  requests of the system ??
+    - in this context, high-level services are 
+      using low-level services of OS to 
+      provide multitasking, for application
+      and real-world requirements
+    - due to this, applications/client applications
+      will benefit  
+
+- the multitasking features of this application server, 
+  can be configured, using configuration files, as per 
+  requirements and testing ???
+    - if reconfigure these files, they will 
+      request a different set of services of 
+      OS, accordingly 
+
+- in a typical set-up, there will be a master process/
+  parent process, which will be managing the application, 
+  including certain OS services,as needed
+    - a typical application will always 
+      have a master process  
+
+- in the same typical set-up,one of the jobs of the 
+  master
+  is to create several children processes and 
+  manage them -
+  these children processes are the 
+  real worker processes, 
+  which will do the job of the application, 
+  concurrently or 
+  parallely, using multiple processes - 
+  this is a typical 
+  scenario, for using multitasking, in an application ??? 
+   - in this form of multitasking, several 
+      jobs of the application are delegated 
+      to several children processes of 
+      the application
+   - if the application is loaded and managed
+     , in an uniprocessor platform, we say, that 
+     it is a concurrent, multitasking 
+   - if the application is loaded and managed
+     , in a multiprocessor platform, we say, 
+     that is a concurrent and parallel 
+     , multitasking 
+
+
+- when you do a similar work, you may or may not enable 
+  multitasking, for your server service/application - 
+  however, it will not be efficient, for real-world 
+  requirements ???
+
+- refer to text documents on nginx design and working 
+- refer to text documents on other such application 
+  services, like Unicorn 
+
+- now, let us understand multitasking, using processes, 
+  at OS level- meaning, let us understand, using 
+  "system call APIs" of process managment of Linux systems 
+
+- before we go forward, let us understand certain 
+  services offered, by the shell and how the 
+  "shell" uses "OS process management services", for 
+  offering such services ???
+
+- similar approach of using "OS process management 
+  services/system call APIs" is done, by "init/systemd 
+  process or sudo , su, or graphical interfaces, and 
+  other applications" 
+
+- what happens, when we execute an external command 
+  on a shell prompt ???
+   - if we type "an internal command of a shell", 
+     it will be processed, "by the shell/shell process", 
+     "not using another external program/utility/
+     new process"
+   - for an external command/utility/program, 
+     current shell/shell process creates a new process, 
+     for launching /loading 
+     the external command/application/utility/
+     progrm-there will be a new process created, 
+     by the 
+     shell/process , for loading/launching the 
+     external command/utility/application - for
+     this creation of the new process and loading
+     another external application/utility/tool/
+     command, shell/shell process uses OS 
+     services - certain system call APIs of 
+     OS/kernel  are used - we will see the details
+     of such system call APIs below ??   
+
+    - in this case, let us assume, that 
+        Pi -----> /bin/bash is active shell utility 
+        --> after we type ls, 
+        Pi ----> /bin/bash is still maintained, and 
+        Pi+1 ----> /usr/bin/ls is created and  active
+         ---> in this context, Pi+1 is created
+              and managed, by Pi//bin/bash, with 
+              the help of OS core services 
+         ---> current shell/shell process creates 
+              another process/new process/child 
+              process and loads /usr/bin/ls, in 
+              this child process - after this, 
+              Pi+1 is the new process, which 
+              is managing/executing /usr/bin/ls
+         ---> in this context, Pi, /bin/bash 
+              is the parent process of Pi+1, 
+              /usr/bin/ls   
+    - after /usr/bin/ls completes, Pi+1 will terminate
+      normally and Pi ----> /bin/bash will continue to 
+      execute normally and Pi will continue 
+      to be active ??
+            ---> a parent process/shell utility which 
+                 handles external commands and it will 
+                 continue its jobs, repeatedly
+            ---> whatever is mentioned, in this example
+                 applies to ./w11 and ./ex2, and other
+                 scenarios  
+
+     - in the above context, shell/shell process is 
+       the parent process and /usr/bin/ls is 
+       managed, using a child process - ideally, 
+       Pi and Pi+1 are active, simultaneously/
+       multitasking - 
+       depends on their applications' characteristics
+       and uniprocessor/multiprocessor scenarios 
+ 
+- what happens, when we execute "bash" on a bash shell 
+  prompt ???
+    - in this context, a sub-shell instance is 
+      created, using a new process
+    - we will see sub-shells, in the case of 
+      su or "sudo -i" , as these "commands will 
+      create sub-shells", with "higher privileges"
+      - "once a sub-shell is created, with 
+      a higher privilege", "this sub-shell will 
+      be the parent process of other children 
+      processes" - so, "these children processes
+      will inherit the attributes/privileges 
+      of the parent process/sub-shell"
+
+    - we need to understand the following 
+      characteristics :
+       - whenever we are , in a shell/process
+         /terminal, the attributes of the 
+         shell/process is important 
+       - since the current shell/process will 
+         be the parent process, for our 
+         sub-shells and commands/utilities/
+         programs,most of the characteristics/
+         attributes of sub-shells are passed 
+         on to the children processes, which 
+         are managing the commands/utilities/
+         programs/sub-shells
+       - what is the practical significance
+         of this design and set-up ??
+         --->if the parent process/shell is 
+             assigned uid 0, the children 
+             processes/utilities/sub-shells
+             /programs will also be 
+             assigned the same uid 0, in 
+             most cases 
+              ---->what is the advantage ??
+                   --->this provides higher 
+                       privileges to the 
+                       children processes/
+                       utilities/programs 
+
+        --->if we set the "process resource 
+            limits", using prlimit, 
+            for parent process/shell,
+            the same process resource limits 
+            are passed on to the children 
+            processes/utilities/sub-shells, 
+            in most cases 
+            --->prlimit  -p  $BASHPID
+            --->prlimit  -p  $$
+                -->the above steps will provide
+                   prlimit settings of the current
+                   shell process
+
+          
+           --->prlimit -v2000000000 -p $BASHPID 
+           --->prlimit  -p  $BASHPID
+                --->set the soft and hard limit 
+                    of AS
+
+           --->prlimit -v:2000000000 -p $BASHPID 
+           --->prlimit  -p  $BASHPID
+                --->set the hard limit 
+                    of AS
+
+
+           --->prlimit -v2000000000: -p $BASHPID 
+           --->prlimit  -p  $BASHPID
+                --->set the soft limit
+                    of AS
+
+   
+
+- what happens, when we execute exec ls on a 
+  bash shell prompt ??? answer is after the 
+       discussions
+  - also, launch 2 different shells - "in one shell", 
+    type "just ls" - "in another shell", type 
+    "exec  ls" - tell, what happens ???
+          -->test the above commands, in the 
+             lab and explain your observations ??
+
+     - in  case of exec ls, no new process is created, but 
+       the command is loaded, in the existing process 
+       , which is currently executing the current shell -
+       so, after the execution of ls,the 
+       current shell/process will be 
+       replaced by ls, in the current shell rocess ??
+     - is this acceptable, practically ???
+     - in this case, 
+
+          Pi --> /bin/bash, initially 
+          after we execute exec ls, 
+          Pi --> /usr/bin/ls  
+          after ls completes, Pi will be 
+          normally terminated and end of Pi 
+          eventually, the original shell associated, 
+          with this Pi is gone 
+
+- what happens, when an internal(built-in) command of the 
+  shell is executed on a shell prompt ???
+          
+         - do we need to create a new process, 
+           for executing a built-in command of 
+           a shell ???
+         - the shell/process just interprets the 
+           built-in command and completes the 
+           processing, without any new process 
+
+- in a typical Unix/Linux system, following are the 
+  "system call APIs/services" used to support 
+  "process management, in the system" ???
+   - these "process management system call APIs"
+     are tightly coupled, with multitasking, 
+     concurrency, and parallelism, as per the 
+     context 
+   - these system call APIs are more peculiar
+     , than other system call APIs ??? 
+
+         - "fork()" is used to create a duplicate 
+           process - what is the meaning of 
+            a duplicate process ??
+              Pi(parent)--->progi--->VASi
+                   |   
+                   ---->Pi'(child)--->progi'--->VASi'
+            -->refer to the lecture diagram 
+note: in these contexts, if a progi is associated
+      with a processi, we say that it is an 
+      active instance of progi
+           -->in this context, Pi and Pi' will 
+              have a shared code segment, in their
+              respective virtual address-spaces
+           -->however, Pi and Pi' will have 
+              private data, heap, stack, and other
+              segments, in their respective 
+              virtual address-spaces
+           -->what is the meaning of shared, 
+              in this context ??
+              -->"virtual segments are private, 
+                 in their respective address-spaces
+                 ,but the virtual pages of these 
+                 segments are mapped to the same 
+                 set of page-frames" 
+           -->what is the meaning of private
+              , in this context ?? 
+              -->"virtual segments are private", 
+                 in their respective address-spaces
+                 ,also the virtual pages of these 
+                 segments are mapped to different 
+                 set of page-frames 
+    --->there is a detailed discussion on fork(), 
+        after brief introduction to process related
+        system call APIs 
+ 
+         - execl() is used to overlay/overwrite 
+           existing active program image/
+           virtual addresss-space layout
+           of the existing process - in this case, 
+           the "current process is used to  
+           load/execute a new active progam image
+           /process address-space layout", 
+           replacing 
+           "the current active program image/
+           process address-space"
+              Pi(current process)--->progi--->VASi
+              |
+              --->Pi(current process)--->progj--->VASj
+            
+              -->initially, "Pi is associated", with 
+                 "an active instance of progi"
+              -->after execl(), "Pi is associated", 
+                 with "an active of instance of progj"
+
+
+              -->refer to the lecture diagram 
+
+            - in the case of execl() system call API, 
+              the a new active application/program
+              is loaded, in the current process - 
+              this will replace the current activ e
+              application/virtual address-space 
+              layout , with a new active application/
+              virtual address-space layout 
+
+            - in the above case, Pi is the 
+              process , which initially 
+              manages an active program, 
+              progi and later, active progi
+              is replaced, with progj
+        -->execl() is explained, in detail below, 
+           after all the introductions 
+          - for normal termination of a process, 
+            "exit() system call API" is used - 
+            "if any application code/command/
+            utility uses exit() system call API," 
+            the operating system is requested
+            to terminate the process - in this 
+            context, to terminate a program 
+            or application, exit() is invoked 
+            and due to this OS is requested to 
+            terminate the process
+            - such a "completion of a program/application  
+              and its process is known", as normal 
+              termination of the process
+            - in a GPOS environment, "if we wish 
+              to complete a program" and "terminate, 
+              we must terminate the associated 
+              current process, using exit()" 
+              -->such an exit() will be executed
+                 directly or indirectly - in most 
+                 of our discussions, exit() will 
+                 be invoked directly  
+              -->if the application/program completes
+                 successfully, exit(0) is invoked
+                  -->completing successully means, 
+                     the job assigned is completed 
+                     successfully  
+              -->if the application/program 
+                 completes unsuccessfully, exit(n) 
+                 is invoked
+                  -->the job is not completed 
+                     successfully, due to various
+                     reasons, like non-availability 
+                     of resources  
+              -->it will be a normal process termination 
+                 , with successful or unsuccessful 
+                 completion of the application 
+              -->based on exit(0)/exit(n), 
+                 "exit code will be stored, as part 
+                 of termination status code of 
+                 the process, when it terminates
+                 and enters Zombie state" - "the 
+                 termination status code will  be maintained                               , in the pd" 
+               -->this termination status code will 
+                  be collected by parent process, 
+                  when it invokes waitpid(), 
+                  for cleaning-up children 
+                  processes 
+               -->the parent process can use the 
+                  termination status code, for 
+                  checking the termination status/
+                  exit code of the children 
+                  processes 
+             
+           --->introduction to waitpid() follows 
+               next 
+
+          - assuming a process is terminated 
+            normally,as above, the process is moved to 
+            Zombie state and its resources 
+            are freed, but the pd is retained
+            - "the retained pd contains termination 
+            status information", which will be used
+            later - Zombie state is a form of 
+            termination state   
+              -->the above statements summarize
+                 a Zombie state 
+              -->refer to lecture diagram, for 
+                 states and state transitions 
+
+          - for cleaning-up terminated children 
+            processes, waitpid() system call API 
+            is used
+             - if children processes are terminated
+               , these are moved to Zombie state, 
+               along with the termination status code
+               --->termination status code contains
+                   exit code, if the process terminated
+                   normally - otherwise, the termination 
+                   status code does not contain 
+                   exit code  
+  
+               - ideally, parent process of these 
+               children processes must clean-up 
+               these "Zombie children/pds" - once
+               cleaned-up, these pds are deleted 
+               completely  
+                 -->cleaning-up children processes
+                    means, the corresponding 
+                    pds are freed /deleted, in 
+                    the system 
+                 -->just assume, that a parent 
+                    process must clean-up its 
+                    children processes, using 
+                    waitpid() system call API -
+                    if the parent process does 
+                    not clean-up the children
+                    processes, the children 
+                    processes will remain, in 
+                    the zombie state only - pds
+                    will not be freed and remain 
+                    as wasted resources
+                 -->if the zombie children 
+                    processes are not cleaned-up, 
+                    system resources will be 
+                    wasted, inefficiently   
+
+          - for forced termination of processes, 
+            signal notifications are used - this is a 
+            typical set-up, in GPOS :
+             - instead of a normal terminatiom 
+               of a process, we wish to forcibly 
+               terminate a process, we may 
+               generate a signal explicitly and 
+               these signals will terminate 
+               target processes, once th e
+               signals are notified and 
+               handled/processed
+             - in the case of abnormal/forced termination
+               as well, the terminated
+               processes are moved to "Zombie state", 
+               but due to forced termination -   
+               forced termination information 
+               is stored, as part of termination 
+               status information of the pd
+             - otherwise, all the rules of termination 
+               and Zombie state apply - in this case
+               as well, Zombie processes/pds need 
+               to be cleaned-up  
+                  ---> we use waitpid(), in our 
+                       code and understand the 
+                      working of clean-up 
+note : many of these system call APIs are strange, in 
+       their working, due to concurrency and 
+       specifically, 
+       they use low-level OS and hw services, 
+       for completing 
+       their jobs 
+
+
+    - fork() explained, in detail : 
+
+       - fork() creates a "new,  duplicate process" 
+         and this "process will be added to the 
+         system" - added to an Rq of the system - 
+         will be "scheduled/dispatched concurrently", 
+         as per the "uniprocessor/multiprocessor"
+             -->based on uniprocessor or multiprocessor
+                set-up, the scheduling of parent/
+                children processes is done
+             -->initially, "we will use taskset to 
+                schedule parent/children processes, 
+                in uniprocessor systems" and next, 
+                we will test on multiprocessor
+                set-up, without taskset   
+
+       - here, "duplicate means, the new process will 
+         be another instance of the "parent process", 
+         which 
+         invokes fork() - "a common example is 
+         the "shell process or init/systemd process", 
+         but any process can be a parent process, like 
+         service processes - many of the system processes
+         use fork()/execl() services 
+           -->the basics are the same, for interactive 
+              non-interactive processes/scenarios
+           -->the parent process/childrenprocesses/ 
+              fork()/execl() and similar rules - these
+              follow the same basic principles, but 
+              design/implementation details differ
+           -->in some cases, we will deal manually 
+              and in other cases, it will , in 
+              the background and automated - in most 
+              case, fork()/execl() will be used, 
+              by system processes, in the background 
+           -->in the case of "interactive shells", 
+              we will be "dealing manually" 
+           -->in the case of "non-interactive shells",
+              we will be dealing, "using scripts"  
+       - meaning, the child process will have a copy 
+         of the VAS/virtual address-space of the 
+         parent process - in addition to the address-space
+         duplication, many of the details of pd are 
+         also duplicated from parent to child - 
+         this also means, all related
+         resources/details are duplicated - many other 
+         attributes are duplicated, like "user credentials" 
+         ,scheduling parameters/cpu pinnings and resource
+         limits of the process - 
+         "however, the child process
+         is managed ,as a separate entity" - it will be
+         provided its own address-space/page-frames/
+         page-tables/pd/nested objects/ its own copy 
+         of all the parameters 
+            -->child process will be treated as a
+               separate entity, but many of the attributes
+               are inherited/duplicated
+            -->this is the design ?? any specific 
+               reasons ?? 
+               -->this is typical, for a multiuser
+                  system
+
+       - let us assume, that the "parent process" 
+         is having 
+         a virtual address space, VASi/segments ---> 
+         codei, datai, 
+         heapi, libi, stacki, and other segments 
+
+       - after the fork() system call API is successful, 
+         the new, "child process will be having a 
+         duplicate virtual address space, VASi'/segments--->
+         codei,datai'(a copy),heapi'(a copy),libi'
+         (a copy) ,stacki'(a copy), and 
+         other segments(copies)" - copy here means, 
+         contents of the segments/pages are duplicated 
+            --->however, due to memory efficiency, 
+                program code segment/contents/mappings/
+               lib code segment/mappings will 
+                be shared
+            -->for all other segments, contents/mappings 
+               will be separate/private   
+
+       - effectively, parent process and children 
+         process share code, but are assigned 
+         different copies of other 
+         segments ?? particularly, for data|stack/heap 
+
+       - the child also inherits many of the attributes of 
+
+         the 
+         parent, "like scheduling paramters/
+         user credentials 
+         and many such" - these are duplicated -
+         these credentials provide privileges, in 
+         a multi-user system 
+
+       - however, "there are many attributes that are not 
+         duplicated/inherited", like pid, ppid, and others 
+
+       - effectively, child process is another duplicate 
+         instance of the parent process 
+
+       - we need to understand parent/child set-up, 
+         from different perspectives - initially, 
+         understand, from "address-space/program 
+         image perspectives" - next, understand, from 
+         "execution perspectives" - still, parent-children
+         processes are fairly independent processes 
+              -->one is, for understanding 
+                 address-space/ memory management 
+     -->the above set-up describes the resources
+        and attributes of parent/child relationships
+     -->the below discussions are more on execution 
+        contexts of parent/child relationships
+       - following are important entities, for 
+         "understanding execution contexts of 
+         parent process and children processes":
+          - hw context / captures the cpu 
+            registers of the current execution 
+            of a process 
+          - user-space stack and system-space 
+            stack contain contents, which also 
+            play important role, 
+            in managing execution contexts 
+          - ??? add more points ??
+             --->in the context of embedded, 
+                 we need a thorough understanding
+
+          - after a fork() system call API,most of 
+            the contents of user-space stack and 
+             kernel-space stack are duplicated - 
+            this means, most of the execution context 
+            of parent process is duplicated, for the 
+            child process - what does this mean, 
+            practically ???
+               -->which means, the child process will 
+                  follow the execution behaviour of 
+                  the parent process   
+
+       - in the below discussions, we need to 
+         assume the following :
+
+           --->parent process and children 
+               processes have the following 
+               set-up :
+                -->parent process has its 
+                   own address-space and
+                   segments :
+                     -codei
+                     -datai
+                     -heapi
+                     -stacki
+                -->similarly, child has its 
+                   own address-space and
+                   segments :
+                     - codei
+                     - datai'
+                     - heap'
+                     - stack'
+                -->in the this set-up, 
+                   parent process virtual segments
+                   will have their own mappings
+                   (page-tables/ptes), 
+                   but code segment mappings(page-tables/
+                   ptes) 
+                   are shared, with child/children
+
+                -->in the this set-up, 
+                   child process virtual segments
+                   will have their own mappings, 
+                   but code segment mappings(page-tables/
+                   ptes) 
+                   are shared, with parent  
+                   
+
+       - in addition to the above basic set-up of 
+         processes,"execution contexts" of the parent 
+         and child are managed appropriately - 
+         the parent 
+         process typically completes the system call 
+         job of 
+         creation of child process and returns, as part 
+         of fork() - effectively, 
+         fork() completes the job and returns - the 
+         parent process returns from fork() and 
+         continues its job
+           -->fork() is not a function call 
+           -->fork() is a system call API 
+           -->this system call API returns once
+              , in the parent context of execution 
+           -->this system call API returns once
+              , in a child's context of execution
+                -->this return is due to duplicated
+                   execution context of the parent, 
+                   in the child's context
+                -->in the context of a child, 
+                   fork() just returns, but did 
+                   not actually execute
+                -->these are some of the peculiarities
+                   of concurrent programming, using 
+                   system call APIs and OS services     
+ 
+        - when the active program instance is 
+          , in the parent process, we say that
+         the context of execution is, in the 
+         parent process 
+             --->parent's context 
+             -->parent's execution context 
+              -->a parent's execution context 
+                 is maintained, in its system 
+                 stack and user-stack 
+
+        - when the active program instance is 
+          , in the child process, we say that 
+          the context of execution is, in the 
+          child process 
+             --->child's context 
+             -->child's execution context
+             -->a child's execution context 
+                is maintained, in its system-space
+                stack and user-space stack  
+
+       - can we say that "two active program 
+         instances" of "an application/program
+         utility" are "executing concurrently, 
+         in two different process contexts of
+         parent and child" 
+          -->this is needed, for multitasking 
+             , in OS and also, for applications
+          -->we will see scenarios/examples, 
+             below
+
+       - once the fork() is successful, a new child 
+         process is created and added to the Rq 
+         of a processor - otherwise, child process 
+         is a duplicate copy of the parent 
+         process - it is fairly, an independent 
+         process   
+              --->depends on uniprocessor or 
+                             multiprocessor 
+                             system/scheduling  
+           --->scheduling/dispatching/execution, 
+               in the context of GPOS systems
+               and their multitasking/concurrency, 
+               "there will non-determinism and 
+               unpredictability"
+           --->"such non-determinism and unpredictabilities
+               increase", in the context of 
+               multiprocessing   
+      -->in the context of RTOS/real-time, we will 
+         understand determinism/predictability and
+         their benefits       
+  
+      - can we say, that the parent process 
+        will complete fork() system call API 
+        and return to its user-space code 
+        and execute ?? yes
+           -->when the parent process completes
+              fork() successfully, the fork() 
+              will return a +ve value, which is 
+              the pid of the child process just 
+              created
+note:--->read/revise chapter 6 of Crowley/cc_2.txt
+         , for more details on hw context/execution 
+         context and similar low-level details 
+               
+      - in the case of child process, fork() is 
+        not really executed, but there is a return 
+        from fork() - see the following statements :
+      - in addition, in the case of the child process, 
+         it will be "scheduled/dispatched", in the future 
+         and it will 
+         also resume its execution, like "returning from 
+         the fork()" - in this case, "it is similar to 
+         the parent process", but "fork() is not executed 
+         by the child", but "just a return is executed"
+         - this set-up is part of OS design and 
+           implementation 
+         - the "child follows the execution context 
+           of the parent",as "the execution context 
+           of the parent is duplicated", for the 
+           child
+         - in the case of a child process, when 
+           fork() returns, 0 will be returned, always
+ 
+             --->in this context, hw contexts of 
+                 kernel stack(s) are duplicated 
+                 and this duplication leads to 
+                 duplicating the execution contexts 
+         - if the system is uniprocessor, the child
+           will be scheduled on a single processor, 
+           along with parent,concurrently - 
+           there will be unpredictability -
+           unpredictability means the order
+           execution of parent and children 
+           processes cannot be predicted  
+         - if the system is multiprocessor, the
+           child process may be scheduled on 
+           another processor and parent and 
+           child process may be parallel execution
+           on different processors
+             - we may pin the processes to processor, 
+               for minimizing unpredictability 
+               due to multiprocessing/scheduling 
+ 
+
+-      - the "above return operations of the fork() 
+         are managed", "using low-level hw context 
+         management" of the "parent and child"
+           -->in this context, return value is 
+              first stored, in system-stack of 
+              the respective process
+           -->this value is moved into a processor
+              register
+           -->from the processor register is moved
+              into a variable, like ret -
+               -->in this case, the usage of 
+                  fork is   ret = fork(); 
+
+       - in addition, for a return of fork(), in the 
+         "parent process context", "the return value is 
+         "+ve"", 
+         "pid" of the newly created child process - 
+          for any parent process, whenever the 
+          parent process completes fork() and  
+          returns, it will return a +ve no., 
+          "pid of the newly created child process" 
+
+       - in addition, for a "special return of fork(), 
+         in the 
+         "child process context", the "return value is 0, 
+         as per convention" - after a fork() system 
+         call API, whenever the child process is 
+         scheduled/dispatched and executed, it will 
+         return 0 
+              --->in this context, child does not 
+                  return, but is scheduled and 
+                  dispatched, using parent's 
+                  hw context stored, in the 
+                  kernel stack/system stack of 
+                  this child process  
+ 
+       - based on all the above set-up and rules, fork() 
+         is used appropriately, by different utilities/
+         applications - many networking applications use
+         fork() and related system call APIs and related 
+         services  
+       - for instance, "a parent process will do a 
+         different job/execute different code", 
+         after returning from fork() - similarly, 
+         "child process will return from fork() 
+         and do a different job/execute different 
+         code" ??
+         --->for instance, if we "type an 
+             external command on a shell prompt",
+             the shell/process will create a 
+              new child process, using fork()
+         --->in the parent process,after fork(), 
+             will continue its job, as a shell/process
+              --->after a fork(), the shell/process 
+                  will continue the job of an interactive
+                  shell 
+ 
+         --->in the child process, after the fork(),
+             child process will continue and 
+             do a different job - what is that job ??
+              -->it will load and execute the 
+                 external command
+              -->however, for loading and executing 
+                 another external command, shell/
+                 process uses "execl() system call 
+                 API"  
+
+      -->following is a typical life-cycle of 
+         actions taken by shell, when an external 
+         command is interpreted/executed:
+
+         -->Pi(parent process/bash shell)
+            |
+            |
+            ---fork()------>Pi+1(child process/bash shell)
+
+
+         -->Pi(parent process/bash shell)
+             |
+             |
+             -----fork()--->after fork() just continues
+                           its job/code 
+
+         -->Pi+1(child process/bash shell)
+             |
+             |
+             -----fork()--->after fork()-->execl() 
+                                           |
+                                           |
+                                           --->load the 
+                                           external command
+        
+          -->Pi+1(child process/external command)
+             |
+             |
+             -------->after execl()--->loads/executes the command
+                     
+       - in the case of a fork() system call API, 
+         following rules apply :
+             - if fork() is unsuccessful, 
+               it will return -1 - we 
+               must check, for errors/-1 
+             - use the provided sample 
+               codes and check the 
+               details ??? fork() fails, 
+               if there is a resource problem 
+               or the service is denied, due 
+               to certain rules 
+             - if fork() is successful, it 
+               will return once, in the 
+               "parent process context" - meaning, 
+               there will be a return from 
+               fork(), in the parent process -
+               this value will be +ve, pid 
+               of the new child process, that 
+               is created
+             - if fork() is successful, it will
+               return once, in the "child 
+               process context" - meaning, 
+               there will be a return, from 
+               fork, when a child process 
+               is scheduled/dispatched and 
+               returns 0 , always  
+             - in the above set-up, fork() 
+               system call API returns 
+               twice, once in the parent 
+               process context/execution 
+               and once in the 
+               child process context/execution, 
+               it is a system call API return, not 
+               a function call API return  
+   
+
+
+       - once a new process/a set of new processes are 
+         created
+         ,using fork(), their sequence of execution is 
+        unpredictable and indeterminate, due to typical 
+        scheduling policies of GPOS systems - however, it 
+        does not matter, as long as multitasking can be 
+        achieved efficiently and reliably - in a GPOS 
+        system, such unpredictability and non-determinism 
+        is acceptable - in certain scenarios, 
+        such unpredictable / indeterminate 
+        concurrent / parallel execution may cause 
+        problems and may need additional services ??
+        -->why there will be unpredictability, in 
+          the context of uniprocessor systems ??
+           -->most of the resource management 
+              , in GPOS is non-deterministic and
+              unpredictable
+           -->for instance, we can refer to 
+              virtual memory management techniques
+              and their impact on processes/applications
+           -->most core services are not designed
+              for determinism/predictability  
+       - unpredictability is true , in uniprocessor 
+         systems - is increased, in multiprocessor 
+         systems, 
+         as processes will be moved to 
+         different processors, 
+         as per multiprocessing, load balancing - 
+         normally, 
+         this leads to multitasking and benefits
+       - in the context of multiprocessor systems, 
+         we may use processor bindings/pinnings
+         , if needed 
+
+       - fork() typically succeeds, unless there is a 
+         resource 
+         problem, where the fork() will return -1 - 
+         when fork() 
+         returns -1, it means, the system cannot create a  
+         new process, due to certain resource 
+         constraints 
+
+       - based on the above set-up and execution contexts, 
+         certain blocks of code of the program/application 
+         will execute, in the "parent process context" and 
+         certain blocks of the program/application 
+         will execute, in the "child(ren) process context(s)" 
+            -->in certain multitasking applications  
+               ,using fork(), execl() may be used 
+            -->however, in certain multitasking applications, 
+               using fork(), execl() may not be used 
+       - concurrency or parallelism will be part of the 
+         parent and children processes - we will discuss
+         more on scheduling issues, with parent and 
+         children processes ?? 
+
+       - typically, a process is associated, with an 
+         application 
+  
+       - if the application completes its job 
+         successfully or 
+         unsuccessfully, the corresponding process 
+         is terminated
+         normally, using a system call API ?? 
+         exit() is the typical 
+         system call API invoked, for a normal termination - 
+         like any system call API, this may be 
+         invoked implicitly or 
+         "explicitly" 
+
+       - if a process is terminated normally, its resources 
+         are
+         freed and it is moved to zombie state, with the pd - 
+         pd will remain allocated, in zombie state - 
+         this zombie 
+         pd will maintain "termination status code", 
+         which also contains "exit status code" ???
+           - if a child process terminates using 
+             "exit(0) or exit(1) or exit(2)", 
+             the "exit code passed will be stored, 
+             as part of the termination status code, 
+             in the pd of the zombie process" - 
+             we can extract this exits status code
+             ,later - we will see this, in our 
+             code samples ?? 
+
+       - such a zombie process/pd must be explicitly 
+         cleaned-up, 
+         by the parent process, 
+         using waitpid() system call API 
+         - once the waitpid() system call API successfully 
+         cleans-up 
+         a child process, the pd is freed and the process 
+         is said to 
+         be completely cleaned-up - "as part of the clean-up, 
+         waitpid() system call API will also collect 
+         the termination status code", which also contains 
+         "exit status code" - we can extract and interpret??? 
+               --> we will see the usage, in the code
+       - once a process/pd is cleaned-up/pd is deleted, the 
+         pd/process is moved to DEAD state and eventually, 
+         the pd is removed/deleted, from 
+         the system - this state is a transitional state, 
+         so cannot be seen - "process will be gone and 
+         application is completed deleted"
+
+       - zombie is an intermediate termination state, which is 
+         used to maintain termination status code and 
+         exit code
+         of normal termination - this termination 
+         status code 
+         and exit status code can be extracted, from a zombie 
+         process/pd and the zombie process/pd can be 
+         cleaned-up 
+          
+       - for instance, if exit(0) is invoked, when an 
+         application 
+         completes its "job successfully" and the process is 
+         terminated normally- 
+         this "exit code/0" will be stored, as part of the 
+         termination 
+         status code of a process
+           -->in one of the scenarios,exit(0) means, 
+              the "job is completed successfully and
+              the process is terminated normally" 
+      
+       - if the application is unsuccessful, in completing its 
+         work/job, exit(n) will be invoked, where n!=0 - 
+         the value of n denotes a possible type of error, 
+         in the application
+               --> possible reasons may be insufficient 
+                   resources
+               -->time-outs due to resource issues
+               -->wrong input parameters
+               -->cannot complete some operations 
+             
+           -->in one of the scenarios,exit(n) means, 
+              the "job is incomplete and
+              the process is terminated normally"
+                 -->there is a problem, in executing 
+                    the application - may be resource
+                    problem  
+
+       - waitpid() is typically used to clean-up a zombie 
+         process and extract termination status code and
+         exit code, from the zombie pd - this information 
+         may be used further, if needed ???
+
+       - fork() is useful, if just duplication of  a process 
+         is needed, but it cannot be used to load/launch 
+         new application binaries/cmds/utilities - for instance, 
+         if a shell process needs to load an external command, 
+         a new process must be created, but the new process 
+         must load a new application/command/utility, 
+         not execute the same application ?? do you understand
+         this statement ??? in this scenario, /bin/bash is 
+         the specific shell program - Bourne again shell - 
+         the original shell was Bourne shell 
+                --->Pi ---> /bin/bash
+                    |
+                    --->fork()--->Pi'--->/bin/bash 
+                --->Pi ---> /bin/bash
+                    |
+                    | 
+                    Pi'--->?????--->Pi'--->/usr/bin/ls
+       - for such a requirement, "first fork()" is 
+         used to create 
+         a duplicate process/another application instance and 
+         this duplicate process/application instance is 
+         forced to "invoke execl() system call API" - execl() 
+         system call API can load/overlay the current 
+         active program image of the process/virtual 
+         address-space, with a new active program image 
+         /virtual address-space of another application - 
+         the process will 
+         remain the same,but the active program/program 
+         image/process address-space associated, with the 
+         process will be changed 
+             (parent) Pi--->fork()--after fork()
+                (progi)       |
+                              -->Pi--->VASi-->progi(parent continues)
+            child part(after fork)
+                     |
+                     -->Pi'-->VASi'-->progi(child)
+                                      (after fork)  
+                                        |
+                                        --->execl()(??)
+                                             |
+                                       (after execl()
+                                             -->Pi'
+                                             |
+                                             --VASj->progj 
+           
+        parent) Pi--->fork()--after fork()-->Pi--->VASi-->/bin/bash
+               |      |
+         (/bin/bash)  
+
+       child part(after fork())-->Pi'-->VASi'-->/bin/bash(child)
+                                  |
+                                  --->execl()(??)
+                                        |
+                                   (after execl())
+                                        -->Pi'
+                                        |
+                                        --VASj->/bin/ls
+
+
+       - as part of the execl(), VASi' of the current process 
+         is will be deleted and a completely new VASj is 
+         set-up, for the current process - in effect, 
+         the current active program image of this 
+         process is replaced 
+
+       - typically,execl() like system call API must be 
+         executed, in the child process, not in the 
+         parent process, as the parent process will not 
+         be able to continue its job 
+              
+       - if we execute execl(), in a parent process 
+         context, the program image of the parent 
+         process will be deleted and overlaid, with 
+         the new program image of execl() - which 
+         means, the parent process will no longer 
+         be able to do its job 
+            --->in most cases, parent process of 
+                a multitasking application will be 
+                the master of the application - so,
+                the master must exit, for the life-time
+                of the application 
+
+       - if we invoke execl(), in the context of the 
+         child process, following actions are taken :
+
+          - current active progam image/VASi of the 
+            child process is deleted, in the current 
+            child process, but the child process 
+            is not deleted  
+          - related resources/page-frames are freed 
+          - as per the newly loaded program/application, 
+            a new set of VASj/segments/active program 
+            image is - for the same child process, 
+            a new address-space is set-up, based on 
+            the newly loaded application/program 
+            (set-up and associated resources are 
+            created) 
+          - a new execution context is set-up, for the 
+            child process executing the newly loaded 
+            program image - hw context is set-up and 
+            this will be used, when the child process 
+            is scheduled/dispatched - the kernel 
+            stack is initialized, with a new hw 
+            context,for executing the newly loaded 
+            application  
+            
+          - once all these are done, the child process 
+            can be scheduled/resumed and it will 
+            start executing the main() of the  
+            newly loaded application 
+
+          - in the context of the child process, 
+            the old program image, its segments are completely 
+            deleted and lost 
+
+          - what happens, when an external command/
+            application 
+            is executed on the command line of a shell process ???
+            - first, shell determines, that it is an external 
+              command , not built-in command - read above 
+              documentation ???
+            - create a new process,using fork() and 
+              in the new process
+              , invoke execl() and load the 
+              external command/application, 
+              based on its path name 
+            
+            - effectively, the shell is the parent process and the 
+              child process will now be executing the 
+              external command - 
+            - once the "external command/application" is "completed", 
+              the child process will be "normally terminated" 
+
+             - the "parent process", "shell" will complete the 
+               "clean-up" 
+               of the "zombie pd" of the "child process"   
+          
+             - the above is true, for foreground processes, as well 
+               as background processes
+                -->shell/shell process are just following 
+                   the design principles of Unix/Linux, 
+                   in managing children processes 
+                   and further job processing
+
+    - in the case of execl(), following parameters
+      are passed to execl():
+      --->refer to assign1_4.c, for more specific 
+          details - there are several scenarios, 
+          for illustrating execl() and its parameters
+
+      -->p1 -->mostly, absolute pathname of the program 
+               /executable object file 
+      -->p2 -->just the base name of the executable 
+               file/program file 
+      -->p3 onwards --> these are parameters passed 
+                         to the program of p1
+      -->eventually, the last parameter must be NULL
+      
+      -->there are certain important points about 
+         the return values of execl()
+          -->execl() never returns back, if it 
+             succeeds - if the loaded application 
+             is successfully loaded into the 
+             process, we say that execl() succeeds
+             and it will never return back
+          -->however, if execl() fails, it will
+             return and it will return -1            
+  
+
+    - let us understand the working of shell/shell scripts, 
+      using sample scripts - refer to the sample scripts
+      and the in-built comments added to the sample scripts
+
+
+   
+
+
+
+
+           - in a given linux system, terminal emulator(high-level)
+             (can be 
+             of different implementations, but functionally similar)
+             manages several graphical terminals(low-level) 
+             and shell instances : 
+        
+              - in these cases, terminal emulator(say, konsole) 
+                will create one or more children processes 
+                and in each child process, load /bin/bash 
+                image - so, a terminal emulator may create
+                several such children processes, using 
+                fork() and load shell images, in these processes 
+                - effectively, terminal emulator is the 
+                parent process / master process and children 
+                processes/shell instances are worker processes 
+                , which do the job of CLI
+
+    - in the case of shell and command line, first understand
+      the behaviour of a typical interactive shell and 
+      how it manages an external command, using fork() 
+      and execl() 
+              -->refer to the discussions above
+                 -->we have seen many scenarios
+
+    - in the case of a shell script,typically the script 
+      provides the pathname of the interpreter at the 
+      top of the shell script 
+       - based on the interpreter, the interactive shell
+         (parent process) will create a new process(fork()) 
+         and in this new  child process(non-interactive
+         shell/process) will load/execute(execl()) 
+         the interpreter
+         based on the pathname execute it - the shell
+         script file is passed as the command line 
+         parameter to the interpreter/shell program 
+
+       - once the above set-up of is done, every line of 
+         the shell script is interpreted 
+
+       - if a specific line contains built-in commands
+         or constructs of the shell/interpreter, they 
+         are processed, by the interpreter
+
+       - in addition, if there are external commands
+         /programs/utilities in the script file, one
+         or more new child processes are created(fork())
+         and further, using execl(), external commands or
+         programs/utilities are loaded, in the children 
+         processes 
+
+       - the processing will continue, as per the rules
+         of the parent-child and shell/interpreter  
+ 
+  
+
+
+
+
+           - refer to fork2n.c, fork_exec.c, and assign1_4.c, 
+             for using system call APIs and related 
+             concurrent programming 
+
+           - fork2nc. 
+
+               - objective is to illustrate creation of 
+                 duplicate processes and their process control, 
+                 including termination, clean-up, and 
+                 check the termination status code/exit code of 
+                 children processes 
+
+         
+            -assign1_4.c 
+
+                - objective is to use fork() and execl() 
+                  to do certain jobs, in the children processes 
+                  and manage the children and the jobs, in 
+                  the parent, using certain concurrent 
+                  programming techniques
+
+               - in this sample, several processes are 
+                 created and concurrently executed - 
+                 these processes are assigned respective 
+                 jobs - based on the completion of the 
+                 jobs, these processes will termination 
+                 the process normally, with appropriate
+                 exit code 
+               - in the parent process, it will do the 
+                 required jobs/block of code
+                 and eventually, invoke 
+                 waitpid() to complete clean-up of 
+                 children processes - the parent process
+                 can complete its essential jobs and then
+                 invoke waitpid() for clean-up of children 
+                 processes
+               - in this context, the parent process will 
+                 set-up 5 children processes and before 
+                 proceeding with other processing, will 
+                 invoke waitpid() to clean-up zombie
+                 children processes - as part of the clean-up, 
+                 termination status is collected and 
+                 checked, for completion of jobs 
+               - based on termination status/exit code, 
+                 the process will proceed to do further 
+                 processing
+               
+               -when waitpid() is invoked and there 
+                are no terminated children processes, 
+                waitpid() will block the parent process, 
+                until a child process is terminated -
+                meaning, waitpid() can block the 
+                parent process, if there are no 
+                terminated children processes - if 
+                the parent process is blocked, due to 
+                waitpid(), it will be unblocked later
+                and it will complete the clean-up 
+                of the children process(es) - this 
+                cycle continues, until all the children 
+                are terminated and cleaned-up    
+              
+               - waitpid() can be used to collect 
+                 termination status code of all the
+                 children processes and eventually, 
+                 the parent process can take further
+                 decisions, based on the termination/
+                 exit code of the children processes-
+                  -if all the children processes 
+                   are successfully terminated(they 
+                   have done their job), continue
+                   further processing 
+                  -if one or more of the children 
+                   processes did not complete their 
+                   jobs or abnormally terminated, 
+                   the parent process will not 
+                   progress further - the parent 
+                   process will terminate, with 
+                   an exit(n)
+                 - this exit code value will be
+                   collected by bash shell and we 
+                   can check this value further - 
+                   echo  $? or  EXIT_CODE=$?
+                   can be used to collect the 
+                   exit code, in a bash shell     
+ 
+                 ---check the code of assign1_4.c
+               - for instance, gcc may fail due to 
+                 compilation errors and complete 
+                 unsuccessfully, but normal termination 
+               - gcc will otherwise complete the 
+                 compilation and complete successfully 
+                 and there is normal termination 
+               - when will execl() fail ?? any scenarios ??
+                  --->the pathname of the first parameter
+                      is wrong 
+                  -->pathname of first parameter is correct, 
+                     but permission to execute is disallowed
+     
+     -->if we are creating one or more children processes
+        and in addition, one or more threads, in an 
+        active application/process, following rules
+        apply:
+        -->if the parent process terminates, the 
+           children processes/threads are assigned
+           to the background processing - meaning, 
+           they will be treated as background 
+           processes/threads 
+        -->due to the limitations of background 
+           processes/threads, the children processes
+           or threads are disallowed to read user-input 
+        -->if we use read() or similar interfaces to 
+           read user-input, from background processes/
+           threads, the corresponding process will 
+           be forcibly stopped by the system - 
+           this is part of the rules of foreground/
+           background processes 
+        -->as long as the parent process is alive
+           and active, the children processes/threads
+           will be treated as part of the foreground
+           processing/processes - these foreground 
+           processes/threads are allowed to read 
+           data from user-input 
+          
+
+      
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+        
+
+
+
+
+
+
+
+
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+  
+       
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+  
+
+
+
+ 

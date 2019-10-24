@@ -1,0 +1,697 @@
+- we will working on a shell, using a terminal
+   -->shell is a system utility executed, as
+      a process - there will be several instances
+      of shell, in a given system 
+   -->a typical shell instance needs a terminal 
+   -->in our case, the shell will be Bourne Again 
+      Shell - it is an improvised form of the 
+      original Bourne shell  
+   -->terminal is another service of OS and 
+      it is an abstract service, low-level 
+      service used by the shell 
+   -->refer to big-pictures 
+  
+
+- there are different forms of shells - on a Linux
+  system, we will be using bash, which is /bin/bash
+   -->depending upon the GPOS platforms of 
+      Unix/Linux, you may come across different 
+      flavours of shells - features will differ 
+      and programming syntax/semantics will differ  
+- there are different forms of terminals - there 
+  is a text mode terminal, which is known as 
+  virtual console, in Linux - any terminal 
+  is provided, as an abstraction to the shell/
+  utilities - the abstraction is provided  as 
+  a device file - these device files are special 
+  files , in Unix and Linux - these enable shells/
+  utilities to interact , with system modules, like
+  terminal modules of the core of the OS  
+
+- there are several graphical terminals, which 
+  are known as pseudo terminals - in these cases, 
+  there are terminal emulators, which are used 
+  to manage pseudo terminals, for shells and 
+  utilities
+   -->in the systems used, in our Labs, konsole
+      is the terminal emulator 
+
+- in whichever shell we are working, type the 
+  command "tty" to find the appropriate terminal 
+  , for our shell and utilities 
+
+- in addition, there is an user-id / login id 
+  associated, with every user of the system - 
+  we can check the login-id/user-id, using 
+  id command - this user-account/ id decides 
+  OS privileges of the session/shell/commands 
+
+- typically, all the sessions/shells of the 
+  user will be executing, with the user-id/
+  login-id of the user - what is the 
+  importance or significance of user-id /
+  user-credentials ??
+    -->this decides OS privileges of 
+       commands and the services allowed 
+
+- the user-id/login credentials are used to 
+  decide the privileges/permissions of 
+  the applications, in the sessions of 
+  a given user 
+
+- the user-id/privileges/permissions are used 
+  along with the access model of the operating 
+  system/kernel
+    -->we will discuss this access model , 
+       during file resource access  
+
+- many of these details will be connected 
+  with different entities of the OS, like 
+  "processes"/"files"/"directories" and "resources" ??
+--->file system, directories and files are 
+    highly abstracted, in a typical Unix/Linux 
+    system - however, the basics of directories
+    and files still apply - but the conventions 
+    are different, from Windows systems 
+- let us understand the filesystem hierarchy of 
+  a typical Linux system ??
+   - in this context, we are understanding 
+     the directory hierarchy of a typical 
+     Linux file system
+   - as we progress, we will connect, with 
+     some of the earlier discussions  
+
+
+- the file system hierarchy starts, with / 
+  - let us understand /, as the top most 
+  directory/file(first logical) of the 
+  filesystem hierarchy ??
+    --> this is known as root "/" directory 
+        of the file system hierarchy 
+    --> what does this represent physically or 
+        logically ??
+         - logically, this / directory 
+           is managed, by VFS/"virtual file
+           switch"/virtual file system, which 
+           is a component of the core, which 
+           manages all the file system managers, 
+           of the core - these file system managers
+           are used to manage the various types 
+           of file systems used, by the 
+           operating system - this VFS is a core
+           component, as part of the kernel
+         - this "logical /" is connected to 
+           the "first directory" of the "rootfs"
+           of the operating system - "rootfs 
+           is the first file system" of the 
+           "OS", which "contains most of the 
+           core and non-core components/directories
+           /files"    
+--->in a given Unix/Linux system, there can be 
+    several file systems on the disk to store
+    directories/files/data - however, the first 
+    file system is used by the OS, for storing 
+    most of the system files and hence, it is 
+    known as rootfs /root file system - other 
+    file systems may be used to store user-data
+    /application data 
+--->in this context, let us assume, that there
+    is a rootfs and there is a root directory(/), 
+    which is the first directory of the system 
+    and it is visible to users/administrators
+
+-->many of these directories will be containing 
+   files of core and non-core components, in 
+   addition to applications' program and data 
+   files
+-->the following layout provides details of 
+   installation of a typical GPOS/Linux  
+- under this /, there will several standard 
+  system directories, which are designated, for 
+  appropriate sub-directories and files 
+
+- /bin  directory 
+   - ideally, this "directory contains most of the 
+     basic system utilities/binaries" - these 
+     are not used , for system administration 
+      -->these are part of non-core components
+         of OS    
+   - in recent implementations, this directory 
+     may contain hard-links/symbolic links/soft-links
+     to actual 
+     binaries present, in /usr/bin/
+       -->there are practical issues 
+
+   - can you name a few basic utilities/normal 
+     utilities, in the system ??
+      -> which sudo
+      -> which su 
+      -> which vi 
+      -> which bash --> this is our Bourne again 
+                        shell 
+      -> which csh
+      -> which sh 
+      -> which ksh  
+   
+   /bin and /usr/bin directory will be 
+    normally updated, during 
+   initial installation and subsequent installations
+   of OS and related packages 
+
+- /home directory 
+
+    - ideally, home directories of user accounts 
+      are present , in this  directory
+      -->every user account is assigned 
+         a dedicated directory under 
+         /home directory - this is a 
+         typical Linux convention  
+
+    - /home/dac or /home/ditiss or other 
+      users 
+       -->in our case, we will be using 
+          /home/dac , for storing most 
+          of the directories and files of 
+          the user's work - it will be the 
+          work space  
+
+    - typically, home directory of  an user account 
+      is used to maintain the work-space of the 
+      respective user-account 
+         --> this is where a specific user 
+             is allowed to create and manage
+             his directories and files - 
+             the regular work-space - 
+             you can install your software
+             /packages ??
+         --> a particular user is restricted 
+             to his directory and scope and 
+             similarly, other users are restricted
+             to their home directories and files 
+               --> check ls -ld  /home/<dir1>
+               --> check ls -ld  /home/<dir2>
+                  ....> check the access permissions
+                       of the directories ??
+-->based on the user account/id, a specific 
+   user is given access to his home directory
+   and subdirectories/files and restricted from 
+   accessing other users' home directories/
+   subdirectories/files - for this access control, 
+   id of the user-account/processes/directories/
+   files are used - all these entities are linked, 
+   during access control 
+
+- /etc  directory 
+ 
+    - /etc directory maintains "configuration
+      files of the OS" and these are "related 
+      to several core and non-core components" 
+
+    - ideally, this directory maintains several 
+      configuration files of non-core components 
+      of the OS 
+
+    - for instance, /etc/sysctl.conf
+        - this is typically used to pass
+          certain settings of parameters 
+          of certain core services
+        - this file will contain several 
+          core components' parameters, which 
+          will be read, during boot-up and
+          used to update the corresponding 
+          system parameters, using proc files/
+          interfaces
+          - proc files are "special files" of 
+            the "system"(not the regular data
+            /program files)  
+          - by accessing these files, system 
+            parameters can be accessed - 
+            meaning, read or updated 
+  
+
+    - for instance, /etc/sudoers 
+        - can you name the non-core component 
+          that uses this configuration file ??
+        - what does this non-core component do 
+          based on this configuration file ???
+           - this file is used by sudo utility 
+             , for "enabling certain normal users"
+             to access privileged services/commands
+           - we can use the same file to "disable 
+             access to privileged services", for 
+             normal users 
+
+
+    - in addition, may services' configuration 
+      files are located under this /etc directory 
+
+    - in this context, many of these configuration 
+      files can be accessed, using root user access-
+      normal users are disallowed from accessing 
+      and modifying these system configuration files 
+
+- /sbin  directory
+     - this directory and its files will be 
+       connected/linked  to /usr/sbin  
+ 
+     - ideally, this directory is used to store 
+       "system administration/supervisor" utilities ??
+
+     - most of these commands/utilities require
+       a privileged user to execute, otherwise 
+       may not be able to complete most services
+       - these utilities are non-core services
+         and they are mostly used to access 
+         and manage certain core services, 
+         which are privileged(OS level privileged) 
+
+     - examples are fdisk, init, swapon, swapoff, etc. 
+-->these are also essential files, which are 
+   installed during installation of OS
+--->most of these supervisor utilities require
+    root privileges, which means, only 
+    root user or sudo enabled users can 
+    execute these services  
+     - what is so special about these utilities???
+         - if these are executed, as part of normal 
+           user sessions,most servicess will fail ??
+
+         - if these are executed, as part of 
+           root user sessions, most services will 
+           succeed ??
+
+         - most of these privileges and access models 
+           are defined, by processes and their 
+           attributes ??
+               - meaning, most of these commands
+                 /utilities will succeed, if the
+                 processes managing these commands
+                 and utilities are privileged 
+               - how do we "enable OS level 
+                 privileges of processes managing 
+                 these utilities" ???
+
+- in addition, typical system binaries will be 
+  also  be located, in /usr/bin and /usr/sbin - 
+  these are typical conventions ???
+    --->   /bin and  /usr/bin are tightly coupled 
+
+    --->   /sbin and /usr/sbin are tightly coupled 
+
+- can we say that the system binaries and supervisor
+  /admin binaries are part of the non-core of the OS ???  
+   - these are system utilities, which are 
+     executed, in the user-space and these 
+     in turn access the core services of the 
+     Os, using system call APIs ??
+         - refer to the discussions above 
+
+- /boot  directory of the system 
+
+    - what is the use of this directory ???
+       - typically, used to "store kernel 
+         images and related files" - these 
+         are related to the "core images and 
+         related binaries"  - for instance, 
+         the kernel's monolithic image file
+         will be located, in this directory
+         - when is this file installed by 
+         the OS ??
+         - normally, these images are installed
+           during initial installation 
+         - in some cases, these images 
+           are updated, during run-time, for 
+           security updates   
+
+       - similarly, certain sub-directories 
+         are used to store boot-loader 
+         related files
+   -->boot-loader files are used to load 
+      operating system images, along with 
+      firmware of the computer system 
+      -->in many systems, firmware is 
+         known as BIOS   
+
+- /root  directory of the system 
+
+     - home directory of the root user and
+       it is the workspace of the root user
+
+     - this is like any other home directory, 
+       but restricted to root account/root 
+       user
+     - other user accounts cannot access this 
+       workspace
+
+     - this root directory is not same, as 
+       / - / is the top most directory/first 
+       directory - whereas, /root is a sub-directory 
+       of /   
+     
+
+- /proc  directory of the system 
+
+     - this directory contains "special directories
+       and files" - the "special files are used to 
+       interface to the core components of the 
+       OS" - to "extract system parameters' information" 
+       or to "update system parameters' information"
+
+     - these files are special meaning, they do 
+       contain any data - if you check the size
+       of these files, it will be zero, but these
+       files are used to interact, with the OS, 
+       using certain special system call APIs  
+
+     - proc and its respective files are treated, as 
+       interface to the core of the OS 
+
+     - ps and top like utilities are dependent 
+       on proc directories/files, for extracting
+       system information - these utilities 
+       use /proc special files to access core 
+       system information, in the background
+ 
+--->we will be using /proc/* special files 
+    for setting/querying certain core parameters
+    of scheduler or memory management sub-systems
+  
+
+- /lib  and  /lib64  directories of the system 
+     
+     - in a Linux-64-bit box,following are 
+       the conventions :
+          LP64/I32LP64 data-model ??
+             --> integers are 32-bit data types
+             -->Long integers are 64-bit data types
+             -->pointers/virtual addresses are 
+                64-bit data types
+ 
+      - in a Windows-64-bit-box, following 
+        are the conventions :
+          LLP64/
+             IL32P64 data-model ??
+             --> integers are 32-bit data types
+             -->Long integers are 32-bit data types
+             -->Long Long integers are 64-bit data types
+             -->pointers/virtual addresses are 
+                64-bit data types
+             
+
+     - why do we need  a separate set of  
+       32-bit libraries/binaries, for 
+       32-bit applications ??
+         - data types /address width/pointer
+           width are different, for 32-bit 
+           and 64-bit
+         - 32-bit will use a different 
+           low-level processor instruction 
+           set and 64-bit will use another
+           low-level processor instruction 
+           set 
+  
+
+     - why do we need  a separate set of  
+       64-bit libraries/binaries, for 
+       64-bit applications ??
+         - data types /address width/pointer
+           width are different, for 32-bit 
+           and 64-bit
+         - for instruction set, refer to the
+           processor details  
+ 
+
+     - typical system libraries are present, in 
+       lib/ and lib64, where 32-bit libraries 
+       are typically present, in lib directory 
+       and 64-bit are , in lib64/
+
+     - why use 64-bit processors and their 
+       operating systems ??? 
+
+      - what are the advantages, for the 
+        servers/server services/applications ??
+    - when are these 32-bit or 64-bit system 
+      libraries installed ?? 
+        ---> mostly, during OS installation 
+          --> in some cases, post OS installation
+
+
+- /opt/*  is another common directory, which will 
+  contain sub-directories and files,which are 
+  normally installed on behalf of third-party 
+  applications/sw packages/installations 
+    - third party Vendors' applications/
+      sw development tools are typically 
+      installed under this directory - 
+      these packages/applications are
+      not provided by the Linux Vendor
+
+- /usr/local/*  is another common directory, 
+   which is similar to /opt/*  - depending 
+  on the third party sw packages/installations, 
+  the locations may vary 
+        - similar to opt and the choice of 
+          directories depends on the 
+          third party Vendors and local 
+          admins. 
+
+
+- /dev/* is another important directory, where 
+  several device special files are created, during 
+  run-time 
+---->in a typical GPOS, system call APIs are used
+     , along with other interfaces, like device 
+     files /procfs files/sysfs file to access
+     core components/services  
+    - these are special files, not regular files
+       - meaning, these are not used to store 
+         data, but to access IO devices/IO 
+         transcations,using system call APIs  
+
+    - these device interfaces /special device files
+      are used to access devices /IO , using 
+      OS services/system call APIs - as part of 
+      this access, device drivers of the OS are 
+      accessed and used ???
+
+    - such special device files/interfaces 
+      are popularly used, for accessing 
+      terminals/terminal devices/hard-disks, 
+      filesystems, swap-spaces, and many more. 
+      
+      --> refer to /dev/pts/8
+          --> this is a device special file 
+              which is used to interface with 
+              a specific "terminal of a shell"
+              - terminal is in the system-space
+                and the file is exported to user-space
+              - using system call APIs, shell and 
+                other utilities access the terminal 
+                IO,using such special files  
+
+     --> in addition, there are other special 
+         files, like /dev/sda1, /dev/sda2, 
+         , /dev/sdai , ... , which are used
+         to represent and manage file systems 
+         of the operating system
+          -->these device files are used to 
+             access storage disks and file
+             systems  
+
+     ---> there are other "interfaces/special 
+          device files", like "/dev/sda3(in a 
+          system)", which will be used to 
+          interface, with the "swap-space/swap
+          area on the secondary storage - 
+          this interface /swap-area are used
+          by virtual memory management" - in 
+          this context, "virtual memory management 
+          services are used by applications"
+        -->swap-space/swap-area(low-level resource)
+            ----> virtual memory management(OS component
+                                            + services)
+                       -----> applications(high level) 
+                                -->uses low-level 
+                                   services and 
+                                   resources 
+--->during memory management and swap 
+    management, we may come across some 
+    of these device files  
+     --> kernel manages these files/interfaces
+         and non-core utilities may use these
+         interfaces , for accessing file systems
+
+      --> since many of the file system low-level 
+          features are abstracted away, it is easier
+          to work, but at the lower levels, these 
+          special files are used  
+
+
+      --> refer to /dev/pts/9 
+            --> in this case also, it is a special file
+                , which is used as an interface to 
+                another terminal of another shell 
+
+            --> in a Linux system, there can be several 
+                such terminals/terminal interfaces 
+                and shells 
+
+       --> such special files are used to provide 
+           an abstract interface to the terminals 
+           - shell processes/shells and system 
+             utilities use these abstractions/
+             interfaces     
+    
+   - Shell and its working 
+        - let us understand how shell manages commands
+          and scripts 
+        - shell is dependent on several system call 
+          APIs , for completing its tasks, like 
+          loading/launching external commands, 
+          utilities and programs 
+
+        - shell supports executing shell scripts, 
+          using the same principles, as external 
+          commands, programs, and utilities, but
+          there is additional support, for automating 
+          the jobs, for different commands, utilities
+          and programs
+
+        - many of the multitasking features of the 
+          OS/kernel are used, in shell scripts, for
+          automating the processing of jobs
+
+        - refer to multitasking_using_processes_2.txt
+          for more specific details of working of 
+          shell, external commands and scripting
+
+        - also, refer to the sample scripts and 
+          comments in-built   
+               
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+            
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+  
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

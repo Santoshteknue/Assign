@@ -1,0 +1,12 @@
+--->along with the regular lecture txt documents, 
+    refer to the following lab documents :
+
+   -->shell_terminal_fs_hier.txt 
+
+   --->cmds.txt
+
+   --->vi.txt 
+
+
+   --->assignment1_hints.txt 
+

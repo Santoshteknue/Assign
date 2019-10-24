@@ -1,0 +1,461 @@
+hints for assignment1
+
+=====================
+
+
+1. for this problem, we need to launch different 
+   instances of while1.c/w1 , using taskset utility 
+--->cd into the directory, that contains while1.c 
+    and type the following commands ??
+--->for instance, 
+      cd   /home/osboxes.org/Downloads/dac_ec_day3
+
+
+   -->let us understand while1.c - use the comments
+      , in the sample code 
+   -->while1.c is a simple code, that will execute 
+      a while(1) and in addition, it will certain 
+      OS services, if needed 
+   -->while1.c is very convenient, for scheduling 
+      related demonstrations and scenarios
+   -->first compile  while1.c , as below :
+        -->gcc while1.c  -o   w1
+      --->gcc will compile /link and generate 
+          an executable binary object file,
+          w1 
+      -->this binary executable file can be 
+          loaded/executed , in the OS  
+
+   -->now, let launch w1, using taskset ???
+
+     -->taskset  0x00000001  ./w1&
+        -->taskset and shell will create a new process
+           and load w1 into the new process - in addition, 
+           the new process will be pinned to cpu0 - 
+           this pinning is done, using a scheduling 
+           parameter, in the pd - this parameter is 
+           known as cpu affinity/binding parameter  
+
+     --->refer to lab_queries_28.03.2019.txt, for 
+         specific details on taskset
+
+--->we can load/launch multiple instances of w1 
+    on cpu0, as below 
+--->similarly, we can load/launch multiple 
+    instances of w1 on other cpus 
+ 
+     -->taskset  0x00000001  ./w1&
+     -->taskset  0x00000001  ./w1&
+     -->taskset  0x00000001  ./w1&
+ 
+
+
+-->if we don't use taskset , the OS /SMP cpu load-balancer
+    ( a core component of the OS)
+
+    will decide our process scheduling and processor, 
+    dynamically - our processes will not be pinned 
+    to a specific processor(s) 
+
+ -->in addition to all the above comments, if a specific
+    processor is selected, for scheduling/execution, 
+    its cpu cycles will be used - based on the time-slice
+    or time-share, several cpu cycles will be provided
+    , for each scheduling of the process - in this case, 
+    each cpu cycle will be of the duration of 1/frequency 
+    of cpu hw clock (cycle)- 1 / 1Ghz or 1 / 2Ghz  
+ -->in each hw clock cycle or a set of clock cycles, 
+    one or more instructions will be processed
+  -->if the processor is faster, the cpu clock cycle 
+     is shorter and in the shorter time duration, 
+     more instructions can be processed - so, the 
+     overall set of instructions/jobs completed 
+     are increased
+  -->in addition, in the real-world scenarios, the 
+     actual performance depends on other hw resources, 
+     like memory/caches/disk IO/network IO /multiprocessing 
+     and other OS related mechanisms    
+---->no.of instances of w1 can be of our choice, as per
+     the assignment  
+
+     -->let us initially, launch 2 instances of  
+         w1 ??? what is your observation
+
+     -->use ps and top, for listing the parameters
+        of the processes
+
+     -->ps -eH  -o pid,ppid,cmd,stat,class,ni,rtprio,psr 
+
+        -->ps is used to list processes, in the 
+           system 
+        -->-e  is list all the processes, in the 
+           system 
+        -->-H is used to list and show the parent 
+            children hiearchy - in the real-world 
+            systems, there are parent-children 
+            hierarchy , for processes 
+         -->pid is the process id(number) of a 
+            specific process
+         -->as per hierarchy, ppid is the process id
+            of the parent process of a specific process
+         -->cmd is the name of the program/application 
+            associated , with the process - active 
+            application's program 
+         -->stat is the run-time state of the process, 
+            like running/blocked and others
+         -->class is the scheduling policy - 
+            TS - time-sharing 
+            FF - PRIO/FCfs hybrid 
+            RR - PRIO/RR hybrid
+            B  - it is a form of time-sharing, 
+                 but very low imporatance 
+          -->ni is the nice value of a process, with 
+             TS policy - otherwise, invalid 
+          -->rtprio is the real-time priority of a 
+             process, if the policy is FF or RR 
+          -->psr is the processor id - 0 for cpu0, 
+             1 for cpu1 and so on
+
+   -->the next command to be used is top, which 
+      provides more dynamic information - however, 
+      the first set of details must be looked-up 
+      , using ps - next , use top 
+
+     ---->refer to cmds.txt and lecture hints
+
+   -->in addition, now launch w1 instances on 
+      cpu1 (second cpu) :
+      taskset 0x00000002  ./w1& 
+      taskset 0x00000002  ./w1& 
+      taskset 0x00000002  ./w1& 
+      taskset 0x00000002  ./w1& 
+
+
+    
+
+   -->now, use ps and top to check their scheduling 
+      and performance ??
+  
+  -->problem 2 of assignment1 
+
+     -->we will be changing / modiifying nice values 
+        of processes to +ve or -ve to decrease/increase 
+        time-shares of the respective processes
+
+     -->initially, let us assign +ve values to 
+        one or more processes and check the time-shares ??
+
+        -->let us launch one or more processes, 
+           using taskset on a single processor
+
+           taskset 0x00000001  ./w1&
+           taskset 0x00000001  ./w1&
+           taskset 0x00000001  ./w1&
+           taskset 0x00000001  ./w1&
+
+       -->check using ps and top  ??
+
+       -->next, let us change the nice values of 
+          one or more processes to +ve values, 
+          using renice  
+
+          renice -n +5 -p <pid1>
+          renice -n +10 -p <pid2>
+        
+          renice -n +15 -p <pid3>
+
+       -->renice is a system utility, which changes
+          the nice value of pds of processes, using 
+          system call APIs - however, it is very 
+          convenient, for developers and 
+          administrators 
+
+       -->in all these discussions, we will using 
+          one or more sessions/shells , for our 
+          commands and launching our active 
+          application instances 
+          -->in each session, we can check the 
+             session's user account id, using 
+             id -un / id / whoami and similar 
+             commands
+          -->if a session belongs to root user 
+             account, most commands/utilities 
+             can execute successfully - meaning, 
+             most commands/utilities and their 
+             services are allowed by the core 
+             of the OS 
+          -->if session belongs to normal user 
+             account, many commands/utilities/
+             their services will be restricted
+             by the core of the OS - this is due
+             to OS privileges /rules
+     -->for instance, let us assume, that we are
+        , in a normal user-session 
+     -->if we attempt  renice -n -5 -p <pid> 
+        to change the nice value of one of 
+        our processes to a -ve value, our 
+        session does not have privileges and
+        hence, processes/commands executed, 
+        in the session do not have privileges 
+        -->operation not permitted    
+
+    -->first alternative is that the administrator
+       allows the normal user account/sessions to 
+       use privileges, using sudo utility and its 
+       configuration file(non-core services) 
+       -->sudo is well controlled by the administrator
+          -->it is a better alternative
+
+     -->second alternative is to use "su root", in 
+        a normal session - be warned that you will 
+        be provided a root session, which will be 
+        powerful - you will be provided a root session 
+        and a powerful shell - as a thumb rule, 
+        maintain a single root session only - all 
+        other sessions must be non-root/normal   
+
+    -->for an su root session, you can check , 
+       using ps -eH -o pid,ppid,cmd,stat,uid,gid | less
+
+
+  -->when we use taskset 0x00000001 or 0x00000002, 
+     we are pinning the process/pd to a specific 
+     processor/Rq , say cpu0/rq0 or cpu1/rq1 
+  -->in addition, for each cpu0/rq0, we can select 
+     a specific scheduling policy/scheduler instance 
+  -->meaning, for  a specific cpui/rqi, there is 
+     a specific policy and its scheduler instance
+  -->for instance, if we assign a set of processes
+     to cpu0/rq0 and select TS policy, for the 
+     processes, a specific TS scheduler instance
+     will be managing all the processes, in cpu0/
+     rq0 
+  -->similarly, if we assign a set of processes to 
+     cpu1/rq1 and select TS policy, for the 
+     processes, a specific TS scheduler instance
+     will be managing the set of processes, in 
+     cpu1 /rq1 
+
+-->since we are dealing, with multiprocessor 
+   systems, we need to bind/pin our processes
+   to specific processor, before assigning 
+   scheduling policy and parameters - 
+   this will ensure, that our processes are 
+   managed, by a specific scheduler/rq instance
+   of a specific processor 
+-->otherwise, our processes may be moved to 
+   different processors and due to this, 
+   the processes will be managed by different 
+   scheduler instances and we will not be able
+   to test specific scenarios 
+
+--->in conclusion, we are actually dealing with 
+    uniprocessor scheduling on every processor, 
+    but since we are dealing with multiple 
+    processors, it is a form of multiprocessor 
+    scheduling - however, we are disallowing 
+    moving/migration of processes to different 
+    processor/scheduler instances, for our 
+    requirements 
+
+--->if we are dealing, with TS policy and parameters, 
+    we must first use taskset , for launching several 
+    processes on one or more processors - refer to 
+    the earlier commands/demos. 
+-->once the taskset is used to bind/pin processes, 
+   we can use renice to change the nice parameters
+   of these processes 
+
+
+-->similarly, if we are dealing, with FF policy, 
+   we must use taskset as above and in addition, 
+   we must use chrt to assign FF policy and 
+   real-time priorities to processes on respective 
+   processors/rqs/scheduler instances  
+
+   -->taskset 0x00000001  ./w1&
+   -->taskset 0x00000001  ./w1&
+   -->taskset 0x00000001  ./w1&
+   -->taskset 0x00000001  ./w1&
+
+   
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+
+
+    -->chrt -f -p 1  <pid1> //pid1 of one of the 
+                            //processes
+
+    -->chrt -f -p 5  <pid2> //pid2 of one of the 
+                            //processes
+
+
+
+    -->chrt -f -p 10  <pid3> //pid3 of one of the 
+                            //processes
+
+
+    -->chrt -f -p 15  <pid4> //pid4 of one of the 
+                            //processes
+
+
+--->in the above demo. we will set-up a set
+    of processes on cpu0/rq0 and assign a specific 
+    TS scheduler instance
+
+--->in the above demo. we will set-up a set
+    of processes on cpu1/rq1 and assign a specific 
+    FF scheduler instance
+
+-->in the following scenario/demo., we will be 
+   assigning hybrid/RR policy to a set of 
+   processes on a specific processor, say cpu1
+   - as per the rules of hybrid/RR, if we need 
+   RR scheduling policy, we must assign equal 
+   priority  to processes - if we assign unequal 
+   priorities, they will behave, with PRIO 
+   policy 
+
+   -->by default, the system decides the fixed
+      time-slice/quantum , for processes - 
+   --> cat  /proc/sys/kernel/sched_rr_timeslice_ms 
+       -->check the value, in your system 
+       -->on some systems, the value is set to 
+          25msecs, but there is no fixed and
+          may be changed, if we have root 
+          privileges - for changing such 
+          parameters, we need higher OS privileges, 
+          like sudo root or su root 
+
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+   -->taskset 0x00000002  ./w1&
+
+
+    -->chrt -r -p 1  <pid1> //pid1 of one of the 
+                            //processes
+
+    -->chrt -r -p 1  <pid2> //pid2 of one of the 
+                            //processes
+
+
+
+    -->chrt -r -p 1  <pid3> //pid3 of one of the 
+                            //processes
+
+
+    -->chrt -r -p 1  <pid4> //pid4 of one of the 
+                            //processes
+
+-->in many of the above scenarios, w1 instances 
+   are long-lived processes, so we may need to 
+   explicitly /forcibly terminate these 
+   processes, for completing the demos.
+
+-->we may use   kill  -SIGKILL   <pid>, where
+   pid is the process id of the specific 
+   process/active instance of the application 
+
+-->if there are several active instances of a given 
+   application, we can terminate all the 
+   associated processes, using 
+ 
+     killall -SIGKILL  <programname>, where
+     we need to fill w1, in the <programname>
+
+-->these commands generate process notifications/
+   signals to target processes - process notifications/
+   signals are a specific form of OS mechanim - 
+   we will study more on this mechanism, during 
+   Linux process management
+
+-->in addition, refer to shell/commands related
+   documents , for working with shell and commands
+    ???
+  
+--->whenever we generate a binary executable file, 
+    it is an object file of the system 
+    -->gcc  while1.c -o w1, where w1 will be 
+       the object file of the binary executable
+    --->gcc   while1.c  --> a.out will be the 
+                            object file 
+    -->it preferred to  use  gcc while1.c -o  w1 
+
+    --->taskset  0x00000001  ./w1& 
+    --->taskset  0x00000002  ./w1&
+    --->taskset  0x00000004  ./w1&
+    --->taskset  0x00000008  ./w1&
+    --->taskset  0x00000003  ./w1&
+    --->taskset  0x00000007  ./w1&
+    --->./w1&
+
+
+   -->in all the above commands, several active 
+      instances of w1 are set-up - there are different 
+      active instances of w1 /processes 
+   -->however, there is only one instance of 
+      w1 object file
+
+--->refer to  lab_queries_28.03.2019.txt, for  
+    details of taskset  and its parameters
+
+    -->the cpu instance/instances are provided, 
+       as a bit-map
+    -->so, 0x00000001 means, first processor 
+    -->so, 0x00000002 means, second processor 
+    -->so, 0x00000004 means, third processor 
+    -->so, 0x00000008 means, fourth processor 
+    -->so, 0x00000003 means, first or second  processor 
+    -->so, 0x00000006 means, second processor or third 
+                             processor
+---->check your system, using  
+     cat  /proc/cpuinfo  or   lscpu   ???
+
+
+--->use   class,ni,rtprio  fields of  ps - they 
+    are as expected 
+
+---> do not use PR field of   top  - top 
+     utility interprets priorities differently, 
+     from our regular ranges used, in system 
+     utilities/system call APIS - it is 
+     confusion, so we should ignore it 
+---->sched_yield() is a system call API - it is a 
+     scheduling system call API 
+-->for sched_yield(), refer to  
+    lab_queries_28.03.2019.txt 
+    -->based on all the comments, we may use 
+       sched_yield(), for co-operative scheduling  
+    -->sched_yield() is typically useful, for 
+       processes, with FF/hybrid policy and equal priority 
+       -->with sched_yield(), we can implement 
+          a co-operative scheduling policy 
+       -->without sched_yield(), one of the 
+          processes may use 100% cpu time, due
+          to FCFS - so, there can be starvation 
+    -->we need to understand the scenarios and 
+       apply scheduling /scheduling parameters/
+       yielding 
+    -->FF/hybrid and unequal cannot be used, 
+       with yielding, since there is no FCFS 
+
+    --->refer to bigpictures, for sched_yield/
+        yielding under sched
+
+    -->FF/equal priority/sched_yield is also 
+       known as manual RR scheduling, not 
+       time-slicing /RR - in the case of yielding, 
+       there is no preemption /no time-slicing  
+
+-->also, refer to while1.c and its comments, 
+   for sched_yield() ??   
+
+
+  
+  
+
+
+

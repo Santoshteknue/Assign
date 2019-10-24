@@ -1,0 +1,449 @@
+
+memory management assignment problems
+=====================================
+
+1. use the while1.c and generate w1, and do the
+   following :
+
+   a) load the application and create multiple instances
+-->there is a system parameter, 
+       /proc/sys/kernel/randomize_va_space 
+--->if this is set to 0(a policy), VAS layout of a specific 
+    process/active instance of a binary executable 
+    object file will be fixed - meaning, if there 
+    are several instances of processes of the same
+    object file, VAS layouts of these processes will 
+    be identical    
+--->if this is set to 2(another policy), VAS layout 
+    of a specific 
+    process/active instance binary executable 
+    object file will not be fixed - meaning, if there 
+    are several instances of processes of the same
+    object file, VAS layouts of these processes will 
+    be different
+--->for our assignments, we prefer 0 , for this 
+    parameter - it is convenient,for our experimentation 
+    and testing      
+      --->hints: do the settings for address-space 
+                   no randomization(0), before loading 
+                   launching the applications/processes
+        --->hints: if you load/launch the applications/
+                   processes and then set the no 
+                   randomization(0), it will not be 
+                   effective - it will be effective only, 
+                   for new processes/not old processes         
+        --->we can write shell scripts to automate 
+            the steps/correct steps - this will 
+            enable us to repeat the testing/jobs, 
+            without retyping the commands again 
+            and the order of commands is taken care
+        --->hints:
+--->set the /proc/sys/kernel/randomize_va_space to 
+    0 or  2, before launching/loading applications
+    /instances 
+-->if there are existing instances of applications, 
+   first forcibly terminate these instances,before
+   changing the settings 
+-->once settings are changed, again load/launch 
+   applications/instances 
+             --> gcc while1.c -o w1
+               -->in a given terminal, 
+                  --->./w1&  --> P1(pid1)->VAS1 is one 
+                                 instance of address-space
+                                 layout 
+                  --->./w1&  --> P2(pid2)->VAS2 
+                                 is another identical 
+                                 instance
+                                 of address-space layout 
+                  --->./w1&  --> P3(pid3)->VAS3
+                                 """""""""""""""""""
+                  --->./w1&  --> P4(pid4)->VAS4
+                                 """""""""""""""""""
+-->since we are using the same object file/binary 
+   executable file, what about the address-space 
+   layouts 
+   of processes/active instances ??
+     -->the object file is only one, for the 
+        application
+     -->however, for each active instance, there
+        will be a new/duplicate address-space layout/
+        segments 
+     -->each of these private segments will be 
+        handling private code/data/stack/heap 
+     -->meaning, segments are different and so, 
+        the contents are different  
+     -->for each process/active instance, a 
+        copy of the address-space/segments/
+        contents/page-frames is set-up 
+
+
+             --> cat  /proc/<pid1>/maps
+                 ---> this will provide a private 
+                      address-space(VAS1) of P1
+                 ---> this address-space will be
+                      mapped using page-tables of 
+                      P1 
+                 -->code1/data1/heap1/stack1, for 
+                    active instance of w1 
+             --> cat  /proc/<pid2>/maps
+                 ---> provide address-space(VAS2) of P2
+                 ---> this address-space will be mapped
+                      using page-tables of P2
+                 -->code1/data1'/heap1'/stack1', for 
+                    active instance of w1 
+             --> cat  /proc/<pid3>/maps
+                 ---> provide address-space(VAS3) of P3
+                 ---> this address-space will be mapped
+                      using page-tables of P3
+                 -->code1/data1''/heap1''/stack1'', for 
+                    active instance of w1 
+ 
+             --> cat  /proc/pid4/maps
+                 ---> provide address-space(VAS4) of P4
+                 ---> this address-space will be mapped
+                      using page-tables of P4
+                 -->code1/data1'''/heap1'''/stack1''', for 
+                    active instance of w1
+   --->in all the above cases, code segment of every 
+       process shares the same set of mappings/
+       physical memory blocks
+   --->effectively, code segment is shared
+   
+  -->if we launch /execute another set of processes, 
+     using another set of object files, we will 
+     have a different set of VAS layouts - their 
+     requirememts/contents/sizes will be different            
+        ---> in the above cases, did you see different 
+             address-spaces ?? whether each process 
+             is assigned its own address-space ??
+        ---> let use see 2 scenarios :
+             ---> cat /proc/sys/kernel/randomize_va_space
+                    --->if it is 2(default policy), 
+                        you may see 
+                        different address ranges for 
+                        segments of different 
+                        processes/address-spaces
+                    --> change the address-ranges of 
+                       processes/address-spaces/segments
+                          -->randomize 
+                          -->this is done, for security 
+                             reasons for applications
+                          -->the address-space should 
+                             not be fixed 
+
+             ---> echo 0 > /proc/sys/kernel/randomize_va_space
+                     ---> if the value is set to 0, 
+                          you will see the same set of
+                          address-ranges will be provided
+                          to segments of different processes
+                          /address-spaces
+                     -->do not randomize address-spaces
+                        --->do not change the 
+                             address-ranges of 
+                             segments
+                            -->for, testing 
+                               and trouble-shooting
+                      -->once the testing is completed, 
+                         you can use the default settings, 
+                         randomized VAS layouts, for 
+                         secure applications     
+  
+                   --> let us see demos, for this ??
+
+                     --> repeat the same, in the lab 
+                         and check ??
+      
+   b) in while1.c, 
+      check the printed pointers/addresses - you need 
+      to print 64-bit pointers/addresses, not 32-bit 
+      addresses/pointers, as your "system is a 64-bit 
+      system" - refer to while1.c - in this context, 
+      refer to while1.c, where we are printing 
+      virtual addresses of global data/stack data/
+      methods of code/other contents - connect these 
+      addresses to virtual/logical 
+      segments, in c), below  
+          --> print virtual addresses, in each 
+              segment range of the process ??
+          -->verify that the printed addresses 
+             are, in appropriate virtual segments of the
+             process ??? 
+          --> in a modern day 32-bit system, virtual 
+              addresses are 32-bits 
+          --> in a modern day 64-bit system, virtual 
+              addresses are 48-bits, not 64-bits 
+         
+   c) check the  "cat   /proc/<pid>/maps", for every 
+      process instance created above 
+      - what is the scope and range of the address-spaces??
+         - follow the above steps and check ???
+      - what are the different segments used by your 
+        active application and their attributes - you 
+        can ignore certain other segments, which are
+        system segments, for libraries and related
+            -->find code segment of your active program ??
+            -->find RO data segment of your active  program ??
+            -->find RW data segment of your active program ??
+            --> find the stack segment of your active """ ??
+       -->programs /executable object files already 
+          contain virtual addresses 
+       -->active programs/processes definitely contain 
+          virtual addresses and mainly, these contain 
+          more segments - stack /heap /library and more 
+            -->the virtual address-space/segments/
+               contents are copy of  the object file's
+               virtual address-space/segments/contents 
+            --> this is part of "process memory managment" 
+            --> this set-up is done by OS   
+
+
+   d) next, try to access a particular address/pointer of 
+      the "code region/segment of a process instance", for 
+      read and write accesses -  what do you 
+      observe ?? what do you understand ???
+           --->let us see one demo ?? 
+             --> if we attempt to access a code segment 
+                 location, it will generate a 
+                 segmentation fault - it is a serious
+                 error, in the operating system - 
+                 we will understand more, when we 
+                 understand low-level details ?? 
+
+
+   e) next, try to access a particular address/pointer 
+      of data(RO) region of a process instance, for 
+      read and write accesses - what do you observe?
+      what do you understand ??
+           --> similarly, try these as well ??
+
+   f) next, try to access a particular address/pointer
+      of data/RW region of a process instance, for 
+      read and write accesses - what do you observe ??
+      what do you understand ??
+
+   g) try accessing logical/virtual addresses of 
+      one or more invalid logical/virtual pages of 
+      one or more invalid logical/virtual segments of 
+      address-spaces of process instances ??
+          -->what are the observations ???
+              ->can you justify the observations
+
+   h) in each instance of w1/process, write and 
+      modify a global data variable and print it ??
+-->in this context, let us take while1.c and 
+   modify each instance, in the data segment 
+-->effectively, there will be different 
+   object files, but they are almost the same
+--->however, we will compile each time to 
+    generate a different w1 and execute it ??
+
+        --->first, do it, for P1/glob1/glob2
+                  -->set the variable glob1/glob2 
+                     to 100
+  ---->compile and load/execute an instance
+ 
+  --->now, modify the while1.c to do the following 
+      -->do not initialize the global data 
+      -->just print 
+        -->next, in the P2/glob1/glob2 
+                  -->just read the variable glob1 and
+                     print 
+  --->again, compile and load/execute 
+
+---->keep doing the same, for other instances ??
+        -->next, in the P3/glob1/glob2 
+                 -->change the global data values 
+
+        -->finally, in the P4/glob1/glob2 
+                 --->just read and print the values  
+  --->based on the above testing, what is your 
+      conclusion ??? 
+
+-->based on the above practicals, we will have a 
+   better understanding of process memory management/
+   address-spaces 
+-->following examples/problems are , for 
+   virtual memory management 
+-->we will not explore the code of example2.c, 
+   which is beyond the scope , at this point
+ 
+2) next, do the following, with example2.c/ex2 :
+      --> this problem requires understanding 
+          of virtual memory management techniques ??
+--->complete the related documents 
+   a) compile the program example2.c to generate ex2 
+      -->gcc example2.c -o ex2 
+   b) as per the lecture notes, set the 
+      /proc/sys/vm/overcommit_memory to 1 or 2, 
+      as per the assignment problems  
+      - refer to lecture notes, for more details 
+--->initially, let us set  
+    /proc/sys/vm/overcommit_memory to  1(unrestricted
+                                         VMM policy)
+   -->echo 1  > /proc/sys/vm/overcommit_memory  
+   c) as per lecture notes, you can change      
+      the prlimit of parent process of ex2, bash, 
+      before loading running ex2 , with appropriate 
+      parameters - the parameter to ex2 lets the 
+      program to allocate large dynamic memory and 
+      hence, larger application/process virtual 
+      address-spaces
+--->initially, do not use prlimit - we will use it, 
+    at the end of the assignment
+-->if needed, refer to 
+      multitasking_using_processes_2.txt , for 
+      detailed discussions on prlimit and how 
+      to manage certain resource parameters of 
+      processes  
+   d) now, try to create very large applications, for
+      ex2 - check , what is the largest size /vsz/VIRT
+
+      that can be allocated ??
+        try, the following :
+        ./ex2  1000&
+        ./ex2  2000&
+        ./ex2  3000&
+
+         ............keep trying reasonably 
+--->we need to load/launch several instances of 
+    ex2, for our assignment problems /testing 
+       - check , with ps -e -o  pid,ppid,cmd,vsz,rsz
+       - check, with top --> in top, refer to 
+                             the "VIRT" and "RES"  
+
+      how many such large applications can be loaded 
+      successfully ???
+--->we will not use prlimit initially 
+   e) can we restrict the process sizes, in d), using 
+      prlimit - if so, how do you do it ??
+      - what is the hard-limit and soft-limit, 
+        in prlimit ???  
+      - try to changing the soft-limit and hard-limit
+        ??
+      - modify the settings and check, if the 
+        settings work, as expected ??  
+-->as part of the demo, we need to unblock/awaken
+   ex2 to enable it to access virtual pages and 
+   this will lead to page-faults 
+    -->so,  use  kill   -SIGTERM   <pid> , for 
+           specific active instance of ex2 
+   f) once loaded, try to force the large processes
+      to access their virtual pages and force 
+      demand-paging of pages, page-frame allocations- 
+        --->for this, we need to do 
+              --->kill -SIGTERM   <pid> of the 
+                   process  
+        ---> check, using  top  
+                 ---> check the VSZ field, RES field
+                 --->check the SWAP field of the processes
+                 --> check the overall physical memory 
+                     allocations and swap memory allocations,                     at the top status window of top
+-->based on the above check the VMM/VM behaviour of 
+   the system                   
+ g) next, you need to modify /proc/sys/vm/overcommit_memory
+    to 2(restricted VMM/VM policy) and 
+    repeat the above scenarios, for problem 2) 
+     -->in addition, for this, strict VM settings, 
+        you need to set /proc/sys/vm/overcommit_ratio   
+        to 50% or above, as per vmm_2.txt
+         -->modify the settings, after understanding 
+            the parameters
+-->we will use scripts, at the end of all the problems 
+ h) you must repeat all parts of the above problems, 
+    using scripts - first, make a design, for your 
+    script(s) and next, start programming and testing??
+        -->you must follow the sample shell scripts
+           provided
+        -->you can use grep to search the scripts 
+           for specific programming constructs  
+
+
+
+hints: first, check /proc/sys/vm/overcommit_memory 
+              -->if it is set to 1, a lenient virtual 
+                 memory management scheme/policy 
+                 is supported, in the system 
+              -->if it is set to 2, a strict virtual 
+                 memory management scheme/policy is 
+                 supported, in the system 
+                 --->for this setting, you need to 
+                     check man more parameters - 
+                     we will update this, in our 
+                     discussions 
+   
+ 
+     
+ =====================================
+
+  --typical lab hints :
+      --> I do not understand, what cat does ??
+          ---> cat  file1 --> just list the file's content??
+          ---> cat file1 file2 --> concatenate the 
+                            contents and list the 
+                            contents 
+          ---> cat file1 file2  > file3
+
+          ---> cat <  file1 >> file2 
+  
+          ---> cat  > file3 
+
+          ---> cat  /proc/<pid>/maps
+
+           ---> cat 
+
+              >/proc/<pid>/maps
+
+
+      --> there is a student using cat wrongly ??
+           --> see the above 
+-->there are two types of commands - one is 
+   external commands of the system - these 
+   are regular system utilities and admin. 
+   system utilities
+--->next,we have internal commands of the shell 
+--->in another discussion, we will see the 
+    practical differences 
+      --> what does cd  do   ?
+           --> this is a built-in command of the shell 
+           --> this will change the current working 
+               directory of the current shell
+--->this current directory will be the place, 
+    our commands will be effective  
+           --> all your operations will be, in this
+               directory 
+                 - built in commands will use this
+                   as current directory 
+                 - external commands also use this
+                   as current directory of the current shell 
+           --> we can check the current directory 
+               location of the shell, using 
+               pwd command(built-in) 
+           
+
+      --> what does mkdir  ??
+             --> mkdir is an external command
+
+             --> when mkdir is typed, it will 
+                 be processed by the shell, using 
+                 another/child  process
+             --> mkdir  <dir1>, where dir1 is the 
+                 name of the new directory to be 
+                 created 
+             --> what will /usr/bin/mkdir will do ??
+                 --> mkdir will create a new directory 
+                     under current working directory 
+                     of the shell, in the 
+                    appropriate file system, using 
+                    system call APIs 
+                 --> the file system call APIs will 
+                     do the actual creation of the  
+                     directory 
+                 --> there are several low-level operations, 
+                     in the file system 
+
+                    
+
+      --> we are typing some commands, but we do 
+          not know what it does  ??
+-->we will discuss, in another specific txt file 
+  

@@ -1,0 +1,1535 @@
+- first, understand processes, process scheduling
+  and process memory management - conventionally, 
+  "conventional threads" are built on top of processes - 
+  conventionally, 
+  threads are managed, in a process and maintained, 
+  as part of a process - however, there are unconventional
+  threads and their design and implementation is different-
+  however, the basic principles remain the same, 
+  but design details and implementation details 
+  will differ 
+-->for our requirements, let us understand conventional 
+   threads only - we will stick to this set-up, in 
+   the upcoming discussions   
+- once the basic study of processes is done, 
+   you can study and use
+  "conventional threads", "light weight processes"
+--->typically, conventional threads are treated, as 
+    lwps/lightweight processes 
+- at the end this discussion, you will understand
+  "how processes and conventional 
+   threads(lwps) work together"
+      -->conventional threads are typically known 
+         as "light weight processes"
+      -->in a typical GPOS, conventional threads 
+         are commonly used
+      -->however, check the platform/sw stack
+         that you  work, for specific design 
+         and coding 
+
+
+- in our case, we will be using GPOS designs/platforms
+  to study and understand "conventional threads/
+  multithreading" 
+
+- let see a few bigpictures for architecture
+  and design
+--->refer to big-pictures and design details 
+  - in every process, there is "a single thread
+    created", for "the main() of the program" - 
+    "this is done, implicitly", by the 
+    system - which means, every process will 
+    have "a single thread,for executing the 
+    main() of the active program of the process"
+     -->main thread of a process/active 
+        application
+
+  - if "an application is using multiple threads/
+    light weight processes", the application will
+    use thread library(a non-core component) 
+    of the operating system, 
+    along with standard system libraries(non-core
+    components) of the 
+    OS - with the help of the thread library(non-core) 
+    of the OS/kernel(thread manager), 
+    additional conventional threads 
+    can  be created - this thread library will be using 
+    core services of thread management subsystem 
+    of the OS/kernel - "this is the design, in a
+    typical GPOS" 
+        -->refer to the big-pictures  
+   
+
+  - if an application is not using multiple 
+    threads/light weight processes, the application
+    will not use the thread library of the OS/kernel
+        -->this active application/process 
+           does not use thread services of the 
+           OS/kernel
+  - "thread library" is also "a non-core component 
+    of the OS/kernel"
+         -->the thread library will be using 
+            the services of thread manager and 
+            many other components/subsystems of 
+            the core of the OS/kernel 
+
+  - in this case, "the thread manager/subsystem is 
+    part of the core/kernel" and "it will interact
+    with other core services", like process manager
+    and scheduler - in addition, several other 
+    core services, as well    
+
+  - if you see the diagrams, some of the applications
+    are designed, with multiple threads, which is 
+    two or more, as per application's requirements
+      -->using multiple threads depends on the 
+         design of an application - based on the 
+         application's requirements, developers
+         can use a single thread or multiple 
+         threads, as per requirements
+      -->the number of threads of a process/application 
+         is dependent on the number of jobs to 
+         be done - this depends on the complexity 
+         of the application  
+         -->in addition, if there are requirements 
+            for multitasking jobs, conventional 
+            threads are a good option -- number of 
+            threads required depends on the 
+            no. of jobs, characteristics of 
+            jobs  and the application    
+
+  - scheduler design and basic principles remain 
+    the same, but the scheduler will be dealing, 
+    with threads more, than processes - "in the 
+    context of multiple threads of a process/active 
+    application, the threads are treated, as 
+    execution units", not processes - "processes are
+    more treated as resource management units of 
+    applications" - mulitasking requirements of 
+    an application are managed by threads of a 
+    process - "in this set-up, threads are 
+    treated as execution units, where they are
+    scheduled and dispatched, by the scheduler" - 
+    processes are not scheduled and dispatched - 
+    the following discussions explain the details  
+      -->process is mainly responsible, for 
+         "resource management of an active 
+         application"
+      -->threads are mainly responsible, for 
+         concurrent/multitasking execution of the active 
+         application's jobs - that is the reason that 
+         these are treated, as execution units 
+ 
+  - like processes, in the case of threads, 
+    we will be having "user-space and 
+    system-space perspectives"
+     -->in the user-space, it will be an application 
+        perspective 
+     -->in the system-space, it will be about 
+        managing threads/their contexts/scheduling/
+        dispatching  
+
+  - in a single threaded process, only the main 
+    method is scheduled/dispatched and  executed
+      -->main thread is managed
+      -->main() method is associated, with 
+         the main thread 
+      -->main thread is scheduled/dispatched
+      -->when main thread is scheduled/dispatched, 
+         main() method will execute 
+      -->main thread can be blocked and the 
+         main() method is blocked
+      -->main thread is unblocked, eventually, 
+         main thread will be scheduled/executed - 
+         main() will be executed  
+
+  - in a multithreaded process/active application, 
+    main and one or more methods of other threads 
+    are scheduled/dispatched and executed,concurrently - 
+    in this case, 
+    main method and one or more other methods 
+    are concurrently executed, in the system - 
+    this will lead to concurrency and multitasking 
+    , in the active application/process - 
+    so, multiple threads/multithreading serves 
+    an active application/process to support 
+    multitasking, for the application 
+       Pi(processi) ---->VASi --->progi 
+        |  |
+        |  +--------->Thread1--->main()
+        |
+        +------------>Thread2--->another methodi()
+         .................
+         .................
+        there can be several additional threads  
+            
+
+  - let us formally define "a main thread of 
+    a single threaded process" - still, refer to 
+    the diagram of single threaded process - 
+     -->a "main thread" is "sum of main() method 
+        + user-space stack + pd + scheduling parameters + 
+        system-stack/kernel-stack"
+     -->in this context, it is a thread unit -
+        there are other contexts and we will 
+        understand as needed
+--->refer to big pictures 
+   - let us formally define a multi-threaded
+     application , as per the OS architecture
+     and design :
+     -->in this context, there will be several 
+        threads, including the main thread
+     -->each thread manages a single thread method
+        and does the "concurrent execution of 
+        the corresponding method" - this thread 
+        method manages a job of the application 
+     -->in the "user-space, every thread is 
+        assigned a method and an user-space 
+        stack" - "these threads share the 
+        process virtual address-space and 
+        its segments" - there are separate 
+        stack segments,for user-space stacks and 
+        other segments of the process are shared
+--->in a single threaded process, there will be 
+    a single stack segment, for main thread
+--->in a multithreaded process, there will be 
+    multiple stack segments, for multiple 
+    threads of the process/active application
+--->this is how the set-up is maintained 
+
+     -->refer to a multi-threading big-pictures, 
+        which will provide an user-space 
+        perspective  
+     -->in the context of system space/kernel, 
+        there is a "single PD managing all the
+        resources of the process/threads" - 
+        meaning, "threads share the resources
+        of the process" - in addition, "every 
+        thread is allocated a td/thread descriptor
+        and all these thread descriptors 
+        are maintained, as part of the 
+        pd" 
+     -->every thread is represented and managed, 
+        by a td - as mentioned before, all tds 
+        are connected together and managed, in the 
+        pd  
+     -->each td contains all the details of 
+        a thread, like its thread id and scheduling 
+        parameters - also, maintains state of the 
+        thread - in this context, every thread 
+        has an run-time state, like Runnable/
+        blocked/suspended/terminated - 
+        scheduling parameters are moved
+        from process/pd to threads/tds
+           -->we will use ps command to 
+              demonstrate threads of a process
+              and their attributes
+           -->we will be using a thread sample, for
+              providing a demo.   
+     -->from now on, "PD will be treated as a 
+        resource manager" - in fact, "process will 
+        be treated as a resource manager" 
+     -->"threads /tds will be treated as 
+        execution units/managing execution 
+        units of the process/application"
+         -->application requires multiple 
+            execution units, for its jobs/
+            methods - to support multiple 
+            execution units, for jobs,system 
+            provides threads/tds
+         -->refer to big-pictures, for user-space
+            perspective
+             -->refer to user-space big-pictures 
+--->in a typical conventional multithreading model, 
+    there is a single process instance managing 
+    the active application and its VASi is shared
+    among all the threads of the process/application 
+--->however, there are practical restrictions and 
+    the following discussion provides the details       
+            -->the virtual address-space of a 
+                process is shared among the threads
+                 -->this is useful, as a programmer
+-->this means, all threads of the process share 
+   a common set of memory regions - it is a 
+   convenience 
+             -->most of the virtual segments are 
+                shared among threads of a process
+                  -->useful, as a programmer
+             -->stack segments are private to each 
+                thread - meaning, every thread is 
+                provided its own stack-segment/
+                stack memory blocks 
+             -->library segments are shared among threads
+                 -->code segment and data segments 
+                    of the libraries are shared 
+                    among threads 
+             -->various methods of the threads are 
+                resident, in the code segment of the 
+                process - code segment is also 
+                shared 
+             -->since "data segments are shared among 
+                threads of a process", these segments 
+                can be used, "as shared virtual segments
+                by threads" - in the context of multiple
+                threads of a process,most of the virtual 
+                data 
+                segments of the process are shared 
+                virtual segments, for the threads of 
+                the process - this enables lightweight/
+                faster IPC mechanism - meaning, 
+                threads can communicate efficiently, 
+                using shared data-segments of the 
+                process   
+                - there is no need to set-up an 
+                explicit shared virtual segment/
+                memory blocks, for threads of 
+                a process 
+                - we can use data-segments, like 
+                  actual data segments and heap
+                  , as shared-data segments 
+         -->refer to big-pictures, for system-space
+            perspective
+     
+
+   - the basic page-based memory management, a
+     ddress-space set-up, VMM, VM are
+     the same, in the context of a multithreaded
+     process - however, the address-space is 
+     modified to support more virtual segments, which 
+     are used to support user-space stacks of 
+     multiple threads/thread methods 
+         -->the basic memory management is based 
+            process memory management 
+        -->in addition, for the threads, there will 
+           be additional memory management on top
+           of process memory management   
+
+   - as part of the multithreading architecture and
+     design,the process virtual address-space layout and 
+     virtual segments are modified - you can refer to 
+     big picture for user-space where multiple 
+     user-space stacks are set-up, for a multithreaded
+     process
+        -->in this context, additional stack 
+           virtual segments are created      
+
+   -->assuming we have understood the architecture 
+      and design of process/threads, following 
+      are "working principles of conventional threads", in 
+      a typical OS/kernel platform - there are
+      advantages and disadvantages  
+
+   - let us understand the behaviour of a single 
+     threaded application, doing several jobs -
+     one or more of these jobs may invoke 
+     system call APIs - in this context, all the 
+     jobs are sequentially executed by the 
+     main thread - what happens, "if code of a
+     job of the main thread invokes a system call 
+     API" and "the system call API is blocking the 
+     current thread/main thread" - what happens to the main()
+     thread and what happens to the entire process/
+     application  ??      
+       -->the main thread is blocked and 
+          cannot progress 
+       -->since there is only one thread of 
+          execution, the main thread cannot 
+          progress and effectively, process
+          cannot progress - so, application 
+          cannot progress - application will 
+          be less responsive - since there is 
+          no other thread, in the process, 
+          the process cannot progress, until 
+          the only main thread is unblocked
+--->effectively, in a single threaded process, 
+    if one of the jobs blocks, the main 
+    thread is blocked and all the jobs are 
+    blocked - meaning, application will be 
+    less responsive  
+        -->in addition, refer to the following 
+           discussions 
+    
+     - what happens, if we create several threads
+       for an application, "using high-level services of 
+       thread libraries" or "similar non-core components"
+       - these high-level services will use 
+        low-level services of OS/KERNEL, in the 
+        background - our multiple threads are
+        used to handle/manage multiple jobs of 
+        the application - these threads are mapped
+        to native threads(OS threads) of the OS/KERNEL - 
+        we are transforming a single threaded 
+        application to a multithreaded application, 
+        using OS services - in this basic design, using 
+        threads, let us assume the threads are 
+        fairly independent -  what are the benefits ?? 
+        what happens, if a thread of the 
+        process/application blocks
+        , due to an OS service/system call API, 
+        in this context  ?? 
+          -->if a thread of the application is 
+             blocked, only that thread/job is 
+             affected and cannot progress 
+          --> however, if the other threads/jobs 
+              are not blocked and they can progress
+              , the application will be
+             responsive - since there are multiple 
+             threads, in a process/application, 
+             this increases the responsiveness of 
+             the application - a basic benefit of 
+             multithreading, in an application - 
+             there are other benefits of multithreading, 
+             in an application/process 
+          ---> in this context, from the application 
+               perspective as well as OS perspective, 
+               threads are light weight entities --
+               meaning, they consume very less resources
+               compared to processes - this is typically 
+               true, for conventional threads - for other
+               forms of multithreading, we will discuss
+               further
+--->typical light weight threads/conventional threads
+    share most of the resources of the process and 
+    use very less of private resources, so efficient 
+    , for applications and OS    
+          -->so, "a typical application uses a single 
+             process and multiple threads", for 
+             its resource management and its 
+             multitasking, respectively - conventional 
+             multithreading is a form of multitasking, 
+             in the context of applications 
+              -->this is a simple design of using 
+                 conventional multithreading 
+       
+      
+
+- what is a single threaded process model/design ??
+   - take a look, at some of the big-pictures ??
+
+   - in this multitasking sw model, "there is only 
+     one execution unit", in an active application/process
+
+- what is a "multithreaded process sw model" ??
+   - take a look, at some of the big pictures ??
+
+    - in this multitasking model, there are 
+      multiple execution units, in an active 
+      application/process 
+
+   - there are certain benefits, due to multithreaded
+     sw model, in uniprocessor systems
+       -->if one or more threads are blocked, other 
+          threads are still active/responsive, so the
+          application is responsive 
+
+   - there are more benefits, due to "multithreaded 
+     sw model, in multiprocessor systems"  
+       -->in this case, in addition to the above
+          scenario, threads/execution units can 
+          be executed, in parallel
+       -->"this set-up will increase responsiveness
+          of applications", "as well as increase 
+          throughput of applications" - the actual 
+          increase in throughput is based on 
+          application  characteristics
+       -->some of these scenarios will be seen, 
+          during embedded/RTOS platforms/applications
+ 
+
+
+- what is a thread ??
+
+   - it is "an execution unit" of 
+     "an active application/process/task",
+     for "a job of the application" 
+   - however, there are different multithreading 
+     sw models/designs
+     and 
+     implementations 
+   - for the current study, we will be focusing more on 
+     conventional multithreading model, where there will 
+     be two or more threads/execution
+     units, in an active application managed, using a single 
+     process - if an active application is managed, using 
+     multiple processes, each process can have two or 
+     more exection units / threads - these execution units/
+     threads are light weight process entities - we will 
+       see more scenarios, as we progress 
+       -->we will see more details, in Linux 
+          and RTOS contexts 
+
+   - however, in "one of the unconventional multithreading 
+     models", 
+     an active application can be managed, "using multiple 
+     unconventional threads/executions", 
+     but each execution unit is 
+     a process entity/heavy weight-threads, 
+     not light weight process entities
+       -->we will see more details, in Linux 
+          and RTOS contexts 
+
+   - in another unconventional multithreading model, 
+     an active application can be managed, using 
+     multiple threads, but there is no process, in 
+     this set-up - in this context, threads are light 
+     weight , but there is no process 
+        -->another design/model that may be 
+           used, in the context of embedded
+   - there are also hybrid multitasking sw models, where
+     there are multiple processes, in a given application 
+     and within a given application, there will be 
+     multiple threads handling the actual jobs - note that 
+     too many threads, in a given process can be a practical 
+     problem, like resources and security - so, in real-world 
+    scenarios, applications/frame-works implement several 
+    processes + threads per process, for balancing 
+    lwp multithreading and multiple processes ???
+       -->in a given application, there will 
+          several processes 
+       -->in each process, there will be several 
+          threads
+       -->this design is used to improve the 
+          robustness of the system 
+
+   - based on the above statments, there are different 
+     sw threading models/designs, which can be used, as per 
+     application's requirements 
+
+   - depending our requirements,we may go for heavy-weight 
+     implementations/platforms, or light weight implementations
+     /platforms ??
+
+   - so, in a conventional multithreading sw model, 
+     "execution units are implemented, using 
+     lwp entities" 
+
+   - in an "unconventional multithreading sw model, 
+     execution units are implemented, using 
+     regular processes/heavy-w-threads"
+
+   - as seen before, a balanced act can be a hybrid model
+
+- what is multithreading ??
+
+    - refer to the above discussions 
+
+- what is conventional multithreading ??
+
+    - refer to the above discussions
+
+- can we have multithreading, using processes ???
+
+     - refer to the above discussions 
+
+- what is the multitasking sw model, that just uses 
+  processes ??
+     - refer to the above discussions 
+
+- what is the multitasking sw model, that just 
+ uses conventional threads ??
+ 
+     - just see the discussions above
+
+- what is the multitasking sw model, that uses 
+  processes and threads ??
+
+      - hybrid multitasking model
+
+- let us understand conventional multithreading model, 
+  from user-space perspective/application perspective 
+  ??
+      - this discussion will be similar to processes
+   
+    - application's code is divided into different 
+      jobs and each job is assigned to a specific 
+      thread /lwp 
+
+    - each lwp/job is assigned its own user-space stack
+
+    - each job is scheduled independently, using its lwp,
+      which is supported, by the kernel/OS - there is 
+      a "lwp descriptor/thread descriptor maintained, by 
+      the kernel/OS"   
+
+    - due to the above set-up, these jobs/lwps will be 
+      executed concurrently or parallely, as per the 
+      underlying hw and OS
+       -->threads add concurrency/parallelism to 
+          application's jobs/methods
+         
+
+    - all threads/lwps/jobs share a common VAS/address-space-
+      effectively, code segment is shared, data segments are 
+      shared, heap is shared, library code /data segments are
+      shared, but are provided separate user-space stacks, 
+      in the VAS
+           -->in the context of threads, there will be 
+              more shared-data/concurrency problems/
+              race-conditions, but the basic 
+              principles are the same 
+
+    - based on the above set-up, conventional threads are 
+      light-weight, in terms of resources - shared address-space, 
+      shared page-tables/page-frames, shared file IO, shared 
+      IO, and many more  
+           -->in the context of threads, there will be 
+              more shared-resource/concurrency problems
+           -->similar to the above issues, shared-
+              resource problems can be more 
+           
+
+    - creation and deletion of lwp threads is faster and 
+      efficient - context switching between threads are 
+      faster and efficient, compared to switching between 
+      multiple processes of an application ???
+          -->creation of lwps is faster and mor e
+             efficient than creating processes
+          -->what is the meaning of switching 
+             between threads of a process is 
+             faster and more efficient compared
+             to switching between processes ??
+              -->when switching between threads
+                 of a process, there is no change 
+                 in the address-space and page-frame
+                 mappings - meaning, there is no 
+                 address-space switch - this affects
+                 performance, in modern systems and
+                 processors 
+              -->however,switching between processes
+                 leads to complete change, in 
+                 address-space and their mappings - 
+                 this adds more overhead to the 
+                 process to process switching
+
+              -->in the context of conventional 
+                 threads of a process,there is no 
+                 need, for explicit shared memory 
+                 segments
+              -->in the case of conventional processes, 
+                 one or more explicit shared memory 
+                 segments need to be set-up   
+          -->these are characteristics of conventional 
+             threads vs conventional processes 
+    - since data segements are shared among threads of a 
+      process, it is easier and efficient to communicate 
+      between threads of a process/active application 
+          -->IPC mechanims are easier to set-up 
+          -->IPC mechanisms are more efficient/
+             faster 
+          -->since most of IPC objects/buffers 
+             are set-up/resident, in the shared data 
+             segments of a process, most of the 
+             operations can be compleleted, in 
+             the user-space, with very minimal 
+             system call APIs  
+   -->in the context of embedded, user-space 
+     perspective will differ, due to OS platform 
+     and multithreading design 
+
+- let us understand conventional multithreading model, 
+  from system-space perspective ??
+
+      - this discussion will be similar to processes 
+
+      - in this discussion, let us assume that the 
+        kernel/CORE of OS supports lwp/conventional 
+        multithreading - this is true in the case 
+        of GPOS - in the case RTOS/embedded, the 
+        design will be different 
+
+      - can we say that, for lwp/conventional multithreading/
+        multitasking, we need the support of kernel/core of 
+        OS ?? why ???
+               -->we need core services of OS/kernel 
+               -->we need thread library calls
+               -->we may need additional system call APIs 
+               -->most of the OS/kernel/core services
+                  are accessed, using thread lib. 
+                  calls, in the context of GPOS
+              -->in the context of embedded, accessing 
+                 thread services may differ
+
+      - in order to manage scheduling of threads/lwps, 
+        in order to manage the descriptors, for threads/lwps,
+        and other activities, like synchronization of threads, 
+        we need the help of core of OS ?? 
+           -->the core of the OS/kernel  now supports
+              scheduling/dispatching  of  threads/tds
+           -->the core of the OS/kernel now supports
+              blocking/unblocking of threads/tds
+           -->the core of the OS/kernel now 
+              supports queueing of threads/tds
+           -->in the case of IPCs, different forms 
+              of synchronization are done, using 
+              threads/tds
+           -->most of these comments apply to 
+              GPOS and Linux 
+           -->still, Linux multithreading design 
+              is slightly different from typical 
+              conventional multithreading - see
+              the Linux multithreading sw model
+               -->in the context of Linux, 
+                  a single threaded process
+                  is just a process - meaning, 
+                  there is no explicit td for 
+                  managing the single main thread-
+                  instead,the single main thread
+                  is managed by pd - so, pd is
+                  overloaded, with the responsibility
+                  of td, as well  
+   
+      
+
+      - even for basic management of lwps/threads, like 
+        creation and deletion of threads ???
+
+      - in most modern systems/kernels, there is explicit 
+        support, for additional threads/lwps - 
+        this is true, for 
+        GPOS or EOS or RTOS  
+
+      - in the case of a conventional, single threaded process, 
+        there is a main()/mainthread + user-space stack 
+
+      - the address-space/VAS represents process, in the user-space
+
+      - in the same conventional, single threaded process, 
+        there is a pd + resource descriptors, which represent 
+        the process, in the system-space 
+
+      - in the above set-up, in the system-space, the main 
+        thread is represented, using a pd + state + 
+        scheduling parameters + kernel stack + main()- kernel stack 
+        is used,during system call executions, in a process 
+        and also for managing low-level hw contexts of 
+        processes   
+
+ - now, let us understand the user-space set-up of 
+   a multithreaded application, using lwps ??
+
+        - there will several "threads/thread methods", 
+          including main thread + additional threads 
+        - each thread is associated, with an user-space 
+          stack 
+        - all threads of the process share the VAS of the 
+          process 
+        - all these threads/lwps/thread methods will be 
+          scheduled concurrently,as per the kernel 
+          support, for multithreading and scheduling 
+
+ - now, let us understand the kernel-space set-up of 
+   a multithreaded application, using lwps/tds ??      
+
+        - in a typical kernel supporting multithreading/
+          lwps, each thread/lwp will be supported, using 
+          a thread descriptor - in the context of 
+          applications using additional threads 
+
+        - a thread descriptor maintains the following : 
+            - state of the thread/lpw
+               -->most of the process states 
+                  apply to threads now 
+            - kernel stack of the lpw - 
+              this kernel stack is used, for managing 
+              hw context of the lwp
+               -->kernel stacks handle hw contexts, 
+                  for threads/lwps 
+            - maintains scheduling parameters
+                -->most of the scheduling policies
+                   are the same, but now applied to 
+                   threads 
+                -->however, application designs 
+                   change and certain details 
+                   change 
+            - td is queued, in Rq(s) - scheduler 
+              and their Rqs are similar to earlier 
+              discussions
+            - in a typical multithreading, using 
+              lwps, all lwps/threads are treated equal 
+              and scheduled /dispatched , as per their 
+             sch.parameters and policies 
+            - all lwps/threads of all processes are 
+              treated equal and there is a global 
+              scheduling set-up - there is no 
+              local scheduling set-up - there is no 
+             per process scheduling - there is no 
+             scheduling of processes and further, 
+             scheduling of threads - there is only 
+             scheduling of threads - there is no 
+             multi-level scheduling - there is no 
+             hierarchical scheduling  
+                -->some of these details may change, 
+                   in specialized systems, like 
+                   embedded
+            - we may need to handle certain application 
+              scenarios ??
+               -->we may need to give higher importance 
+                  to a process/active application 
+                  over other processes/active applications 
+                  ?? see the discussions below 
+               -->within an application/process, we 
+                  may need to give higher importance
+                  to a set of threads of the 
+                  application ??/ 
+            - all tds of all processes/pds are queued, 
+              in appropriate Rq(s) of a single processor 
+              or multiprocessor system  
+            - td is blocked/queued, in wq(s) 
+            - td is used to control the execution of 
+              a specific thread - pds are never blocked
+              - meaning, tds are used , for all the 
+              execution related activities 
+            - in the multithreaded sw model, td is 
+              the unit for scheduling, not pd 
+         - pd maintains all the tds of a specific process
+           - so, if the active application/process is 
+             being terminated 
+             normally or abnormally, all the tds are freed
+             and the process is terminated
+              -->for instance, if main thread or 
+                 another thread of the process 
+                 invokes exit(), all the threads
+                 of the process are deleted/killed
+                 and the process is terminated - 
+                 meaning, the process enters Zombie
+                 state
+              -->can we invoke exit() in a thread
+                 method ??? answer is above - 
+                 what to do ?? there are other mechanisms
+                 to terminate a thread - if a thread
+                 method completes, the thread must 
+                 be terminated, using other techniques  
+              -->the basic principles of processes are
+                 still maintained, but there are 
+                 certain design changes and some 
+                 more APIs and strict rules   
+
+     --->let us understand certain low-level details 
+         of threads/multithreading, using chapter 6 
+         of Crowley:
+
+           -->refer to chapter 6 slides of Crowley
+           -->refer to ???
+         -->in this multithreading model, there is a
+            thread descriptor and a process descriptor
+            -->for every new process, there will be 
+               a process descriptor 
+            -->for every new thread, there will  be 
+               a thread descriptor 
+         -->there is a system table, for allocating 
+            process descriptors 
+         -->there is another system table, for allocating 
+            thread descriptors 
+         -->refer to the "process creation service routine"-
+            CreateProcess:
+             -->as always, a pd is created and initialized
+             -->in addition,CreateThread() is invoked 
+                to create and set-up the main() thread-
+                main() method is associated, with 
+                the main thread
+             -->let us understand CreateThread(p1,p2,p3);
+                 -->p1 ->pid of the calling process
+                 -->p2 ->start address of the thread method
+                 -->p3 ->start address of the user-space 
+                         stack 
+                 -->based on the parameters, CreateThread
+                    will create a new td and initialize the 
+                    hw context, for the thread - this 
+                    hw context, includes thread method's 
+                    starting address and user-space 
+                    stack address/pointer
+                 -->td's state will be set to Ready
+                 -->td added to appropriate Rq 
+                 -->pd is maintained, in a master list   
+                 -->main thread of this process will 
+                    scheduled sometime, in the future 
+                 -->when this main thread is scheduled/
+                    dispatched,initialized hw context 
+                    will be loaded into the processor - 
+                    the main thread will be dispatched
+                    and executed - when the main thread
+                    /td of the new process is scheduled
+                    /dispatched, corresponding method
+                    will be executed  
+               -->in this set-up, what happens, if the 
+                  application invokes a system call API 
+                  or a lib. API, for creating an additional 
+                  thread, in the application ??
+                  -->in this context, a system call 
+                     API is invoked and this system call 
+                     API will end up invoking 
+                     the corresponding service routine - 
+                     CreateThread(p1,p2,p3);
+                  -->as part of the system call API, 
+                     p1, p2, p3 are passed - 
+                     p1-->is the pid of the current process
+                     p2-->start address of new thread's 
+                          method - additional thread's 
+                          method 
+                     p3-->another user-space stack's 
+                          starting address - additional 
+                          thread's user-space stack 
+                  -->if this system call API is successful, 
+                     another td is created,set-up and 
+                     hw context is initialized - td will 
+                     be added to Rq
+                  -->similarly, other additional threads can 
+                     be created and managed - high-level 
+                     thread methods are connected to low-level
+                     tds
+                  -->scheduling policies remain the same, 
+                     but scheduler code/selection code 
+                     works on tds/scheduling parameters
+                  -->once a td is selected, dispatcher will 
+                     extract the hw context from the td 
+                     and load into the processor - once
+                     dispatched, the thread method is 
+                     executed 
+               -->if a thread is blocked, corresponding 
+                  hw context is saved, in the td/kernel
+                  stack of the td - in the future, when        
+                  the thread is unblocked,this thread/td/
+                  hw context will be scheduled/dispatched-
+                  the thread method will be resumed 
+                  and executed, as per hw context used
+                  to resume the thread 
+                      
+                                  
+            
+       - why multithreading,using lwps/conventional threads  ???
+
+           - better resource sharing, due to the set-up
+              -->easier to share resources, but need 
+                 to take care resource synchronization  
+           - logical separation of jobs of the application 
+             is easier, in a given program - for each job, 
+             a thread method of the program is assigned 
+               -->better separation of code and data, 
+                  as per jobs  
+           - IPCs(inter-thread communication) is simpler 
+             and light weight - there are light-weight 
+             thread IPC mechanisms - these are more 
+             efficient, along with multithreading, than 
+             processes  
+                 -->due to the shared virtual address-space
+                    /data segments, more efficient 
+                    IPC mechanisms  
+           - light-weight creation and deletion
+                 -->overheads are minimal  
+           - light-weight context switching between threads, 
+             as this switching involves minimal low-level 
+             hw context  switching and minimal context 
+             switching impact - if there is a context switch 
+             between threads of the same process,there
+             is no page-table switching and no address-space
+             switching - this makes it very effecient
+                 -->hw context is changed minimally
+                 -->in certain processors, cache is 
+                    more efficiently managed, in the 
+                    context of threads   
+               
+           - more efficient concurrency and parallelism, 
+             due to shared resource set-up 
+           - better performance due to light-weight 
+             characteristics
+           - otherwise, it is another form of  
+             multitasking
+                -->we can implement multitasking, 
+                   using processes or threads
+
+                -->based on the requirements, we can 
+                   select appropriate sw model, for 
+                   our requirements    
+           - like any form of multitasking, it can 
+             be used, as per the requirements of the 
+             application 
+
+        - irrespective of the multitasking sw model used, for 
+          multithreading, following are the practical benefits
+          of adding multithreading to a specific application :
+
+           - if an application has overlapping several cpu bound 
+             and IO  jobs, it is effective/efficient  
+              -->can be very effective, in the case of 
+                 different IO jobs, as well 
+
+           - exploiting concurrency, for different jobs
+                -->a job may deal, with one of the IO 
+                   peripherals and another job may 
+                   deal, with another peripheral - let them 
+                   be handled concurrently
+
+                -->if one specific job is blocked, the
+                   jobs are free to progress
+                -->some of these flexibilities will be
+                   better exploited, in embedded  
+      
+           - exploiting parallelism, for different jobs
+                 -->if we have a multiprocessor system, 
+                    pushing different threads of different 
+                    jobs to different processors 
+                  
+    
+           - better responsiveness, due to the above reasons 
+     
+           - easy to implement "Master/manager"-worker model(s)
+               -->Master thread
+                   -->worker threads
+               -->many application design models are 
+                  easier implement, using threads 
+
+           - let us assume there are 3 jobs, in an application 
+             and these 3 jobs can be logically separated, 
+             using multithreading sw model 
+
+               - however, let us assume there "is a single 
+                 threaded process" is managing "all the 3 jobs" 
+                 - what happens ??
+
+                 - if a job of the application invokes a 
+                   system call API and blocks, for 
+                   some IO, like network IO/UART IO, all the other 
+                   jobs are also blocked, as they cannot 
+                   progress - meaning,there is only one 
+                   thread/descriptor, which is blocked and 
+                   the entire application/process is blocked 
+                   - in this scenario, if one of the jobs 
+                   is user-input job, it cannot progress/respond, 
+                   until the other job(s) are complete ??? this 
+                   leads to poor responsiveness ???
+                    -->we can always exploit such freedom, 
+                       in other scenarios of embedded
+                       -->for instance, we may need to 
+                          handle different real-time 
+                          requirements, for different jobs               
+ 
+
+               - if the above application is transformed into 
+                 a multithreaded application, using 3 lwps
+                 (other models are possible),for 3 different 
+                 jobs,  what are 
+                 the benefits ???
+                   - in this set-up and context, each thread 
+                     /lwp will managed, using its own td 
+                   - so, if a job/thread/lwp is blocked, due
+                     to certain IO, only the respective 
+                     td/descriptor/lwp is blocked - other 
+                     tds/descriptors/lwps/threads are independent 
+                     and are managed, as per their 
+                     states - so, if there is an user-input job/
+                     thread that is blocked, for user-input 
+                     and user-input is generated, it can be 
+                     independently unblocked and scheduled/dispatched, 
+                     irrespective of the other threads/lwps/tds 
+                     of the application
+                         -->in this case, the application '
+                            remains responsive  
+
+
+   - let us understand the "design issues and implementation  
+     issues of Linux threads" - "user-space and system-space
+     perspectives" - "Linux threads are conventional threads" 
+     , but their "design and implementation is different"- 
+     otherwise, "all the basic principles of conventional 
+     threads apply":
+     -->in the user-space, there is a thread library of 
+        Linux, which is NPTL thread lib - this needs to 
+        linked to active applications, which will be using 
+        thread services - this library provides several 
+        thread lib APIs which are used to access thread 
+        services of the core of the OS/kernel - thread 
+        library also provides certain services,as a 
+        non-core component of OS and these 
+        thread lib APIs in turn use several system call 
+        APIs of the OS/kernel - typical GPOS thread 
+        libraries are abstract - meaning, they may 
+        not provide much documentation about their 
+        working - however, as per standard, 
+        we must invoke lib APIs, as these APIs take care
+        of certain user-space issues, along with 
+        core /kernel services
+        -->we can link with the thread lib. using 
+             gcc  <prog.c> -o  <prog>  -lpthread
+                            (or)
+
+             gcc  <prog.c>  -o  <prog>  -pthread
+                 -->this is currently preferred 
+                 -->this command is the super-set 
+                    of the previous command
+                 -->if we use the above commands, 
+                    in addition to the standard 
+                    library, thread library of 
+                    Linux is also linked to the 
+                    application
+
+                -->even in the context of embedded, 
+                   we typically link multiple libraries, 
+                   as per application's requirements  
+
+
+        -->this Linux thread lib works along with system 
+           libraries and core/kernel services, for 
+           creating/managing/deleting threads 
+
+        -->based on the architecture and design of 
+           threading support, in linux, following 
+           features are true:
+           -->there is no separate td/thread descriptor
+           -->pd will be used, as a pd or a td, 
+              as per requirements
+           -->for instance, when a basic process is 
+              created and set-up,a new pd is created 
+              and it also does the job of the first 
+              td, which manages the main thread
+               -->typically, main thread is managed
+                  implicitly    
+           -->if additional threads are explicitly 
+              created,"for each new thread, a new 
+              pd is created and used, as a td" - 
+              "when a pd is used, as a td", it shares
+              the resource descriptors/resources of 
+              the first pd of the process - effectively, 
+              these new pds are used, as tds - all pds 
+              of a single process used to manage threads, 
+              will be forced to share the same set of 
+              resource descriptors/resources
+                -->refer to the big-pictures, but replace 
+                   tds, with pds, in the context of 
+                   Linux multithreading architecture 
+              -->resource descriptors/tables are shared
+              -->virtual address descriptors are shared, 
+                 so virtual address-space is shared 
+              -->similarly, page-tables/ptes are shared
+              -->similarly, other tables, like file IO/
+                 IO tables are shared among the threads
+                 /pds of the same process
+              -->we will see more of this, using demos    
+                 and ps and top
+              -->many of these design issues will be 
+                 clear, during programming and using 
+                 specific OS/kernel services - many 
+                 of these discussions "will apply to 
+                 device drivers and embedded issues"    
+              -->this design and implementation is based
+                 1:1 model of multithreading, where each 
+                 new thread created is allocated and 
+                 assigned a new pd, as td - this means, 
+                 each new thread is managed, as a separate 
+                 thread, by the OS/kernel - in 1:1 model, 
+                 for every application/user-space thread, 
+                 there will be support, in the kernel-space
+                 , with the help of td or certain 
+                 descriptor 
+                  -->this is true, in the case of 
+                     embedded/RTOS, as well  
+              -->in a typical Linux system, the term task 
+                 is used - in the context of a single threaded
+                 process, this term task will apply to 
+                 the process - in this case, process/only pd
+                 is doing the job of resource management 
+                 and the only execution unit/the only thread
+              -->in addition, if there are additional threads
+                 , these threads/pds  are treated as threads
+                 /tasks - meaning, these threads are also 
+                 known as tasks - in certain contexts, 
+                 tasks always refer to processes and 
+                 conventional threads are known as threads
+                 only                  
+      - let us understand some of the thread lib. APIs
+        of Linux system - these are standard POSIX 
+        APIs :
+        ->>there is a thread creation lib API, which
+           is ret = pthread_create(p1,p2,p3,p4);
+          
+           -->p1 is a pointer to an user-space thread id/
+              handle -
+              this is an abstract object, which must be 
+              resident, in the global data/heap, not 
+              local data/stack - we must not interpret 
+              the contents of p1 - however, we can use
+              p1, as per the library APIs and their 
+              rules 
+           -->p2 is pointer to another object, which can 
+              be used to set and pass attributes, for 
+              creating a new thread - these are 
+              thread attributes  and will 
+              be set,in the td of the thread - eventually,     
+              these attributes will be passed to 
+              td - for instance, 
+              using these attributes, we can set the scheduling 
+              policy /parameters - if this is set to NULL, 
+              library will take care of setting the attributes
+              to default values and new thread is created
+               -->in the case of processes, we can 
+                  use system utilities to manipulate 
+                  processes/attributes
+               -->however, in the case of threads, 
+                  we must use thread library APIs or 
+                  system call APIs, for managing 
+                  threads/attributes - in most cases, 
+                  we may not be able to manipulate 
+                  threads/attributes, using system 
+                  utilities  
+           -->p3 is used to pass the starting address of the 
+              thread method, that will be associated, with 
+              the thread - this will be passed to the td and
+              maintained, in the hw context       
+           -->p4 is used to pass pointer to specific application
+              object(s), which will be eventually passed to 
+              thread's method, by the system - this will also 
+              be managed by the system and passed using 
+              hw context - this is a parameter
+              to thread's method, passed via the OS/kernel, 
+              not directly
+           -->if pthread_create() is successful, along with the 
+              help of core services, a new thread will be set-up
+              and corresponding thread/td will be added to 
+              appropriate Rq - user-space stack will also be 
+              set-up, by the library API/code and taken care
+           -->like this, we can create as many threads, as 
+              possible - all these threads, including the main 
+              thread are treated, as siblings - so, there is 
+              no hierarchy
+           -->in a typical application design, using multiple 
+              threads, main()/main thread will act, as master
+              and other threads will act, as worker threads - 
+              this is a common design/model
+           -->a typical threadi/thread methodi will be 
+              assigned a job of the application:
+              -->the thread method must be written, as
+                 per the rules of multithreading/concurrency
+                    -->there are several rules, including 
+                       re-rentrancy rules 
+              -->prototype must be as per thread lib 
+                 standards
+              -->ensure critical sections are well managed
+                 -->since threads/thread methods can 
+                    share data/resources of a process, 
+                    there will be critical sections - 
+                    in most cases, to protect such 
+                    critical sections of code of 
+                    threads/thread methods, we must 
+                    use mutex locks   
+              -->ensure that library APIs are appropriately 
+                 used 
+                  -->understand the re-entrancy 
+                     characteristics of 
+                     library APIs - accordingly 
+                     use the library APIs and their 
+                     parameters  
+              -->we will see more details, during further 
+                 programming discussions 
+            -->typically, main thread will use pthread_join()
+               to block until sibling threads are terminated --
+               once sibling threads are terminated, clean-up 
+               the sibling threads and main() will complete
+               other clean-up operations, if needed - 
+               pthread_join() is similar to waitpid(), but 
+               used differently, in the context of threads
+            -->at the end of main(), exit() is typically 
+               invoked, which terminates the current process
+            -->it should be noted that, if exit() is invoked, 
+               in any of the threads,"all the threads will be 
+               forcibly terminated" and the "process will 
+               be normally terminated"
+        note: rules of thread programming may differ, 
+              "as per multithreading design and 
+              implementation" 
+            -->a typical thread can be normally terminated, 
+               using pthread_exit() - this will terminate 
+               the current thread and free its regular/implicit 
+               resources, but will not free resources that 
+               were allocated, by the developer, explicitly 
+               - these explicitly allocated resources must 
+               be explicitly freed by the developer,before 
+               terminating the thread, using pthread_exit()
+
+                -->so, resources explicitly allocted by 
+                   developer must be freed explicitly, 
+                   before invoking pthread_exit()  
+                -->implicit resources are like system td, 
+                   user-space td, kernel-stack and similar
+                -->explicit resources are like memory 
+                   allocated by developer, locks acquired
+                   by developer and similar - "this may include
+                   hw resources as well"  
+     
+            -->in the context of attributes, we need to 
+               use an attribute object to pass attributes
+               to a newly created thread - meaning, we need to 
+               initialize the attribute object and set one or 
+               more attributes to our requirements and pass the
+               attribute object to pthread_create()
+               -->we may initialize the attribute object 
+                  and set policy and scheduling parameters
+                  of a newly created thread
+               -->if the thread is successfully created, 
+                  the passed attributes will be set in th e
+                  td/pd of the thread   
+               -->if it is scheduling policy/parameters, 
+                  the threads will be scheduled/managed
+                  appropriately
+                   -->refer to 08_test_app_linux.c, 
+                      for setting up attributes 
+             -->in the context of threads and 
+                scheduling, let us assume that 
+                we wish to assign 
+                a higher importance to a specific 
+                multithreaded application - refer to 
+                multithreading_n1.pdf - there is a 
+                detailed discussion on setting scheduling
+                policies and parameters of threads/tds
+
+             -->if a specific process/active application 
+                is to be assigned higher/absolute importance, 
+                its threads must be assigned SCHED_FIFO and a 
+                real-time priority - we may assign all the
+                threads the "same RT priority" - what will 
+                be the effective scheduling, for all the 
+                processes/threads, in the system ??
+                 -->typically, all threads of all   
+                    processes will be assigned 
+                    TS policy and nice value set to 0
+                 -->however, in the case of a specific 
+                    set of threads, we will be changing 
+                    the scheduling policy and parameters
+                 -->all threads of a specific  process 
+                    will be of higher importance than 
+                    threads of other processes 
+                 -->in addition, all threads of this 
+                    process will treated, with FCFS
+                    policy - we may use blocking or
+                    yielding,in the threads, 
+                    within the process 
+                 -->in addition, if there is blocking, 
+                    in these high priority threads, 
+                    other threads of other processes 
+                    will get certain cpu cycles and there
+                    will be no starvation
+                  -->many of these issues are based on 
+                     application design and implementation   
+               -->we may have an application design requirement, 
+                  which will need a thread of this process
+                  to be assigned higher 
+                  importance/priority ,
+                  than other threads of the same
+                  process - in this context, just modify 
+                  the real-time scheduling priority of 
+                  the respective thread, in the process 
+               -->in addition, if needed, we may change 
+                  the nice values of one or more threads 
+                  of one or more processes, if we need to 
+                  assign different time-shares to applications 
+               -->add one embedded scenario  - refer to 
+                  embedded code samples, in the context 
+                  of Linux or RTOS - we will see more details, 
+                  during embedded/RTOS discussions
+               
+    -let us understand rentrancy issues, in concurrent 
+        programming and threads - this is a form of shared-data
+        problem, but this is not a classical shared-data 
+        problem, so the interpretations and solutions 
+        will be different
+          -->in this context, we will be "understanding 
+             reentrancy characteristics" 
+             of "methods/APIs/library APIs", 
+             when used, "in one or more thread methods
+             of multiple threads" - used, as below: 
+
+             Pi-->thread1--->thread_method1()--->methodj
+
+             Pi-->thread2-->thread_method2()--->methodj
+
+             Pi-->thread3-->thread_method3()--->methodj
+
+       -->in this context of discussion, reentrant 
+          APIs/methods/lib APIs are known as 
+          thread-safe methods/APIs/lib APIs  
+
+        -->what is meant by thread-safe APIs ??
+            -->if an API is invoked, in two or more threads/
+               thread methods,the API instances will use 
+               private data, for their operations - 
+               meaning, each API instance is assigned a
+               separate private data, in the shared-data 
+               segment of the process - this is due to 
+               the design of the APIi(which is thread-safe)
+
+           --Pi -->progi-->VASi
+           | |
+           | |
+           | Threadi-->methodi-->APIi--->datai,in data-segmenti
+           |
+           Threadi+1-->methodi+1-->APIi-->datai+1,in data-segmenti
+        -->thread-safe methods based on thread-unsafe methods, 
+           but safe methods are re-written to use different 
+           data elements, for each invokation of APIi, in 
+           different threads
+           -->older methods may be thread-unsafe
+           -->we will see several such examples, in the 
+              future samples/coding        
+                  
+
+      -->what is meant by thread-unsafe APIs ??
+         -->in this context, if two or more threads/thread methods
+            are accessing an APIi, the data/resource 
+            operated by the
+            API instances will be the same,due to the 
+            design of the 
+            APIi(which is thread unsafe) 
+              
+           --Pi -->progi-->VASi
+           | |
+           | |
+           | Threadi-->methodi-->APIi--->datai,in data-segmenti
+           |
+           Threadi+1-->methodi+1-->APIi-->datai,in data-segmenti 
+
+     -->since this is a form of shared-data/concurrency problem, 
+       in a multithreading context,this also leads to 
+               race-conditions and eventually, inconsistencies, 
+               in the results      
+              
+        -->what is meant by thread-safe library APIs ??
+             -->refer to the above discussions, but 
+                these are library APIs, otherwise 
+                the issues/problems are the same 
+
+        -->what is meant by thread-unsafe library APIs ??
+             -->refer to the above discussions, but 
+                these are library APIs, otherwise 
+                the issues/problems are the same 
+         
+        -->what is meant by a re-entrant method, in the context 
+           of multithreading  ??
+             -->if a method/API/library API is a re-entrant 
+                method, if it can be safely invoked concurrently, 
+                in thread methods of different threads
+             -->a re-entrant method/API/library API is 
+                a thread-safe API 
+
+      -->what is meant by a non-re-entrant method, in the 
+         context of multithreading ??
+         -->if a method/API/library API is non-re-entrant 
+            method, it cannot be safely invoked concurrently, 
+            in thread methods of different threads
+             -->in these cases, a thread method may use 
+                a semaphore/mutex lock to lock/unlock 
+                the API access/critical section - this 
+                will protect API/shared-data access, but 
+                this reduce the multitasking/multithreading 
+                performance of the threads - there will be 
+                more overheads, due to blocking/scheduling/
+                unblocking                  
+     -->in the context of thread programming, is it 
+        preferred to use non-re-entrant/thread-unsafe 
+        APIs or re-rentrant/thread-safe APIs ??
+          -->thread-safe / re-entrant APIs 
+     -->what happens, if we do not have thread-safe
+        APIs, for certain functional requirements ??
+          -->in these cases, locks are acceptable 
+          -->typically, mutex locks are used 
+          -->depending upon the OS platform, 
+             other forms of locks may also be 
+             used 
+
+
+  
+
+
+      Note: most of the above issues also exist, in embedded
+            scenarios, but the execution contexts will be 
+            slighty different 
+ 
+      - we may come across several APIs/methods/library APIs, 
+        which are non-re-entrant 
+      
+      - we may come across several APIs/methods/library APIs, 
+        which are re-entrant 
+
+      - based on the above, we must understand the APIs and 
+        their usage, in different contexts
+
+      - we will come across several re-rentrant APIs, in 
+        POSIX system call APIs, RTOS APIs, kernel space
+        system APIs,networking APIs  and many more
+
+  -->assuming we are programming, in a single 
+     tasking environment/platform, will re-entrant 
+     or non-re-entrant methods/APIs behave 
+     differently  
+ 
+  -->refer to embedded documents or embedded samples
+     , for re-entrant methods/APIs 
+                   
+
+
+
+ 
+
+
+
+
+
+
+
+
+      
+ 
+  
+  
+
+
+ 
+
+
+
+
+  
+
+
+ 
+  
+          
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+   
+
+ 
+
+
+
+
+ 

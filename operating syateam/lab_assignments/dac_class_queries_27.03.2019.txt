@@ -1,0 +1,246 @@
+- if we are using a PRIO policy, the priorities 
+  are absolute - if there is a higher priority
+  process/pd it will be given highest importance
+  and 100% cpu-time 
+      - first, create /launch 2 or more processes
+        using taskset - this will pin the processes
+        to specific processor/scheduler 
+      - so, all these processes will be managed
+        , in a single scheduler/Rq(s)/processor 
+      - these processes will not be moved to 
+        other processors
+
+      - taskset 0x00000001 ./w11&
+      - we load many such instances 
+      - initially, all these processes will be 
+        assigned TS policy and default nice 
+        value of 0 
+      - once all these processes are created 
+        , let us change their policy and 
+        real-time priorities 
+          --->chrt -f -p <rtprio>  <pid1>
+
+          --->chrt -f -p <rtprio>  <pid2>
+
+          ......
+        - as per their real-time priorities., 
+          the processes are given 100% cpu 
+          time - if another process is given 
+          higher priority, it will immediately 
+          preempt the currently executing/running
+          process - there can frequent preemptions, 
+          in this policy, based on real-time 
+          priorities 
+
+     - the basic TS policy is simple and 
+       there are no non-real-time priorities - 
+       ideally, if there are several ready processes/
+       pds, in the Rq, as per Epoch settings, 
+       they will be provided time-shares - 
+       refer to the scheduling txt, for the 
+       time-sharing policy 
+    
+     - what is the value of Epoch ? how is 
+       it set ? does it change ??
+        - based on the system and its 
+          resources, there will be a 
+          default value used, by the 
+          TS scheduler 
+        - this will vary, from system to 
+          system ???
+           --> cat /proc/sys/kernel/sched_latency_ns
+              ---> on one system it may be 12msecs
+              ---> on another system, it may 
+                   be different 
+              ---> if you understand Epoch and 
+                   time-sharing, you can change 
+                   the values and test , for your
+                   applications
+              ---> do not touch it, unless we 
+                   have the background 
+
+        - assuming we use time-sharing scheduler, 
+          it is better than time-slicing scheduler
+          ,for GPOS systems - by default, we can 
+          use default nice values/time-shares - 
+          in most cases, this works 
+
+        - however, if we wish to allocate more 
+          time-share/processor time to one or 
+          more processes/applications,we must 
+          change the nice values, using nice or 
+          renice utilities - we need to privileges
+          to use these utilities, for -ve values -
+          if we assign different nice values to 
+          different processes, they will be 
+          allocated different cpu-times/time-shares- 
+          we can change, if needed
+        - let us use renice to change the 
+          nice values of one or two processes 
+          and check their performance ??
+          ---->renice -n -5 -p <pid>
+
+          ---->renice -n -10 -p <pid>
+          ................ 
+
+        - professional references :
+            - Linux kernel development - 3rd edition
+              -->core of the OS 
+              -->by developers
+              -->cover concepts + design + 
+                 low-level details 
+                   
+            - Professional Linux Kernel development
+               --->core of the OS 
+               --->by developers
+               ----->covers concepts + design +  
+                     low-level details 
+            - Hand-book of Unix and Linux 
+              Administration - 5th edition 
+               ---->covers non-core components 
+                    of OS 
+               ---->covers how to manage the 
+                    applications, in Linux 
+               ---->written by professional 
+                    Linux administrators, who 
+                    manage servers and their 
+                    services 
+ 
+
+
+        - there are many standard scenarios and 
+          many non-standard/corner scenarios ???
+
+            - the standard scenarios are easy to 
+              interpret and work with 
+            - non-standard scenarios are not 
+              easy to work with, due to low-level 
+              details, which may be hidden ???
+          - a scenario, for standard case:
+            - we have 4 processes, in the Rq
+              and the scheduler is TS/time-sharing 
+              and nice value is set to 0 - meaning, 
+              equal time-share 
+               - there is an Epoch setting
+               - there is equal division of 
+                 Epoch, among processes - 
+               - Pi ---> Epoch/4(high-level)
+               - Pi+1--->Epoch/4
+               ....
+
+          - a case of non-standard scenario is 
+            assign different nice values to 
+            different processes :
+               - there is an Epoch setting 
+               - there is unequal division 
+                 of Epoch, among processes
+               - the proportion of time-share
+                 is based on the nice value - 
+                 if the nice value is -5, the 
+                 respective process is assigned
+                 an internal weight parameter - 
+                 based on this internal weight 
+                 parameter, it is provided 
+                 a proportional time-share 
+               - similarly, if another process
+                 is -10, it will be provided 
+                 another internal weight parameter 
+                 and proportional time-share   
+              - Pi is assigned a nice value of -5,
+                it will be assigned a weight of 
+                w1
+              - Pi+1 is assigned a nice value of -10, 
+                it will be assigned a weight of 
+                w2 
+              - w2 > w1
+              - the other processes are assigned 
+                nice value of 0 and their weight 
+                will be w3 
+
+              - w2 > w1 > w3
+              - so, the following are the "time-shares
+                allocated" to the processes :
+                --->Pi ---> Epoch*w1/(w1+w2+w3+w3)
+
+                --->Pi+1---> Epoch*w2/(w1+w2+w3+w3)
+
+                --->Pi+2---> Epoch*w3/(w1+w2+w3+w3)
+
+                --->Pi+3---> Epoch*w3/(w1+w2+w3+w3)
+            (the above high-level requirements 
+             need to be implemented, using 
+             low-level operations of ISRs 
+             and scheduler)
+            - another corner case :
+           
+               Pi, Pi+1, Pi+2, Pi+3 are, in the 
+               Rq and are assigned nice value of 
+               0 and their time-share estimates 
+               are :
+
+                --->Pi---> Epoch*w3/(4*w3)
+                --->Pi+1---> Epoch*w3/(4*w3)
+                --->Pi+2---> Epoch*w3/(4*w3)
+                --->Pi+3---> Epoch*w3/(4*w3)
+              
+               - what happens, if Pi finishes
+                 its current job before its time-share 
+                 and blocks ??? 
+                  - such special scenarios can 
+                    be answered by design and 
+                    implementation details 
+                    provided by developers 
+                    and other engineers 
+                  - some of the above corner 
+                    cases will be handled by 
+                    low-level operations of 
+                    scheduler, like timer 
+                    ISR managing the time-share
+                    manipulation and scheduling
+          - irrespective of standard scenarios or 
+            abnormal scenarios, how are time-shares
+            (dynamic) are handled, in the case
+            of time-sharing scheduler ??
+
+             - based on different requirements 
+               low-level int. events and ISRs 
+               need to handle dynamic time-shares, 
+               using flexible event generation 
+               and processing 
+             - some times, there are 2 processes, 
+               in the Rq, for Epoch1 
+             - some times, there are 4 processes
+               - for Epoch5
+             .....
+
+             - in some cases, there can be 
+               10 processes, in the Rq, for 
+               another Epochi  ?? 
+
+    --------X-x----x--X--------X-------X--------X------> 
+        |        |                         |  
+      epoch1   epoch2                    epochi 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+ 
