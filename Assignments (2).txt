@@ -1,0 +1,584 @@
+######################--ASSIGNMENT 1--######################
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	int a, b;
+	cout<<"Enter the first value : ";
+	cin>>a;
+	cout<<"Enter the second value : ";
+	cin>>b;
+	if(a!=b)
+	{
+		cout<<"The value entered are not Equal";
+	}	
+		else
+		{
+			cout<<"The value entered  Equal";
+			
+		}
+	
+	
+}
+
+
+######################--ASSIGNMENT 2--######################
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	int i;
+	char* sub[]={"Mathematics","Computer","Chemistry"};
+	int marks[]={90,77,69};
+	
+	for(i=0;i<3;i++)
+	{
+	cout<<sub[i]<<"      "<<marks[i]<<endl;
+	}
+}
+
+
+######################--ASSIGNMENT 3--######################
+
+#include <iostream>
+#define N 10
+using namespace std;
+
+int func(int i, int x) {
+    while(i<=x && cout<<i<<endl && i++ ){}
+}
+int main(int i, char **c){
+    if( ( i && i > 1 && func(1,i)) || (i==1 && main(N, c)))
+    
+    {}
+        
+}
+
+
+######################--ASSIGNMENT 4--######################
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	float p,r,t,SI;
+	cout<<"Enter principle : ";
+	cin>>p;
+	cout<<"Enter rate : ";
+	cin>>r;
+	cout<<"Enter time : ";
+	cin>>t;
+	SI=(p*r*t)/100;
+	cout<<"The simple interest is : "<<SI;
+}
+
+
+######################--ASSIGNMENT 5--######################
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	float f,c;
+	cout<<"Enter the farehnite value to get its centigrade : ";
+	cin>>f;
+	c=((f-32)/9)*5;
+	cout<<"Your final conversion is : "<<c<<" C"<<endl;
+}
+
+######################--ASSIGNMENT 6--######################
+
+#include <iostream> 
+using namespace std; 
+void reverseStr(string & string) 
+{ 
+    int n = string.length(); 
+    for (int i = 0; i < n /2 ; i++) 
+        swap(string[i], string[n - i - 1]); 
+} 
+int main() 
+{ 
+    string string;
+    cout<<"enter name "<<endl;
+    cin>>string;
+    reverseStr(string); 
+    cout << string; 
+}
+
+######################--ASSIGNMENT 7--######################
+
+#include<iostream>
+using namespace std;
+
+
+int main()
+{
+	int a;
+	cout<<"Enter any Number : ";
+	cin>>a;
+	(a>0)?
+	cout<<"Number is positive":
+	cout<<"Number is negative";
+	
+	
+	return 0;
+}
+
+######################--ASSIGNMENT 8--######################
+
+#include<iostream>
+using namespace std;
+
+int main()
+{
+    int n;
+    cout<<"Enter Number of elements :: ";
+    cin>>n;
+    float arr1[n],sum=0,avg;
+    for(int i = 0;i<n;i++)
+	{
+        cin>>arr1[i];
+        sum = sum + arr1[i];
+    }
+    for(int i = 0;i<n;i++)
+	{
+        cout<<arr1[i]<<"\t";
+	}   
+    avg= sum/n;
+    cout<<"\nSum ="<<sum<<"\nPercentage = "<<avg;
+	
+}
+
+######################--ASSIGNMENT 9--######################
+
+#include<iostream>
+using namespace std;
+
+void accept(int Arr[], int s);
+void display(int Arr[], int s);
+
+int main()
+{
+ int Arr[100],n,choice;
+ cout<<"Enter the Size of an Array ";
+ cin>>n;
+ do
+ {
+  cout<<"\n\nMENU";
+  cout<<"\n1. Accept the elements of an array";
+  cout<<"\n2. Display the elements of an array";
+  cout<<"\n\nEnter your choice either 1 or 2 :";
+  cin>>choice;
+ 
+ switch(choice)
+  {
+   case 1: accept(Arr,n);
+    break;
+   case 2: display(Arr,n);
+    break;
+ default:cout<<"\nInvalid choice !!!! TRY AGAIN !!!!";
+  }
+ }while(choice!=6);
+}
+void accept(int Arr[], int s)
+{
+ for(int i=0;i<s;i++)
+ {
+  cout<<"Enter element "<<i+1<<":";
+  cin>>Arr[i];
+ }
+}
+
+void display(int Arr[], int s)
+{
+ cout<<"The elements of the array are:\n";
+ for(int i=0;i<s;i++)
+  cout<<Arr[i]<<" ";
+} 
+
+######################--ASSIGNMENT 10--######################
+
+#include <iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
+using namespace std;
+static int serial=1;
+class Employee
+{
+	
+	public:
+		int empid;
+		string empName;
+		string empAdd;
+		public:
+		void setDetails(int id,string name,string addr)
+		{
+			empid=id;
+		empName=name;
+			empAdd=addr;
+		}
+	
+		
+		
+		   void writeFile()
+              {
+                   	int id;
+                 	string name,addr;
+                	ofstream fout;
+                	string fname= "ass10.csv";
+                	bool tryAgain=true;
+                   fout.open(fname.c_str(),ios::app);
+                   	do
+                      	{
+	                    	cout<<"\n enter id:....";
+	                     	cin>>id;
+		                   	cout<<"\n Enter  emp name:....";
+		     	        	cin>>name;
+		                 	cout<<"\n Enter address:....";
+		     	        	cin>>addr;
+	     	            	fout << id << "," << name << "," << addr <<"\n";
+	     	             	string option ;
+			            	 cout<<"Press n for New Entry else any other key";
+			             	 cin>>option;
+			             	 serial++;
+	     	             	tryAgain = option == "n" ? true : false;
+	                   	}while(tryAgain);
+	             	fout.close(); 	
+	              }
+	           
+				  void update()
+				  {
+				  	int id,l1;
+                 	string name,addr,line;
+                	fstream fin,fout;
+                	string fname= "ass10.csv";
+				  int find;
+				  cout<<" update the record by serial no:"<<endl;
+            cin>>find; 
+           
+            
+            fin.open("ass10.csv", ios::in); 
+  
+   
+    fout.open("ass10.csv", ios::app); 
+    for(int i=1;i<=serial;i++)
+    {
+    if(i==find)
+    {
+            while (!fin.eof())
+            {
+
+                getline(fin,line);
+            }
+ line.clear(); 
+            cout<<"enter ID "<<endl;
+            cin>>id;
+
+            cout<<"enter Name"<<endl;
+            cin>>name;
+
+             cout<<"enter Address"<<endl;
+            cin>>addr;
+            	line="\n emp Detsils \n";
+	     	            	line+="\n emp name:\t "+name;
+	     	            	line+="\n emp address:\t "+addr;
+	     	            	fout<< id << "," << name << "," << addr <<"\n";
+            
+     }
+     else
+     {
+     	cout<<"not found";
+	 }
+}
+
+}
+        void delete1()
+        {
+        	remove("ass10.csv");
+		}
+};
+void menu()
+{
+ string t="1 WRITEFILE \n";
+ t+="2 UPDATE \n";
+ t+="3 DELETE FILE \n";	
+ cout<<t;
+}
+Employee e;
+void start()
+{
+	int n;
+	
+	do{
+		cout<<"enter choice \n";
+	cin>>n;
+	switch(n)
+	{
+		case 1: e.writeFile();
+		break;
+		case 2:e.update();
+		break;
+		case 3:e.delete1();
+		break;
+		default:exit(0);
+	}
+}while(true);
+}
+ 
+int main() {
+	menu();
+	start();
+}
+
+######################--ASSIGNMENT 11--######################
+
+#include<iostream>
+using namespace std;
+int factorial(int);
+
+int factorial(int USERNUM)
+{
+	int fact=1;
+
+	while(USERNUM>1)
+	{
+		fact=fact*USERNUM;
+		USERNUM--;
+	}
+
+	return fact;
+}
+int main()
+{
+	int USERNUM,FINALFACT;
+	cout<<"Enter number : ";
+	cin>>USERNUM;
+	FINALFACT=factorial(USERNUM);
+	cout<<"The factorial is :"<<FINALFACT;
+	
+}
+
+######################--ASSIGNMENT 12--######################
+
+#include<iostream>
+#include<string>
+#include<fstream>
+using namespace std;
+int main(){
+	string content ;
+	content = "it kills all its pupils dfadfadsfasdf";
+	ofstream filecreate;
+	filecreate.open("program.csv");
+	filecreate<<content;
+	filecreate.close();
+}
+
+######################--ASSIGNMENT 13--######################
+
+#include <iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
+using namespace std;
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+		   void writeFile()
+              {
+                  
+                	ofstream fout;
+                	string fname= "ass13.txt";
+                
+                   fout.open(fname.c_str(),ios::app);
+                   
+	                    	
+		                 	string line="Time is a great teacher but unfortunately it kills all its pupils. Berlioz";
+	     	            	
+	     	            	fout << line <<"\n";
+	     	             cout<<"completed...";
+	     	
+	               
+	             	fout.close(); 	
+	              }
+int main() {
+	writeFile();
+	return 0;
+}
+
+######################--ASSIGNMENT 14--######################
+
+#include <iostream>
+#include<fstream>
+#include<sstream>
+#include<string>
+#include<cstring>
+using namespace std;
+void writeFile()
+              {
+                  
+                	ofstream fout;
+                	string fname= "story.txt";
+                
+                   fout.open(fname.c_str(),ios::app);
+                   string line="The rose is red.\n";
+                                  line+="A girl is playing there.\n";
+                                  line +="There is a playground.\n";
+                                 line+="An aeroplane is in the sky.\n";
+                            line+="Numbers are not allowed in the password.\n";
+                          
+                            
+	     	              fout << line <<"\n";
+	     	             cout<<"completed...";
+	     	            
+	               
+	             	fout.close(); 	
+	              }
+	              void readLine()
+	              {
+	              	int count=1;
+	              	ifstream fin;
+	              	string fname="story.txt";
+	              	fin.open(fname.c_str());
+	              	string line;
+	              
+	              	getline(fin, line,'.');
+	              for(int i=0;i<100;i++)
+                              {
+                              if((line[0]!='A')&&( line[i-1]=='\n'))
+                              {  count++;
+                             }
+                             }
+                              
+                           cout<<"\nNumber of lines="<<" "<<count;
+                               fin.close();
+               }
+          int main() {
+	writeFile();
+	readLine();
+	return 0;
+}
+
+######################--ASSIGNMENT 15--######################
+
+#include<iostream>
+#include<string>
+using namespace std;
+static int rt=1;
+int getNumber(string message) {
+  	int answer = 0;
+  	cout << message << endl;
+  	cin >> answer;
+  	return answer;
+  }
+int size=getNumber("enter the size of lot");
+class parkingTicket
+{
+	private:
+		string name;
+		int num;
+		public:
+			void set(string n,int a)
+			{
+				name=n;
+				num=a;
+			}
+			string getname()
+			{
+				return name;
+			}
+			int getnum()
+			{
+			return num;
+			}
+ };
+ parkingTicket t;
+  parkingTicket createObject(string name,int num)
+  {
+  t.set(name,num);
+  return t;	
+  }
+  string getString(string message) {
+  	string answer;
+  	cout << message << endl;
+  	cin >> answer;
+  	return answer;
+  }
+ class ParkingLot
+ {
+ 	public:
+ 	parkingTicket p[100];
+ 	public:
+ 		void raiseTicket(parkingTicket t)
+ 		 {
+ 		   for(int i=0;i<size;i++)
+			{
+				if(p[i].getname()=="")
+				{
+					p[i].set(t.getname(),rt);
+						rt++;
+					return;
+				} 
+				else continue;
+				
+				}	
+		 }
+		 void display()
+		 {
+		 	for(int i=0;i<size;i++)
+		 	{
+		 		if(p[i].getname()!="")
+		 		{
+		 		cout<<p[i].getname()<<"\t"<<p[i].getnum()<<endl;
+			 }
+		}
+		 }
+		 void findVehicle()
+		 {
+		 	cout<<"enter the rt"<<endl;
+		 	int rt1;
+		 	cin>>rt1;
+		 	for(int i=0;i<size;i++)
+		 	{
+		 		if(p[i].getnum()==rt1)
+		 		{
+		 			cout<<p[i].getname()<<endl;
+				 }
+			 }
+		 }
+  };
+  
+  ParkingLot pl;
+  void menu()
+  {
+  	string con="1 RAISE TICKET \n";
+  	con+="2 Display \n";
+  	cout<<con<<endl;
+  }
+  void start()
+  {
+  do{
+  		cout<<"CHOICE"<<endl;
+  		int ch;
+  		cin>>ch;
+  		int rt=1;	
+  		switch(ch)
+		  {
+		  	
+	case 1: pl.raiseTicket(createObject(getString("enter the vehicle"),rt));
+	rt++;
+	break;
+	case 2: pl.display();
+	break;
+	case 3: pl.findVehicle();
+	break;
+	default: exit(0);
+		  }
+   }while(true);
+}
+  int main()
+  {
+  	menu();
+  	start();
+}
