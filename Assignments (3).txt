@@ -1,0 +1,13 @@
+Assignments:
+Create the Calc program that was shown in the class. 
+Find the differences with a sample code on Copy vs. Clone vs. CopyTo of the Array class.
+Create an App that performs user sign in and signup operations using dictionary. 
+
+Destination
+Date: dd/MM/yyyy 
+No Of Days
+Mode Of Transport
+Posted By:
+Details 
+
+Improvise the code by creating a new Implementation for the ITravelBlog. Now the class should save the data to a file using FileIO. Make appropriate changes to the Main class so that the interface object behaves polymorphically.
